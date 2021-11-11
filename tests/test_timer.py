@@ -15,11 +15,11 @@ change-log:
 """
 
 import time
-import unittest
-from timer import Timer
+from unittest import TestCase
+from tools.timer import Timer
 
 
-class TestTimerMethods(unittest.TestCase):
+class TestTimerMethods(TestCase):
     """
     description:
     """
@@ -110,7 +110,3 @@ class TestTimerMethods(unittest.TestCase):
         timer.enable()
         time.sleep(period / 1000)
         self.assertEqual(timer.check(), True)
-
-
-if __name__ == '__main__':
-    unittest.main()

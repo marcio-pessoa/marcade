@@ -18,10 +18,10 @@ change-log: Check CHANGELOG.md file.
 
 import random
 import pygame
-from pygame.locals import *  # pylint: disable=wildcard-import
+from pygame.locals import HWSURFACE, SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE, K_a, K_RETURN  # pylint: disable=no-name-in-module
 from tools.font import Font
 from tools.sound import Sound
-from tools.timer.timer import Timer
+from tools.timer import Timer
 
 
 class Invasion:  # pylint: disable=too-many-instance-attributes
@@ -802,6 +802,7 @@ class Barrier:  # pylint: disable=too-many-instance-attributes
         self.shape = pygame.Surface(self.size, SRCALPHA)  # pylint: disable=undefined-variable
         draw(self.shape, self.sprites[self.status], self.color, 4)
         self.points = 1
+        self.rect = self.shape.get_rect().move(self.position)
 
     def update(self):
         """

@@ -19,7 +19,7 @@ change-log: Check CHANGELOG.md file.
 
 import random
 import pygame
-from pygame.locals import *
+from pygame.locals import K_ESCAPE, SRCALPHA, K_w, K_s, K_UP, K_DOWN  # pylint: disable=no-name-in-module
 from tools.font import Font
 from tools.sound import Sound
 
@@ -56,11 +56,6 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.play_area = 0
         self.score_player1 = 0
         self.score_player2 = 0
-
-    def start(self):
-        """
-        description:
-        """
         self.running = True
         self.size_set()
         self.pad_acceleration = 1
@@ -87,7 +82,7 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.court = pygame.Surface(self.screen_size)
         self.play_area = pygame.Surface([self.court.get_size()[0] - 2,
                                          self.court.get_size()[1] - 2],
-                                        pygame.SRCALPHA, 32)
+                                         SRCALPHA, 32)
         self.play_area.convert_alpha()
         # TODO: Set ball size based on both dimensions of window size
         self.ball_radius = int(self.play_area.get_size()[0] * 0.03 / 2)
@@ -137,10 +132,11 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        pygame.draw.rect(self.play_area, (200, 200, 200),
-                         [self.ball_position[0] - self.ball_radius,
-                          self.ball_position[1] - self.ball_radius,
-                          self.ball_radius * 2, self.ball_radius * 2])
+        pygame.draw.rect(
+            self.play_area, (200, 200, 200),
+            [self.ball_position[0] - self.ball_radius,
+            self.ball_position[1] - self.ball_radius,
+            self.ball_radius * 2, self.ball_radius * 2])
 
     def draw_pad1(self):
         """
@@ -151,11 +147,12 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
             self.pad1_position = 0 + self.pad_height_half
         if self.pad1_position + self.pad_height_half > self.court.get_size()[1]:
             self.pad1_position = self.court.get_size()[1] - self.pad_height_half
-        pygame.draw.rect(self.play_area, (160, 160, 160),
-                         [0,
-                          self.pad1_position - self.pad_height_half,
-                          self.pad_width,
-                          self.pad_height])
+        pygame.draw.rect(
+            self.play_area, (160, 160, 160),
+            [0,
+            self.pad1_position - self.pad_height_half,
+            self.pad_width,
+            self.pad_height])
         self.pad1_vel *= 0.9
 
     def draw_pad2(self):

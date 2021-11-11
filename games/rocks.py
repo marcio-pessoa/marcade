@@ -24,7 +24,7 @@ change-log: Check CHANGELOG.md file.
 import math
 import random
 import pygame
-from pygame.locals import *
+from pygame.locals import HWSURFACE, SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, K_SPACE, K_a  # pylint: disable=no-name-in-module
 from tools.font import Font
 from tools.sound import Sound
 
@@ -40,11 +40,6 @@ class Rocks:
         self.screen = screen
         self.running = False
         self.sound = Sound()
-
-    def start(self):
-        """
-        description:
-        """
         self.running = True
         self.size_set()
         self.pad_acceleration = 1
@@ -64,10 +59,12 @@ class Rocks:
         """
         description:
         """
-        self.screen_size = [self.screen.get_size()[0],
-                            self.screen.get_size()[1]]
-        self.space = pygame.Surface(self.screen_size,
-                                    HWSURFACE | SRCALPHA, 32)
+        self.screen_size = [
+            self.screen.get_size()[0],
+            self.screen.get_size()[1]]
+        self.space = pygame.Surface(
+            self.screen_size,
+            HWSURFACE | SRCALPHA, 32)
         self.space.convert_alpha()
 
     def set(self):
@@ -82,10 +79,9 @@ class Rocks:
         description:
         """
         # Discover new size factor
-        x_factor = self.screen.get_size()[0] / self.screen_size[0]
-        y_factor = self.screen.get_size()[1] / self.screen_size[1]
+        # x_factor = self.screen.get_size()[0] / self.screen_size[0]
+        # y_factor = self.screen.get_size()[1] / self.screen_size[1]
         self.size_set()
-        self.ship.screen_reset()
 
     def reset(self):
         """
@@ -197,9 +193,10 @@ class Rocks:
         if len(self.burst) >= 10:
             return
         # Shoot!
-        shoot = Missile(self.space,
-                        self.ship.get_position(), self.ship.get_radius(),
-                        self.ship.get_speed(), self.ship.get_angle())
+        shoot = Missile(
+            self.space,
+            self.ship.get_position(), self.ship.get_radius(),
+            self.ship.get_speed(), self.ship.get_angle())
         self.burst.add(shoot)
         self.sound.tone(800)
 
@@ -244,15 +241,18 @@ class Ship:
 
     def __init__(self, screen):
         self.screen = screen
-        self.screen_size = [self.screen.get_size()[0],
-                            self.screen.get_size()[1]]
+        self.screen_size = [
+            self.screen.get_size()[0],
+            self.screen.get_size()[1]]
         self.reset()
 
     def reset(self):
         """
         description:
         """
-        self.position = [self.screen_size[0] / 2, self.screen_size[1] / 2]
+        self.position = [
+            self.screen_size[0] / 2,
+            self.screen_size[1] / 2]
         self.speed = [0, 0]
         self.angle = math.pi / -2
         self.thrust = False
@@ -450,27 +450,28 @@ class Sprite:
         position = [0, 0]
         ship = pygame.Surface(self.size, SRCALPHA)
         color_tone = random.randrange(50, 100)
-        pygame.draw.polygon(ship,
-                            [color_tone, color_tone, color_tone],
-                            [(random.uniform(0, size[1] / 4),
-                              random.uniform(0, size[1] / 3)),
-                             (random.uniform(size[0] / 4, size[1] / 1.5),
-                              random.uniform(0, size[1] / 2)),
-                             (random.uniform(size[0] / 1.5, size[1]),
-                              random.uniform(0, size[1] / 2)),
-                             (random.uniform(size[0] / 1.1, size[1]),
-                              random.uniform(size[0] / 1.5, size[1])),
-                             (random.uniform(size[0] / 3, size[1] / 1.5),
-                              random.uniform(size[0] / 1.5, size[1])),
-                             (random.uniform(0, size[1] / 4),
-                              random.uniform(size[0] / 1.5, size[1])),
-                             ], 0)
+        pygame.draw.polygon(
+            ship,
+            [color_tone, color_tone, color_tone],
+            [(random.uniform(0, size[1] / 4),
+                random.uniform(0, size[1] / 3)),
+                (random.uniform(size[0] / 4, size[1] / 1.5),
+                random.uniform(0, size[1] / 2)),
+                (random.uniform(size[0] / 1.5, size[1]),
+                random.uniform(0, size[1] / 2)),
+                (random.uniform(size[0] / 1.1, size[1]),
+                random.uniform(size[0] / 1.5, size[1])),
+                (random.uniform(size[0] / 3, size[1] / 1.5),
+                random.uniform(size[0] / 1.5, size[1])),
+                (random.uniform(0, size[1] / 4),
+                random.uniform(size[0] / 1.5, size[1])),
+                ], 0)
         self.ship = pygame.Surface([48, 48], SRCALPHA)
         position[0] = self.ship.get_rect().center[0] - ship.get_rect().center[0]
         position[1] = self.ship.get_rect().center[1] - ship.get_rect().center[1]
         self.ship.blit(ship, position)
         self.__rect = ship.get_rect()
-        __spawn_far = pygame.Surface([80, 80], SRCALPHA).get_rect()
+        # __spawn_far = pygame.Surface([80, 80], SRCALPHA).get_rect()
         self.radius = self.ship.get_rect().center[1]
         self.update()
 

@@ -21,7 +21,7 @@ try:
     import pygame
     from pygame.locals import \
     HWSURFACE, DOUBLEBUF, RESIZABLE, QUIT, KEYDOWN, K_ESCAPE, VIDEORESIZE, KEYUP
-    import tools.joystick.joystick as joystick
+    import tools.joystick as joystick
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -61,21 +61,25 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         self.running = None
         self.screen = None
         self.screen_rate = None
-        header = ('marcade <game> [<args>]\n\n' +
-                  'Games:\n' +
-                  '  invasion       based on memorable Space Invaders\n' +
-                  '  pongue         based on classic Pong\n' +
-                  '  rocks          based on amazing Asteroids\n\n')
-        footer = (self.program_copyright + '\n' +
-                  'License: ' + self.program_license + '\n' +
-                  'Website: ' + self.program_website + '\n' +
-                  'Contact: ' + self.program_contact + '\n')
-        examples = ('examples:\n' +
-                    '  marcade rocks\n' +
-                    '  marcade\n')
-        self.version = (self.program_name + " " +
-                        str(self.__version__) + " (" +
-                        self.program_date + ")")
+        header = (
+            'marcade <game> [<args>]\n\n' +
+            'Games:\n' +
+            '  invasion       based on memorable Space Invaders\n' +
+            '  pongue         based on classic Pong\n' +
+            '  rocks          based on amazing Asteroids\n\n')
+        footer = (
+            self.program_copyright + '\n' +
+            'License: ' + self.program_license + '\n' +
+            'Website: ' + self.program_website + '\n' +
+            'Contact: ' + self.program_contact + '\n')
+        examples = (
+            'examples:\n' +
+            '  marcade rocks\n' +
+            '  marcade\n')
+        self.version = (
+            self.program_name + " " +
+            str(self.__version__) + " (" +
+            self.program_date + ")")
         epilog = (examples + '\n' + footer)
         parser = argparse.ArgumentParser(
             prog=self.program_name,
@@ -84,10 +88,11 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
             add_help=True,
             usage=header)
         parser.add_argument('game', help='game to run')
-        parser.add_argument('-V', '--version',
-                            action='version',
-                            version=self.version,
-                            help='show version information and exit')
+        parser.add_argument(
+            '-V', '--version',
+            action='version',
+            version=self.version,
+            help='show version information and exit')
         if len(sys.argv) < 2:
             # Select a random game
             game = random.choice(self.available_games)
@@ -119,14 +124,16 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
 
     def __screen_reset(self):
         if self.resizeable:
-            self.screen = pygame.display.set_mode(self.canvas_size,
-                                                  HWSURFACE |
-                                                  DOUBLEBUF |
-                                                  RESIZABLE)
+            self.screen = pygame.display.set_mode(
+                self.canvas_size,
+                HWSURFACE |
+                DOUBLEBUF |
+                RESIZABLE)
         else:
-            self.screen = pygame.display.set_mode(self.canvas_size,
-                                                  HWSURFACE |
-                                                  DOUBLEBUF)
+            self.screen = pygame.display.set_mode(
+                self.canvas_size,
+                HWSURFACE |
+                DOUBLEBUF)
 
     def __run(self):
         while self.running:
@@ -170,12 +177,13 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' pongue',
             description='based on classic Pong')
-        parser.add_argument('-v', '--verbosity',
-                            type=str,
-                            default='ERROR',
-                            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-                            help='verbose mode, options: ' +
-                            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
+        parser.add_argument(
+            '-v', '--verbosity',
+            type=str,
+            default='ERROR',
+            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+            help='verbose mode, options: ' +
+            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         verbosity(args.verbosity)
         self.window_title = 'Pongue'
@@ -183,7 +191,6 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         self.resizeable = True
         self.__screen_start()
         self.game = Pongue(self.screen)
-        self.game.start()
         self.__run()
         sys.exit(False)
 
@@ -195,19 +202,19 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' rocks',
             description='based on amazing Asteroids')
-        parser.add_argument('-v', '--verbosity',
-                            type=str,
-                            default='ERROR',
-                            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-                            help='verbose mode, options: ' +
-                            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
+        parser.add_argument(
+            '-v', '--verbosity',
+            type=str,
+            default='ERROR',
+            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+            help='verbose mode, options: ' +
+            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         verbosity(args.verbosity)
         self.window_title = 'Rocks'
         game_start_message(self.window_title, Rocks.__version__)
         self.__screen_start()
         self.game = Rocks(self.screen)
-        self.game.start()
         self.__run()
         sys.exit(False)
 
@@ -219,12 +226,13 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         parser = argparse.ArgumentParser(
             prog=self.program_name + ' invasion',
             description='based on Space Invaders')
-        parser.add_argument('-v', '--verbosity',
-                            type=str,
-                            default='ERROR',
-                            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-                            help='verbose mode, options: ' +
-                            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
+        parser.add_argument(
+            '-v', '--verbosity',
+            type=str,
+            default='ERROR',
+            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+            help='verbose mode, options: ' +
+            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         verbosity(args.verbosity)
         self.window_title = 'Invasion'
