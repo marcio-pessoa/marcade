@@ -11,6 +11,7 @@ git clone https://github.com/marcio-pessoa/marcade.git
 
 ### Installing required Python modules
 ``` bash
+sudo apt install python3-pyaudio
 pip3 install -r requirements.txt
 ```
 
