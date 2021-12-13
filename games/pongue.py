@@ -2,6 +2,7 @@
 ---
 name: pongue.py
 description: Pongue game package file
+copyright: 2014-2021 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa

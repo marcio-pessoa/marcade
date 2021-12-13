@@ -2,7 +2,7 @@
 ---
 name: timer.py
 description: Timer package
-copyright: 2014-2019 Marcio Pessoa
+copyright: 2014-2021 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -26,7 +26,6 @@ class Timer:
         self.period = period * 1.0
         self.__style = style
         self.__enable = True
-        self.__unit = 'm'
         self.counter = self.millis()
 
     def set(self, period):
@@ -59,16 +58,6 @@ class Timer:
         description:
         """
         self.__enable = False
-
-    def unit(self, unit):
-        """
-        description:
-            - Available units:
-                s: seconds
-                m: milliseconds
-                u: microseconds
-        """
-        self.__unit = unit
 
     def check(self):
         """

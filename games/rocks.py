@@ -2,6 +2,7 @@
 ---
 name: rocks.py
 description: Rocks game package file
+copyright: 2018-2021 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -54,6 +55,11 @@ class Rocks:
         self.livesboard.set_size(3)
         self.livesboard.set_position([300, 10])
         self.livesboard.set_color((100, 100, 100))
+        self.lives = 3
+        self.score = 0
+        self.rock_group = set()
+        self.burst = set()
+        self.ship_size = [31, 31]
 
     def size_set(self):
         """

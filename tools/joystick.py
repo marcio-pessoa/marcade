@@ -2,7 +2,7 @@
 ---
 name: joystick.py
 description: Joystick package
-copyright: 2019-2019 Marcio Pessoa
+copyright: 2019-2021 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -61,7 +61,7 @@ class Joystick():
             self.joystick.init()
             self.enable()
             return False
-        except BaseException:
+        except AttributeError:
             if pygame.joystick.get_init():
                 pygame.joystick.quit()
             self.__id = None

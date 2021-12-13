@@ -4,7 +4,7 @@
 ---
 name: marcade.py
 description: Invasion package file
-copyright: 2014-2020 Márcio Pessoa
+copyright: 2014-2021 Márcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -21,7 +21,7 @@ try:
     import pygame
     from pygame.locals import \
     HWSURFACE, DOUBLEBUF, RESIZABLE, QUIT, KEYDOWN, K_ESCAPE, VIDEORESIZE, KEYUP
-    import tools.joystick as joystick
+    from tools import joystick
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)

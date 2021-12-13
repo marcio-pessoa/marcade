@@ -2,6 +2,7 @@
 ---
 name: invasion.py
 description: Invasion package file
+copyright: 2018-2021 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -59,6 +60,11 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.gameovermessage.set_size(9)
         self.gameovermessage.set_position([180, 60])
         self.gameovermessage.set_color((230, 230, 230))
+        self.alien_burst_seed = 2000
+        self.start_march_period = 600
+        self.march_period = self.start_march_period
+        self.way = True
+        self.drop = False
         self.sound = Sound()
         self.reset()
 
@@ -358,6 +364,7 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         self.shape = pygame.Surface(self.size, SRCALPHA)  # pylint: disable=undefined-variable
         draw(self.shape, sprite, self.color, 4)
         self.radius = self.shape.get_rect().center[0]
+        self.rect = self.shape.get_rect().move(self.position)
 
     def reset(self):
         """
@@ -501,6 +508,7 @@ class Monster:  # pylint: disable=too-many-instance-attributes
         draw(self.shape, self.alien[0], self._color, 4)
         self.points = 10 - aspect
         self.enable = True
+        self.rect = self.shape.get_rect().move(self.position)
 
     def _sprite(self, monster):
         aliens = \
