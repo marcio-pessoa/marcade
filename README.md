@@ -9,17 +9,23 @@ All notable changes to this project will be documented in this [Change log](CHAN
 git clone https://github.com/marcio-pessoa/marcade.git
 ```
 
-### Installing required Python modules
+### Installing SO dependencies
 ``` sh
-sudo apt install python3-pyaudio
-pip3 install -r requirements.txt
+sudo apt install portaudio19-dev python3-all-dev
 ```
 
-## Running
+### Installing required Python modules
 Enter MArcade directory:
 ``` sh
 cd marcade
 ```
+
+Install dependencies using pip:
+``` sh
+pip3 install -r requirements.txt
+```
+
+## Running
 
 To start a random game:
 ``` sh
