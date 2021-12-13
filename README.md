@@ -5,34 +5,34 @@ Márcio's Arcade games
 All notable changes to this project will be documented in this [Change log](CHANGELOG.md).
 
 ## Cloning
-``` bash
+``` sh
 git clone https://github.com/marcio-pessoa/marcade.git
 ```
 
 ### Installing required Python modules
-``` bash
+``` sh
 sudo apt install python3-pyaudio
 pip3 install -r requirements.txt
 ```
 
 ## Running
 Enter MArcade directory:
-``` bash
+``` sh
 cd marcade
 ```
 
 To start a random game:
-``` bash
+``` sh
 ./marcade.py
 ```
 
 To start a game:
-``` bash
+``` sh
 ./marcade.py invasion
 ```
 
 For help:
-``` bash
+``` sh
 ./marcade.py -h
 ```
 

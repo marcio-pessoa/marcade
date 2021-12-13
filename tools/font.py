@@ -16,7 +16,7 @@ import pygame
 from pygame.locals import SRCALPHA  # pylint: disable=no-name-in-module
 
 
-class Font:
+class Font:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
