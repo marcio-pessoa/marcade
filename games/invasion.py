@@ -510,7 +510,7 @@ class Monster:  # pylint: disable=too-many-instance-attributes
         self.enable = True
         self.rect = self.shape.get_rect().move(self.position)
 
-    def _sprite(self, monster):
+    def _sprite(self, monster):  # pylint: disable=no-self-use
         aliens = \
             (
                 (

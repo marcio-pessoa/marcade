@@ -30,7 +30,7 @@ from tools.font import Font
 from tools.sound import Sound
 
 
-class Rocks:
+class Rocks:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
@@ -239,7 +239,7 @@ class Rocks:
             self.shoot()
 
 
-class Ship:
+class Ship:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
@@ -384,13 +384,12 @@ class Ship:
         return self.angle
 
 
-class Missile:
+class Missile:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
 
-    def __init__(self, screen,
-                 ship_position, ship_radius, ship_speed, ship_angle,):
+    def __init__(self, screen, ship_position, ship_radius, ship_speed, ship_angle,):  # pylint: disable=too-many-arguments
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0],
                             self.screen.get_size()[1]]
@@ -440,7 +439,7 @@ class Missile:
         return self.rect
 
 
-class Sprite:
+class Sprite:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
