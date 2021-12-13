@@ -2,7 +2,7 @@
 ---
 name: rocks.py
 description: Rocks game package file
-copyright: 2018-2021 Márcio Pessoa
+copyright: 2014-2021 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -59,7 +59,6 @@ class Rocks:
         self.score = 0
         self.rock_group = set()
         self.burst = set()
-        self.ship_size = [31, 31]
 
     def size_set(self):
         """
@@ -250,6 +249,13 @@ class Ship:
         self.screen_size = [
             self.screen.get_size()[0],
             self.screen.get_size()[1]]
+        self.ship_size = [31, 31]
+        self.ship = pygame.Surface([48, 48], SRCALPHA)
+        self.thrust = False
+        self.__rect = None
+        self.radius = None
+        self.rect = None
+        self.double_rect = None
         self.reset()
 
     def reset(self):
@@ -268,13 +274,11 @@ class Ship:
         """
         description:
         """
-        self.ship_size = [31, 31]
         position = [0, 0]
         ship = pygame.Surface(self.ship_size, SRCALPHA)
         # Draw ship
         pygame.draw.polygon(ship, (200, 200, 200),
                             [(0, 30), (15, 0), (30, 30), (15, 23)], 0)
-        self.ship = pygame.Surface([48, 48], SRCALPHA)
         ship = pygame.transform.rotate(ship, 90)
         position[0] = self.ship.get_rect().center[0] - ship.get_rect().center[0]
         position[1] = self.ship.get_rect().center[1] - ship.get_rect().center[1]

@@ -85,7 +85,6 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
                                          self.court.get_size()[1] - 2],
                                          SRCALPHA, 32)
         self.play_area.convert_alpha()
-        # TODO: Set ball size based on both dimensions of window size
         self.ball_radius = int(self.play_area.get_size()[0] * 0.03 / 2)
         self.pad_height_half = int(self.play_area.get_size()[1] * 0.2 / 2)
         self.pad_width = int(self.play_area.get_size()[0] * 0.015)
@@ -101,10 +100,8 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         # Set objects new size
         self.ball_position[0] *= x_factor
         self.ball_position[1] *= y_factor
-        # FIXME: Fix pads position
         self.pad1_position *= y_factor
         self.pad2_position *= y_factor
-        # FIXME: Fix ball speed
         self.ball_velocity[0] *= x_factor
         self.ball_velocity[1] *= y_factor
         self.size_set()
