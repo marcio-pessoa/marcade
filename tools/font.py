@@ -13,7 +13,7 @@ change-log:
 """
 
 import pygame
-from pygame.locals import *
+from pygame.locals import SRCALPHA  # pylint: disable=no-name-in-module
 
 
 class Font:
