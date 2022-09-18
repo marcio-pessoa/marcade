@@ -4,7 +4,6 @@
 ---
 name: marcade.py
 description: Invasion package file
-copyright: 2014-2022 Márcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -28,11 +27,11 @@ except ImportError as err:
 
 class MArcade():  # pylint: disable=too-many-instance-attributes
     """
-    description:
+    MArcade class
 
-    reference:
-    - https://docs.python.org/2/library/argparse.html
-      http://chase-seibert.github.io/blog/
+    argparse reference:
+      - https://docs.python.org/2/library/argparse.html
+      - http://chase-seibert.github.io/blog/
     """
 
     __version__ = "0.3.4"
@@ -191,7 +190,6 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         self.__screen_start()
         self.game = Pongue(self.screen)
         self.__run()
-        sys.exit(False)
 
     def rocks(self):
         """
@@ -215,7 +213,6 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         self.__screen_start()
         self.game = Rocks(self.screen)
         self.__run()
-        sys.exit(False)
 
     def invasion(self):
         """
@@ -239,7 +236,6 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
         self.__screen_start()
         self.game = Invasion(self.screen)
         self.__run()
-        sys.exit(False)
 
 
 def verbosity(level):
@@ -258,6 +254,7 @@ def verbosity(level):
         logging.basicConfig(level=logging.CRITICAL)
     else:
         logging.basicConfig(level=logging.ERROR)
+
 
 def game_start_message(name, version):
     """

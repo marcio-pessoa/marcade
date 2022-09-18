@@ -2,7 +2,6 @@
 ---
 name: pongue.py
 description: Pongue game package file
-copyright: 2014-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -27,8 +26,6 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
-
-    __version__ = 0.06
 
     def __init__(self, screen):
         self.screen = screen

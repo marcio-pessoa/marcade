@@ -2,7 +2,6 @@
 ---
 name: invasion.py
 description: Invasion package file
-copyright: 2018-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -27,8 +26,6 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
-
-    __version__ = 0.5
 
     def __init__(self, screen):
         self.screen = screen

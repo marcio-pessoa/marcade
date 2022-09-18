@@ -2,7 +2,6 @@
 ---
 name: rocks.py
 description: Rocks game package file
-copyright: 2014-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -31,8 +30,6 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
     """
     description:
     """
-
-    __version__ = '0.05'
 
     def __init__(self, screen):
         self.screen = screen

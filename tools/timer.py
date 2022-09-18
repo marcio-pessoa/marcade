@@ -2,7 +2,6 @@
 ---
 name: timer.py
 description: Timer package
-copyright: 2014-2021 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -17,10 +16,7 @@ class Timer:
     description:
     """
 
-    __version__ = 0.1
-
     def __init__(self, period, style="LOOP"):
-
         self.millis = lambda: int(round(time.time() * 1000))
         self.period = period * 1.0
         self.__style = style

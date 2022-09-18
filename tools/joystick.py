@@ -2,7 +2,6 @@
 ---
 name: joystick.py
 description: Joystick package
-copyright: 2019-2021 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
@@ -16,14 +15,9 @@ from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, u
 
 
 class Joystick():
-    """
-    description: Abstration class to manage joysticks with pygame.
-    """
-
-    __version__ = 0.1
+    """ Abstration class to manage joysticks with pygame. """
 
     def __init__(self):
-
         self.__enable = False
         self.__speed = 1
         self.__delay = 0
