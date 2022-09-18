@@ -14,8 +14,11 @@ import sys
 import random
 import argparse
 
-from tools import game
+from tools.arcade import Arcade
 from tools.log import Log
+from games.invasion import Invasion
+from games.pongue import Pongue
+from games.rocks import Rocks
 
 
 class MArcade():
@@ -41,6 +44,14 @@ class MArcade():
         parser = argparse.ArgumentParser(
             prog=self.program_name,
             formatter_class=argparse.RawDescriptionHelpFormatter,
+            add_help=True,
+            usage=(
+                'marcade <game> [<args>]\n\n' +
+                'Games:\n' +
+                '  invasion       based on memorable Space Invaders\n' +
+                '  pongue         based on classic Pong\n' +
+                '  rocks          based on amazing Asteroids\n\n'
+                ),
             epilog=(
                 'examples:\n'
                 '  marcade rocks\n'
@@ -50,45 +61,37 @@ class MArcade():
                 'License: GPLv2\n'
                 'Website: https://github.com/marcio-pessoa/marcade\n'
                 'Contact: Marcio Pessoa <marcio.pessoa@gmail.com>\n'
-            ),
-            add_help=True,
-            usage=(
-                'marcade <game> [<args>]\n\n' +
-                'Games:\n' +
-                '  invasion       based on memorable Space Invaders\n' +
-                '  pongue         based on classic Pong\n' +
-                '  rocks          based on amazing Asteroids\n\n')
+                ),
             )
         parser.add_argument('game', help='game to run')
         parser.add_argument(
             '-V', '--version',
             action='version',
+            help='show version information and exit',
             version=(
-                f'{self.program_name} '
-                f'{self.__version__} ('
-                f'{self.program_date})'
-            ),
-            help='show version information and exit')
-        if len(sys.argv) < 2:
-            # Select a random game
+                f'{self.program_name} {self.__version__} {self.program_date})'
+                ),
+            )
+
+        if len(sys.argv) < 2:  # No args given, select a random game
             run = random.choice(self.available_games)
             eval("self." + str(run) + "()")  # pylint: disable=eval-used
             sys.exit()
+
         args = parser.parse_args(sys.argv[1:2])
         if not hasattr(self, args.game):
             print('Unrecognized command')
             parser.print_help()
             sys.exit(True)
+
         getattr(self, args.game)()
 
     def pongue(self):
         """
         description:
         """
-        from games.pongue import Pongue  # pylint: disable=import-outside-toplevel
-        title = 'Pongue'
         parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {title}',
+            prog=f'{self.program_name} {Pongue.__name__}',
             description='based on classic Pong')
         parser.add_argument(
             '-v', '--verbosity',
@@ -99,16 +102,14 @@ class MArcade():
             'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         Log().verbosity = args.verbosity
-        game.Game(Pongue).run()
+        Arcade(Pongue).run()
 
     def rocks(self):
         """
         description:
         """
-        from games.rocks import Rocks  # pylint: disable=import-outside-toplevel
-        title = 'Rocks'
         parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {title}',
+            prog=f'{self.program_name} {Rocks.__name__}',
             description='based on amazing Asteroids')
         parser.add_argument(
             '-v', '--verbosity',
@@ -119,16 +120,14 @@ class MArcade():
             'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         Log().verbosity = args.verbosity
-        game.Game(Rocks).run()
+        Arcade(Rocks).run()
 
     def invasion(self):
         """
         description:
         """
-        from games.invasion import Invasion  # pylint: disable=import-outside-toplevel
-        title = 'Invasion'
         parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {title}',
+            prog=f'{self.program_name} {Invasion.__name__}',
             description='based on Space Invaders')
         parser.add_argument(
             '-v', '--verbosity',
@@ -139,7 +138,7 @@ class MArcade():
             'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
         args = parser.parse_args(sys.argv[2:])
         Log().verbosity = args.verbosity
-        game.Game(Invasion).run()
+        Arcade(Invasion).run()
 
 
 if __name__ == '__main__':
