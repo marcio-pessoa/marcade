@@ -7,7 +7,6 @@ people:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-change-log: Check README.md file.
 """
 
 import time

@@ -4,20 +4,19 @@
 ---
 name: marcade.py
 description: Invasion package file
-copyright: 2014-2021 Márcio Pessoa
+copyright: 2014-2022 Márcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-change-log: Check CHANGELOG.md file.
 """
 
+import sys
+import os
+import logging
+import random
 try:
-    import sys
     import argparse
-    import os
-    import logging
-    import random
     import pygame
     from pygame.locals import \
     HWSURFACE, DOUBLEBUF, RESIZABLE, QUIT, KEYDOWN, K_ESCAPE, VIDEORESIZE, KEYUP
@@ -266,12 +265,6 @@ def game_start_message(name, version):
     """
     logging.info("Starting %s version %s", name, version)
 
-def main():
-    """
-    description:
-    """
-    MArcade()
-
 
 if __name__ == '__main__':
-    main()
+    MArcade()

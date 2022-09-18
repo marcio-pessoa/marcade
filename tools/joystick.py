@@ -7,10 +7,6 @@ people:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-change-log:
-  2019-08-31
-  - version: 0.1
-    added: First version.
 """
 
 import contextlib

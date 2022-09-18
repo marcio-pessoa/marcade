@@ -6,10 +6,6 @@ contributors:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-change-log:
-  2019-01-29:
-  - version: 0.01
-    Added: Starting a new package.
 """
 
 from math import pi, sin

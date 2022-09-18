@@ -1,7 +1,7 @@
 # Waves per second
 
 Take a look on:
-https://en.wikipedia.org/wiki/Bit_rate#Audio
+[https://en.wikipedia.org/wiki/Bit_rate#Audio](https://en.wikipedia.org/wiki/Bit_rate#Audio)
 
 ## Reference table
 
