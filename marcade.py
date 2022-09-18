@@ -14,8 +14,8 @@ import sys
 import random
 import argparse
 
-from tools.arcade import Arcade
 from tools.log import Log
+from tools.arcade import Arcade
 from games.invasion import Invasion
 from games.pongue import Pongue
 from games.rocks import Rocks
@@ -86,58 +86,44 @@ class MArcade():
 
         getattr(self, args.game)()
 
-    def pongue(self):
+    @staticmethod
+    def common_arguments(func):
         """
         description:
         """
-        parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {Pongue.__name__}',
-            description='based on classic Pong')
-        parser.add_argument(
-            '-v', '--verbosity',
-            type=str,
-            default='ERROR',
-            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-            help='verbose mode, options: ' +
-            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
-        args = parser.parse_args(sys.argv[2:])
-        Log().verbosity = args.verbosity
+        def wrapper():
+            parser = argparse.ArgumentParser()
+            parser.add_argument(
+                '-v', '--verbosity',
+                type=str,
+                default='ERROR',
+                choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+                help=(
+                    'verbose mode, options: '
+                    'CRITICAL, ERROR (default), WARNING, INFO, DEBUG'
+                )
+            )
+            args = parser.parse_args(sys.argv[2:])
+            Log().verbosity = args.verbosity
+            func()
+        return wrapper
+
+    @staticmethod
+    @common_arguments
+    def pongue():
+        """ Pongue """
         Arcade(Pongue).run()
 
-    def rocks(self):
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {Rocks.__name__}',
-            description='based on amazing Asteroids')
-        parser.add_argument(
-            '-v', '--verbosity',
-            type=str,
-            default='ERROR',
-            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-            help='verbose mode, options: ' +
-            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
-        args = parser.parse_args(sys.argv[2:])
-        Log().verbosity = args.verbosity
+    @staticmethod
+    @common_arguments
+    def rocks():
+        """ Rocks """
         Arcade(Rocks).run()
 
-    def invasion(self):
-        """
-        description:
-        """
-        parser = argparse.ArgumentParser(
-            prog=f'{self.program_name} {Invasion.__name__}',
-            description='based on Space Invaders')
-        parser.add_argument(
-            '-v', '--verbosity',
-            type=str,
-            default='ERROR',
-            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-            help='verbose mode, options: ' +
-            'CRITICAL, ERROR (default), WARNING, INFO, DEBUG')
-        args = parser.parse_args(sys.argv[2:])
-        Log().verbosity = args.verbosity
+    @staticmethod
+    @common_arguments
+    def invasion(_description: str = 'memorable Space Invaders'):
+        """ Invasion """
         Arcade(Invasion).run()
 
 
