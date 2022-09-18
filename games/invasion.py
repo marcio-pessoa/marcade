@@ -2,7 +2,7 @@
 ---
 name: invasion.py
 description: Invasion package file
-copyright: 2018-2021 Márcio Pessoa
+copyright: 2018-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -12,9 +12,7 @@ contributors:
     email: marcio.pessoa@gmail.com
   - name: Nicolas Masaishi Oi Pessoa
     email: masaishi.pessoa@gmail.com
-  - name: Gustavo Nuzzo Gass
-    email: gustavonuzzogass@gmail.com
-change-log: Check CHANGELOG.md file.
+  - name: Gus
 """
 
 import random
@@ -48,16 +46,16 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.shoot_timer = Timer(50)
         self.march_timer = Timer(1)
         self.scoreboard = Font(self.space)
-        self.scoreboard.set_size(3)
+        self.scoreboard.size = 3
         self.scoreboard.set_position([10, 5])
         self.livesboard = Font(self.space)
-        self.livesboard.set_size(3)
+        self.livesboard.size =3
         self.livesboard.set_position([330, 5])
         self.levelboard = Font(self.space)
-        self.levelboard.set_size(3)
+        self.levelboard.size = 3
         self.levelboard.set_position([580, 5])
         self.gameovermessage = Font(self.space)
-        self.gameovermessage.set_size(9)
+        self.gameovermessage.size = 9
         self.gameovermessage.set_position([180, 60])
         self.gameovermessage.set_color((230, 230, 230))
         self.alien_burst_seed = 2000

@@ -2,7 +2,7 @@
 ---
 name: pongue.py
 description: Pongue game package file
-copyright: 2014-2021 Márcio Pessoa
+copyright: 2014-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -11,11 +11,9 @@ contributors:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
   beta-testers:
-  - name: Gustavo Nuzzo Gass
-    email: gustavonuzzogass@gmail.com
   - name: Nicolas Masaishi Oi Pessoa
     email: masaishi.pessoa@gmail.com
-change-log: Check CHANGELOG.md file.
+  - name: Gus
 """
 
 import random
@@ -66,11 +64,11 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.set()
         self.ball_spawn()
         self.score_player1 = Font(self.play_area)
-        self.score_player1.set_size(5)
+        self.score_player1.size = 5
         self.score_player1.set_position([290, 20])
         self.score_player1.set_color((120, 120, 120))
         self.score_player2 = Font(self.play_area)
-        self.score_player2.set_size(5)
+        self.score_player2.size = 5
         self.score_player2.set_position([480, 20])
         self.score_player2.set_color((120, 120, 120))
 

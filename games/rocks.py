@@ -2,7 +2,7 @@
 ---
 name: rocks.py
 description: Rocks game package file
-copyright: 2014-2021 Márcio Pessoa
+copyright: 2014-2022 Márcio Pessoa
 contributors:
   developers:
   - name: Marcio Pessoa
@@ -12,14 +12,11 @@ contributors:
     email: marcio.pessoa@gmail.com
   - name: Nicolas Masaishi Oi Pessoa
     email: masaishi.pessoa@gmail.com
-  - name: Gustavo Nuzzo Gass
-    email: gustavonuzzogass@gmail.com
+  - name: Gus
   beta-testers:
-  - name: Gustavo Nuzzo Gass
-    email: gustavonuzzogass@gmail.com
   - name: Nicolas Masaishi Oi Pessoa
     email: masaishi.pessoa@gmail.com
-change-log: Check CHANGELOG.md file.
+  - name: Gus
 """
 
 import math
@@ -48,11 +45,11 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
         self.set()
         self.ship.start()
         self.scoreboard = Font(self.space)
-        self.scoreboard.set_size(3)
+        self.scoreboard.size = 3
         self.scoreboard.set_position([10, 10])
         self.scoreboard.set_color((100, 100, 100))
         self.livesboard = Font(self.space)
-        self.livesboard.set_size(3)
+        self.livesboard.size = 3
         self.livesboard.set_position([300, 10])
         self.livesboard.set_color((100, 100, 100))
         self.lives = 3
