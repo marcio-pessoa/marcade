@@ -23,11 +23,11 @@ from tools.timer import Timer
 
 
 class Invasion:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Invasion game class """
 
-    def __init__(self, screen):
+    __version__ = '0.5.2'
+
+    def __init__(self, screen: pygame.Surface):
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0], self.screen.get_size()[1]]
         self.space = pygame.Surface(self.screen_size,

@@ -14,15 +14,16 @@ import sys
 import os
 import logging
 import random
+import argparse
 try:
-    import argparse
     import pygame
     from pygame.locals import \
     HWSURFACE, DOUBLEBUF, RESIZABLE, QUIT, KEYDOWN, K_ESCAPE, VIDEORESIZE, KEYUP
-    from tools import joystick
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
+
+from tools import joystick
 
 
 class MArcade():  # pylint: disable=too-many-instance-attributes
@@ -37,14 +38,10 @@ class MArcade():  # pylint: disable=too-many-instance-attributes
     __version__ = "0.3.4"
 
     def __init__(self):
-        """
-        https://docs.python.org/2/library/argparse.html
-        http://chase-seibert.github.io/blog/
-        """
         self.program_name = "marcade"
-        self.program_date = "2020-01-08"
+        self.program_date = "2022-09-18"
         self.program_description = "MArcade"
-        self.program_copyright = "Copyright (c) 2014-2020 Marcio Pessoa"
+        self.program_copyright = "Copyleft (c) 2014-2022 Marcio Pessoa"
         self.program_license = "GPLv2"
         self.program_website = "https://github.com/marcio-pessoa/marcade"
         self.program_contact = "Marcio Pessoa <marcio.pessoa@gmail.com>"

@@ -27,9 +27,9 @@ from tools.sound import Sound
 
 
 class Rocks:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Rocks game class """
+
+    __version__ = '0.5.2'
 
     def __init__(self, screen):
         self.screen = screen

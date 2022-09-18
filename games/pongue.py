@@ -23,9 +23,9 @@ from tools.sound import Sound
 
 
 class Pongue:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Pongue game class """
+
+    __version__ = '0.6.4'
 
     def __init__(self, screen):
         self.screen = screen
