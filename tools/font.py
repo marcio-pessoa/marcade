@@ -385,26 +385,11 @@ class Font:
         position = list(self.position)
         for i in list(string):
             sprite = self.chars[i]
-            size = (6 * self.__size, 7 * self.__size)
+            size = (6 * self.size, 7 * self.size)
             self.shape = pygame.Surface(size, SRCALPHA)
             self.draw(sprite, (0, 0))
             self.screen.blit(self.shape, position)
-            position[0] += self.__increment
-
-    @property
-    def size(self):
-        """
-        description:
-        """
-        return self.__size
-
-    @size.setter
-    def size(self, value):
-        """
-        description:
-        """
-        self.__size = value
-        self.__increment = 6 * self.__size
+            position[0] += 6 * self.size
 
     def set_position(self, position):
         """
@@ -429,7 +414,7 @@ class Font:
                 if col == "#":
                     pygame.draw.rect(self.shape, self.color,
                                      (x_position, y_position,
-                                      self.__size, self.__size))
-                x_position += self.__size
-            y_position += self.__size
+                                      self.size, self.size))
+                x_position += self.size
+            y_position += self.size
             x_position = position[0]
