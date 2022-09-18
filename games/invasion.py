@@ -57,7 +57,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.gameovermessage = Font(self.space)
         self.gameovermessage.size = 9
         self.gameovermessage.position = [180, 60]
-        self.gameovermessage.set_color((230, 230, 230))
+        self.gameovermessage.color = (230, 230, 230)
         self.alien_burst_seed = 2000
         self.start_march_period = 600
         self.march_period = self.start_march_period

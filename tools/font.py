@@ -13,9 +13,7 @@ from pygame.locals import SRCALPHA  # pylint: disable=no-name-in-module
 
 
 class Font:
-    """
-    description:
-    """
+    """ A basic font class """
 
     def __init__(self, screen):
         self.screen = screen
@@ -379,9 +377,7 @@ class Font:
         self.color = [200, 200, 200]
 
     def echo(self, string: str):
-        """
-        description:
-        """
+        """ echo desired string """
         position = list(self.position)
         for i in list(string):
             sprite = self.chars[i]
@@ -391,24 +387,17 @@ class Font:
             self.screen.blit(self.shape, position)
             position[0] += 6 * self.size
 
-    def set_color(self, color):
-        """
-        description:
-        """
-        self.color = color
-
     def draw(self, sprite, position):
-        """
-        description:
-        """
+        """ draw current char """
         x_position = position[0]
         y_position = position[1]
         for row in sprite:
             for col in row:
                 if col == "#":
-                    pygame.draw.rect(self.shape, self.color,
-                                     (x_position, y_position,
-                                      self.size, self.size))
+                    pygame.draw.rect(
+                        self.shape, self.color,
+                        (x_position, y_position, self.size, self.size)
+                    )
                 x_position += self.size
             y_position += self.size
             x_position = position[0]

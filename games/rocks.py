@@ -47,11 +47,11 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
         self.scoreboard = Font(self.space)
         self.scoreboard.size = 3
         self.scoreboard.position = [10, 10]
-        self.scoreboard.set_color((100, 100, 100))
+        self.scoreboard.color = (100, 100, 100)
         self.livesboard = Font(self.space)
         self.livesboard.size = 3
         self.livesboard.position = [300, 10]
-        self.livesboard.set_color((100, 100, 100))
+        self.livesboard.color = (100, 100, 100)
         self.lives = 3
         self.score = 0
         self.rock_group = set()

@@ -66,11 +66,11 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.score_player1 = Font(self.play_area)
         self.score_player1.size = 5
         self.score_player1.position = [290, 20]
-        self.score_player1.set_color((120, 120, 120))
+        self.score_player1.color = (120, 120, 120)
         self.score_player2 = Font(self.play_area)
         self.score_player2.size = 5
         self.score_player2.position = [480, 20]
-        self.score_player2.set_color((120, 120, 120))
+        self.score_player2.color = (120, 120, 120)
 
     def size_set(self):
         """
