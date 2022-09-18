@@ -12,22 +12,15 @@ import pygame
 from pygame.locals import SRCALPHA  # pylint: disable=no-name-in-module
 
 
-class Font:  # pylint: disable=too-many-instance-attributes
+class Font:
     """
     description:
     """
 
-    __version__ = 0.02
-
     def __init__(self, screen):
         self.screen = screen
-        self.alphabet = (
-            "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-            "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-            " ", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+", "-"
-        )
-        self.sprites = (
-            (
+        self.chars = {
+            'A': (
                 "  #   ",
                 " # #  ",
                 "#   # ",
@@ -35,7 +28,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "##### ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'B': (
                 "####  ",
                 "#   # ",
                 "#   # ",
@@ -43,7 +37,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 "####  ",
-            ), (
+            ),
+            'C': (
                 " ###  ",
                 "#   # ",
                 "#     ",
@@ -51,7 +46,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#     ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'D': (
                 "####  ",
                 "#   # ",
                 "#   # ",
@@ -59,7 +55,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 "####  ",
-            ), (
+            ),
+            'E': (
                 "##### ",
                 "#     ",
                 "#     ",
@@ -67,7 +64,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#     ",
                 "#     ",
                 "##### ",
-            ), (
+            ),
+            'F': (
                 "##### ",
                 "#     ",
                 "#     ",
@@ -75,7 +73,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#     ",
                 "#     ",
                 "#     ",
-            ), (
+            ),
+            'G': (
                 " ###  ",
                 "#   # ",
                 "#     ",
@@ -83,7 +82,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'H': (
                 "#   # ",
                 "#   # ",
                 "#   # ",
@@ -91,7 +91,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'I': (
                 "##### ",
                 "  #   ",
                 "  #   ",
@@ -99,7 +100,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "##### ",
-            ), (
+            ),
+            'J': (
                 "    # ",
                 "    # ",
                 "    # ",
@@ -107,7 +109,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'K': (
                 "#   # ",
                 "#  #  ",
                 "# #   ",
@@ -115,7 +118,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "# #   ",
                 "#  #  ",
                 "#   # ",
-            ), (
+            ),
+            'L': (
                 "#     ",
                 "#     ",
                 "#     ",
@@ -123,7 +127,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#     ",
                 "#     ",
                 "##### ",
-            ), (
+            ),
+            'M': (
                 "#   # ",
                 "#   # ",
                 "## ## ",
@@ -131,7 +136,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'N': (
                 "#   # ",
                 "#   # ",
                 "##  # ",
@@ -139,7 +145,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#  ## ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'O': (
                 " ###  ",
                 "#   # ",
                 "#   # ",
@@ -147,7 +154,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'P': (
                 "####  ",
                 "#   # ",
                 "#   # ",
@@ -155,7 +163,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#     ",
                 "#     ",
                 "#     ",
-            ), (
+            ),
+            'Q': (
                 " ###  ",
                 "#   # ",
                 "#   # ",
@@ -163,7 +172,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "# # # ",
                 "#  #  ",
                 " ## # ",
-            ), (
+            ),
+            'R': (
                 "####  ",
                 "#   # ",
                 "#   # ",
@@ -171,7 +181,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "# #   ",
                 "#  #  ",
                 "#   # ",
-            ), (
+            ),
+            'S': (
                 " ###  ",
                 "#   # ",
                 "#     ",
@@ -179,7 +190,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'T': (
                 "##### ",
                 "  #   ",
                 "  #   ",
@@ -187,7 +199,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "  #   ",
-            ), (
+            ),
+            'U': (
                 "#   # ",
                 "#   # ",
                 "#   # ",
@@ -195,7 +208,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            'V': (
                 "#   # ",
                 "#   # ",
                 "#   # ",
@@ -203,7 +217,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 " # #  ",
                 "  #   ",
-            ), (
+            ),
+            'W': (
                 "#   # ",
                 "#   # ",
                 "#   # ",
@@ -211,7 +226,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "## ## ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'X': (
                 "#   # ",
                 "#   # ",
                 " # #  ",
@@ -219,7 +235,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 " # #  ",
                 "#   # ",
                 "#   # ",
-            ), (
+            ),
+            'Y': (
                 "#   # ",
                 "#   # ",
                 "#   # ",
@@ -227,7 +244,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "  #   ",
-            ), (
+            ),
+            'Z': (
                 "##### ",
                 "    # ",
                 "   #  ",
@@ -235,7 +253,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 " #    ",
                 "#     ",
                 "##### ",
-            ), (
+            ),
+            ' ': (
                 "       "
                 "       "
                 "       "
@@ -243,7 +262,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "       "
                 "       "
                 "       "
-            ), (
+            ),
+            '0': (
                 " ###  ",
                 "#   # ",
                 "#  ## ",
@@ -251,7 +271,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "##  # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            '1': (
                 "  #   ",
                 " ##   ",
                 "# #   ",
@@ -259,7 +280,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "##### ",
-            ), (
+            ),
+            '2': (
                 " ###  ",
                 "#   # ",
                 "   #  ",
@@ -267,7 +289,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 " #    ",
                 "#     ",
                 "##### ",
-            ), (
+            ),
+            '3': (
                 "####  ",
                 "    # ",
                 "    # ",
@@ -275,7 +298,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "    # ",
                 "####  ",
-            ), (
+            ),
+            '4': (
                 "#     ",
                 "#   # ",
                 "#   # ",
@@ -283,7 +307,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "    # ",
                 "    # ",
-            ), (
+            ),
+            '5': (
                 "####  ",
                 "#     ",
                 "#     ",
@@ -291,7 +316,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "    # ",
                 "####  ",
-            ), (
+            ),
+            '6': (
                 " ###  ",
                 "#     ",
                 "#     ",
@@ -299,7 +325,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            '7': (
                 "##### ",
                 "    # ",
                 "   #  ",
@@ -307,7 +334,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "  #   ",
-            ), (
+            ),
+            '8': (
                 " ###  ",
                 "#   # ",
                 "#   # ",
@@ -315,7 +343,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "#   # ",
                 "#   # ",
                 " ###  ",
-            ), (
+            ),
+            '9': (
                 " ###  ",
                 "#   # ",
                 "#   # ",
@@ -323,7 +352,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "    # ",
                 "    # ",
                 " ###  ",
-            ), (
+            ),
+            '+': (
                 "      ",
                 "  #   ",
                 "  #   ",
@@ -331,7 +361,8 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "  #   ",
                 "  #   ",
                 "      ",
-            ), (
+            ),
+            '-': (
                 "      ",
                 "      ",
                 "      ",
@@ -340,20 +371,20 @@ class Font:  # pylint: disable=too-many-instance-attributes
                 "      ",
                 "      ",
             )
-        )
+
+        }
         self.size = 1
         self.shape = None
         self.position = [0, 0]
         self.color = [200, 200, 200]
 
-    def echo(self, string):
+    def echo(self, string: str):
         """
         description:
         """
         position = list(self.position)
         for i in list(string):
-            char = self.alphabet.index(i)
-            sprite = self.sprites[char]
+            sprite = self.chars[i]
             size = (6 * self.__size, 7 * self.__size)
             self.shape = pygame.Surface(size, SRCALPHA)
             self.draw(sprite, (0, 0))
