@@ -47,16 +47,16 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.march_timer = Timer(1)
         self.scoreboard = Font(self.space)
         self.scoreboard.size = 3
-        self.scoreboard.set_position([10, 5])
+        self.scoreboard.position = [10, 5]
         self.livesboard = Font(self.space)
         self.livesboard.size =3
-        self.livesboard.set_position([330, 5])
+        self.livesboard.position = [330, 5]
         self.levelboard = Font(self.space)
         self.levelboard.size = 3
-        self.levelboard.set_position([580, 5])
+        self.levelboard.position = [580, 5]
         self.gameovermessage = Font(self.space)
         self.gameovermessage.size = 9
-        self.gameovermessage.set_position([180, 60])
+        self.gameovermessage.position = [180, 60]
         self.gameovermessage.set_color((230, 230, 230))
         self.alien_burst_seed = 2000
         self.start_march_period = 600

@@ -391,12 +391,6 @@ class Font:
             self.screen.blit(self.shape, position)
             position[0] += 6 * self.size
 
-    def set_position(self, position):
-        """
-        description:
-        """
-        self.position = position
-
     def set_color(self, color):
         """
         description:
