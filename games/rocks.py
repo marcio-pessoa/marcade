@@ -21,7 +21,8 @@ contributors:
 import math
 import random
 import pygame
-from pygame.locals import HWSURFACE, SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, K_SPACE, K_a  # pylint: disable=no-name-in-module
+from pygame.locals import SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, K_SPACE, K_a  # pylint: disable=no-name-in-module
+
 from tools.font import Font
 from tools.sound import Sound
 
@@ -61,9 +62,7 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
         self.screen_size = [
             self.screen.get_size()[0],
             self.screen.get_size()[1]]
-        self.space = pygame.Surface(
-            self.screen_size,
-            HWSURFACE | SRCALPHA, 32)
+        self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
         self.space.convert_alpha()
 
     def set(self):

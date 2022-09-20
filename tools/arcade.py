@@ -12,8 +12,7 @@ import os
 import sys
 try:
     import pygame
-    from pygame.locals import \
-        HWSURFACE, DOUBLEBUF, QUIT, KEYDOWN, K_ESCAPE, KEYUP
+    from pygame.locals import DOUBLEBUF, QUIT, KEYDOWN, K_ESCAPE, KEYUP
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -66,7 +65,7 @@ class Arcade():
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()  # pylint: disable=no-member
         pygame.display.set_caption(self.__game_class.__name__)
-        self.__screen = pygame.display.set_mode(SIZE, HWSURFACE | DOUBLEBUF)
+        self.__screen = pygame.display.set_mode(SIZE, DOUBLEBUF)
         self.__clock = pygame.time.Clock()
 
     def __control_start(self) -> None:

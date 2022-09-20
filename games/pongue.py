@@ -18,6 +18,7 @@ contributors:
 import random
 import pygame
 from pygame.locals import K_ESCAPE, SRCALPHA, K_w, K_s, K_UP, K_DOWN  # pylint: disable=no-name-in-module
+
 from tools.font import Font
 from tools.sound import Sound
 
