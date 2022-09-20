@@ -22,7 +22,8 @@ from tools import joystick
 from tools.log import log
 
 
-SCREEN_RATE = 60  # FPS
+RATE = 60  # FPS
+SIZE = (800, 480)  # WVGA
 
 
 class Arcade():
@@ -37,33 +38,38 @@ class Arcade():
         log.info("Starting %s version %s",
             self.__game_class.__name__,
             self.__game_class.__version__)
-        # Window position
-        os.environ['SDL_VIDEO_CENTERED'] = '1'
-        pygame.init()  # pylint: disable=no-member
-        pygame.display.set_caption(self.__game_class.__name__)
-        self.screen_reset()
-        self.clock = pygame.time.Clock()
-        self.running = True
-        self.__ctrl_set()
+        self.__running = False
+        self.__screen_start()
+        self.__control_start()
+
+    @property
+    def running(self) -> bool:
+        """ running getter
+
+        Returns:
+            bool: True if game is running
+        """
+        return self.__running
 
     def run(self) -> None:
         """ Run game """
-        game = self.__game_class(self.screen)
-        while self.running:
+        self.__running = True
+        game = self.__game_class(self.__screen)
+        while self.__running:
             keyboard, joypad = self.__check_event()
             game.control(keyboard, joypad)
             game.run()
-            self.clock.tick(SCREEN_RATE)
+            self.__clock.tick(RATE)
             pygame.display.flip()
 
-    def screen_reset(self) -> None:
-        """ Reset screens to default values """
-        canvas_size = (800, 480)  # WVGA
-        self.screen = pygame.display.set_mode(
-            canvas_size,
-            HWSURFACE | DOUBLEBUF)
+    def __screen_start(self) -> None:
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+        pygame.init()  # pylint: disable=no-member
+        pygame.display.set_caption(self.__game_class.__name__)
+        self.__screen = pygame.display.set_mode(SIZE, HWSURFACE | DOUBLEBUF)
+        self.__clock = pygame.time.Clock()
 
-    def __ctrl_set(self):
+    def __control_start(self) -> None:
         pygame.key.set_repeat(0, 0)  # Set keyboard speed
         self.keys = set()
         self.joystick = joystick.Joystick()
@@ -75,10 +81,10 @@ class Arcade():
         joy_state = None
         for event in pygame.event.get():
             if event.type == QUIT:
-                self.running = False
+                self.__running = False
             elif event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
-                    self.running = False
+                    self.__running = False
                 self.keys.add(event.key)
             elif event.type == KEYUP:
                 self.keys.remove(event.key)
