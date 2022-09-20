@@ -51,7 +51,7 @@ class MArcade():
                 '  invasion       based on memorable Space Invaders\n' +
                 '  pongue         based on classic Pong\n' +
                 '  rocks          based on amazing Asteroids\n\n'
-                ),
+            ),
             epilog=(
                 'examples:\n'
                 '  marcade rocks\n'
@@ -61,8 +61,8 @@ class MArcade():
                 'License: GPLv2\n'
                 'Website: https://github.com/marcio-pessoa/marcade\n'
                 'Contact: Marcio Pessoa <marcio.pessoa@gmail.com>\n'
-                ),
-            )
+            ),
+        )
         parser.add_argument('game', help='game to run')
         parser.add_argument(
             '-V', '--version',
@@ -70,8 +70,8 @@ class MArcade():
             help='show version information and exit',
             version=(
                 f'{self.program_name} {self.__version__} {self.program_date})'
-                ),
-            )
+            ),
+        )
 
         if len(sys.argv) < 2:  # No args given, select a random game
             run = random.choice(self.available_games)
@@ -87,7 +87,7 @@ class MArcade():
         getattr(self, args.game)()
 
     @staticmethod
-    def common_arguments(func):
+    def __common_arguments(func):
         """
         description:
         """
@@ -109,19 +109,19 @@ class MArcade():
         return wrapper
 
     @staticmethod
-    @common_arguments
+    @__common_arguments
     def pongue():
         """ Pongue """
         Arcade(Pongue).run()
 
     @staticmethod
-    @common_arguments
+    @__common_arguments
     def rocks():
         """ Rocks """
         Arcade(Rocks).run()
 
     @staticmethod
-    @common_arguments
+    @__common_arguments
     def invasion(_description: str = 'memorable Space Invaders'):
         """ Invasion """
         Arcade(Invasion).run()
