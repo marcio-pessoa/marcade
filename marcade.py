@@ -36,7 +36,7 @@ class MArcade():
         self.program_name = "marcade"
         self.program_date = "2022-09-18"
         self.program_description = "MArcade"
-        self.available_games = ["invasion", "pongue", "rocks"]
+        self.available_games = [self.invasion, self.pongue, self.rocks]
 
         Log().name = self.program_name
         Log().verbosity = 'ERROR'
@@ -73,9 +73,9 @@ class MArcade():
             ),
         )
 
-        if len(sys.argv) < 2:  # No args given, select a random game
+        if len(sys.argv) < 2:  # When no args given, select a random game
             run = random.choice(self.available_games)
-            eval("self." + str(run) + "()")  # pylint: disable=eval-used
+            run()
             sys.exit()
 
         args = parser.parse_args(sys.argv[1:2])
