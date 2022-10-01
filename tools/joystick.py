@@ -258,6 +258,7 @@ class Joystick():
                 'ball': self.ball()
             }
 
+
 def detect():
     """
     description: Detect joysticks

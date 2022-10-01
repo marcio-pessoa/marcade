@@ -13,9 +13,7 @@ from pyaudio import PyAudio
 
 
 class Sound():
-    """
-    description:
-    """
+    """ Sound class """
 
     def __init__(self):
         self.bitrate = 44100  # Frames per second (frame rate / frameset)

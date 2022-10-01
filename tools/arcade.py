@@ -34,9 +34,10 @@ class Arcade():
 
     def __init__(self, game_class) -> None:
         self.__game_class = game_class
-        log.info("Starting %s version %s",
-            self.__game_class.__name__,
-            self.__game_class.__version__)
+        log.info(
+            "Starting %s version %s",
+            self.__game_class.__name__, self.__game_class.__version__
+        )
         self.__running = False
         self.__screen_start()
         self.__control_start()

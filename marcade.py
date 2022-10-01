@@ -22,8 +22,7 @@ from games.rocks import Rocks
 
 
 class MArcade():
-    """
-    MArcade class
+    """ MArcade class
 
     argparse reference:
       - https://docs.python.org/2/library/argparse.html
