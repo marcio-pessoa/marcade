@@ -17,12 +17,29 @@ class Game(ABC):
 
     def __init__(self, screen: pygame.Surface) -> None:
         self.screen = screen
-        self.screen_size = [self.screen.get_size()[0], self.screen.get_size()[1]]
+        self.screen_size = [
+            self.screen.get_size()[0], self.screen.get_size()[1]
+        ]
+        self.init()
+        self.match()
+        self.reset_match()
+
+    @abstractmethod
+    def init(self):
+        """ Init game """
+
+    @abstractmethod
+    def match(self):
+        """ Start match """
+
+    @abstractmethod
+    def reset_match(self):
+        """ Reset match """
 
     @abstractmethod
     def run(self):
         """ Run game """
 
     @abstractmethod
-    def control(self):
+    def control(self, keys, joystick):
         """ Get user control input """

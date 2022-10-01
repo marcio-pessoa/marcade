@@ -16,22 +16,20 @@ contributors:
 
 import random
 import pygame
-from pygame.locals import HWSURFACE, SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE, K_a, K_RETURN  # pylint: disable=no-name-in-module
+from pygame.locals import SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE, K_a, K_RETURN  # pylint: disable=no-name-in-module
 from tools.font import Font
 from tools.sound import Sound
 from tools.timer import Timer
+from tools.game_template import Game
 
 
-class Invasion:  # pylint: disable=too-many-instance-attributes
+class Invasion(Game):  # pylint: disable=too-many-instance-attributes
     """ Invasion game class """
 
     __version__ = '0.5.2'
 
-    def __init__(self, screen: pygame.Surface):
-        self.screen = screen
-        self.screen_size = [self.screen.get_size()[0], self.screen.get_size()[1]]
-        self.space = pygame.Surface(self.screen_size,
-                                    HWSURFACE | SRCALPHA, 32)  # pylint: disable=undefined-variable
+    def init(self):
+        self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
         self.space.convert_alpha()
         self.running = True
         self.ship_burst = set()
@@ -61,9 +59,9 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.way = True
         self.drop = False
         self.sound = Sound()
-        self.reset()
+        self.reset_match()
 
-    def set(self):
+    def match(self):
         """
         description:
         """
@@ -81,7 +79,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self._walls_deploy()
         self._aliens_deploy()
 
-    def reset(self):
+    def reset_match(self):
         """
         description:
         """
@@ -89,7 +87,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.lives = 2
         self.score = 0
         self.start_march_period = 600
-        self.set()
+        self.match()
         self._level_up()
 
     def run(self):
@@ -121,7 +119,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
                joystick['axis'][0] > 0:
                 self.ship.move_right()
             if joystick['button'][10]:
-                self.reset()
+                self.reset_match()
             if joystick['button'][0] or joystick['button'][7]:
                 self._ship_shoot()
         if K_ESCAPE in keys:  # pylint: disable=undefined-variable
@@ -133,7 +131,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         if K_SPACE in keys or K_a in keys:  # pylint: disable=undefined-variable
             self._ship_shoot()
         if K_RETURN in keys:  # pylint: disable=undefined-variable
-            self.reset()
+            self.reset_match()
 
     def _lives_check(self):
         if self.lives == 0:
@@ -288,7 +286,7 @@ class Invasion:  # pylint: disable=too-many-instance-attributes
         self.lives += 1
         self.alien_burst_seed -= self.level * 100
         self.start_march_period -= self.start_march_period * self.level / 20
-        self.set()
+        self.match()
 
     def _walls_deploy(self):
         quantity = 4
