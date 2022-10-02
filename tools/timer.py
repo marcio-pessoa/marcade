@@ -16,25 +16,27 @@ class Timer:
     description:
     """
 
-    def __init__(self, period, style="LOOP"):
+    def __init__(self, period: float, style: str = "LOOP"):
         self.millis = lambda: int(round(time.time() * 1000))
-        self.period = period * 1.0
+        self.__period = period
         self.__style = style
         self.__enable = True
         self.counter = self.millis()
 
-    def set(self, period):
+    @property
+    def period(self):
         """
         description:
         """
-        self.period = period * 1.0
-        self.reset()
+        return self.__period
 
-    def get(self):
+    @period.setter
+    def period(self, value: float):
         """
         description:
         """
-        return self.period
+        self.__period = value
+        self.reset()
 
     def reset(self):
         """
@@ -61,11 +63,11 @@ class Timer:
         if not self.__enable:
             return False
         if self.__style == "LOOP":
-            if self.millis() - self.counter >= self.period:
+            if self.millis() - self.counter >= self.__period:
                 self.counter = self.millis()
                 return True
         if self.__style == "COUNTDOWN":
-            if self.millis() - self.counter >= self.period:
+            if self.millis() - self.counter >= self.__period:
                 self.__enable = False
                 return True
         if self.__style == "STOPWATCH":

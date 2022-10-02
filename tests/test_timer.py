@@ -3,15 +3,10 @@
 ---
 name: timer_test.py
 description: Test Timer package
-copyright: 2019-2019 Marcio Pessoa
 people:
   developers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-change-log:
-  2019-08-26
-  - version: 0.1
-    added: timer tests
 """
 
 import time
@@ -30,12 +25,12 @@ class TestTimerMethods(TestCase):
         """
         period = 1000
         timer = Timer(period)
-        self.assertEqual(timer.get(), period)
+        self.assertEqual(timer.period, period)
 
     def test_status(self):
         """
-        description: status() method must return current time, so it is a number
-                     between 0 and defined period.
+        status() method must return current time, so it is a number between 0
+        and defined period.
         """
         period = 10
         timer = Timer(period)
@@ -48,8 +43,8 @@ class TestTimerMethods(TestCase):
         period = 10
         timer = Timer(period)
         period = 20
-        timer.set(period)
-        self.assertEqual(timer.get(), period)
+        timer.period = period
+        self.assertEqual(timer.period, period)
 
     def test_reset(self):
         """
