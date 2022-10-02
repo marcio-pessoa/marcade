@@ -341,22 +341,19 @@ class Invasion():  # pylint: disable=too-many-instance-attributes
             return
         # Shoot!
         shoot = Missile(self.space,
-                        self.ship.get_position(), self.ship.get_radius(), 5)
+                        self.ship.get_position(), self.ship.radius, 5)
         self.ship_burst.add(shoot)
         self.sound.tone(1200)
 
 
-class Ship:  # pylint: disable=too-many-instance-attributes
+class Ship:
     """ Ship class """
 
+    __move_increment = 5
+    __size = [48, 32]
+
     def __init__(self, screen):
-        self.screen = screen
-        self.screen_size = [
-            self.screen.get_size()[0],
-            self.screen.get_size()[1]
-        ]
-        self.size = [48, 32]
-        self.color = (180, 180, 240)
+        self.__screen = screen
         self.enable = True
         sprite = (
             "            ",
@@ -368,10 +365,9 @@ class Ship:  # pylint: disable=too-many-instance-attributes
             " ########## ",
             "############",
         )
-        self.move_increment = 5
         self.reset()
-        self.shape = pygame.Surface(self.size, SRCALPHA)
-        _draw(self.shape, sprite, self.color, 4)
+        self.shape = pygame.Surface(self.__size, SRCALPHA)
+        _draw(self.shape, sprite, (180, 180, 240), 4)
         self.radius = self.shape.get_rect().center[0]
         self.rect = self.shape.get_rect().move(self.position)
 
@@ -379,8 +375,11 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        self.position = [self.screen_size[0] / 2,
-                         self.screen_size[1] - self.size[1]]
+        screen_size = [
+            self.__screen.get_size()[0],
+            self.__screen.get_size()[1]
+        ]
+        self.position = [screen_size[0] / 2, screen_size[1] - self.__size[1]]
         self.start()
 
     def update(self):
@@ -389,10 +388,10 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         """
         if self.position[0] < 0:
             self.position[0] = 0
-        if self.position[0] + self.size[0] > self.screen.get_size()[0]:
-            self.position[0] = self.screen.get_size()[0] - self.size[0]
+        if self.position[0] + self.__size[0] > self.__screen.get_size()[0]:
+            self.position[0] = self.__screen.get_size()[0] - self.__size[0]
         self.rect = self.shape.get_rect().move(self.position)
-        self.screen.blit(self.shape, self.position)
+        self.__screen.blit(self.shape, self.position)
 
     def move_right(self):
         """
@@ -400,7 +399,7 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         """
         if not self.enable:
             return
-        self.position[0] += self.move_increment
+        self.position[0] += self.__move_increment
 
     def move_left(self):
         """
@@ -408,13 +407,7 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         """
         if not self.enable:
             return
-        self.position[0] -= self.move_increment
-
-    def get_radius(self):
-        """
-        description:
-        """
-        return self.radius
+        self.position[0] -= self.__move_increment
 
     def get_position(self):
         """
@@ -732,15 +725,15 @@ class Monster:  # pylint: disable=too-many-instance-attributes
         self.enable = False
 
 
-class Barrier:  # pylint: disable=too-many-instance-attributes
+class Barrier:
     """ Barrier class """
 
+    __color = (139, 105, 20)
+
     def __init__(self, screen, position):
-        self.screen = screen
-        self.position = position
-        self.size = [48, 32]
-        self.color = (139, 105, 20)
-        self.sprites = (
+        self.__screen = screen
+        self.__position = position
+        self.__sprites = (
             (
                 "            ",
                 "            ",
@@ -802,32 +795,32 @@ class Barrier:  # pylint: disable=too-many-instance-attributes
                 "###      ###",
             )
         )
-        self.status = len(self.sprites) - 1
-        self.shape = pygame.Surface(self.size, SRCALPHA)
-        _draw(self.shape, self.sprites[self.status], self.color, 4)
+        self.status = len(self.__sprites) - 1
+        self.shape = pygame.Surface([48, 32], SRCALPHA)
+        _draw(self.shape, self.__sprites[self.status], self.__color, 4)
         self.points = 1
-        self.rect = self.shape.get_rect().move(self.position)
+        self.rect = self.shape.get_rect().move(self.__position)
 
     def update(self):
         """
         description:
         """
-        self.rect = self.shape.get_rect().move(self.position)
-        self.screen.blit(self.shape, self.position)
+        _draw(self.shape, self.__sprites[self.status], self.__color, 4)
+        self.__screen.blit(self.shape, self.__position)
 
     def add_damage(self):
         """
         description:
         """
         self.status -= 1
-        _draw(self.shape, self.sprites[self.status], self.color, 4)
+        _draw(self.shape, self.__sprites[self.status], self.__color, 4)
         return self.status
 
     def get_position(self):
         """
         description:
         """
-        return self.position
+        return self.__position
 
 
 class Explosion:  # pylint: disable=too-few-public-methods
@@ -837,6 +830,7 @@ class Explosion:  # pylint: disable=too-few-public-methods
         self.__screen = screen
         self.__position = position
         self.__update_timer = Timer(50)
+        self.__frame = 0
         self.__sprites = (
             (
                 "     ##     ",
@@ -939,8 +933,6 @@ class Explosion:  # pylint: disable=too-few-public-methods
                 "  #      #  ",
             )
         )
-        self.__frame = 0
-        self.__sprite = self.__sprites[self.__frame]
         self.done = False
 
     def update(self):
@@ -948,13 +940,16 @@ class Explosion:  # pylint: disable=too-few-public-methods
         description:
         """
         shape = pygame.Surface([48, 32], SRCALPHA)
+        sprite = self.__sprites[self.__frame]
+
         if self.__update_timer.check():
             self.__frame += 1
             if self.__frame >= len(self.__sprites):
                 self.done = True
                 return
-            self.__sprite = self.__sprites[self.__frame]
-        _draw(shape, self.__sprite, (255, 150, 150), 4)
+            sprite = self.__sprites[self.__frame]
+
+        _draw(shape, sprite, (255, 150, 150), 4)
         self.__screen.blit(shape, self.__position)
 
 
