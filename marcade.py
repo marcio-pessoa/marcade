@@ -3,7 +3,7 @@
 """
 ---
 name: marcade.py
-description: Invasion package file
+description: MArcade main file
 people:
   developers:
   - name: Marcio Pessoa
@@ -30,18 +30,14 @@ class MArcade():
     """
 
     __version__ = '0.3.4'
+    __date__ = "2022-10-01"
 
     def __init__(self):
-        self.program_name = "marcade"
-        self.program_date = "2022-09-18"
-        self.program_description = "MArcade"
-        self.available_games = ['invasion', 'pongue', 'rocks']
-
-        Log().name = self.program_name
+        Log().name = 'marcade'
         Log().verbosity = 'ERROR'
 
         parser = argparse.ArgumentParser(
-            prog=self.program_name,
+            prog='marcade',
             formatter_class=argparse.RawDescriptionHelpFormatter,
             add_help=True,
             usage=(
@@ -53,7 +49,7 @@ class MArcade():
             ),
             epilog=(
                 'examples:\n'
-                '  marcade rocks\n'
+                '  marcade invasion\n'
                 '  marcade\n'
                 '\n'
                 'Copyleft (c) 2014-2022 Marcio Pessoa\n'
@@ -68,12 +64,12 @@ class MArcade():
             action='version',
             help='show version information and exit',
             version=(
-                f'{self.program_name} {self.__version__} {self.program_date})'
+                f'MArcade {self.__version__} {self.__date__})'
             ),
         )
 
-        if len(sys.argv) < 2:  # When no args given, select a random game
-            game = random.choice(self.available_games)
+        if len(sys.argv) < 2:  # When no args given, run random game
+            game = random.choice(['invasion', 'pongue', 'rocks'])
             getattr(self, game)()
             sys.exit()
 
@@ -87,16 +83,13 @@ class MArcade():
 
     @staticmethod
     def __common_arguments(func):
-        """
-        description:
-        """
         def wrapper():
             parser = argparse.ArgumentParser()
             parser.add_argument(
                 '-v', '--verbosity',
                 type=str,
-                default='ERROR',
                 choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+                default='ERROR',
                 help=(
                     'verbose mode, options: '
                     'CRITICAL, ERROR (default), WARNING, INFO, DEBUG'
@@ -121,7 +114,7 @@ class MArcade():
 
     @staticmethod
     @__common_arguments
-    def invasion(_description: str = 'memorable Space Invaders'):
+    def invasion():
         """ Invasion """
         Arcade(Invasion).run()
 

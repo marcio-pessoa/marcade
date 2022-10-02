@@ -8,9 +8,7 @@ people:
     email: marcio.pessoa@gmail.com
 """
 
-import contextlib
-with contextlib.redirect_stdout(None):
-    import pygame
+import pygame
 from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 
 
@@ -260,22 +258,20 @@ class Joystick():
 
 
 def detect():
-    """
-    description: Detect joysticks
+    """ Detect joysticks
 
-    parameters:
-      None
-
-    returns:
-      False: If there is none joystick connected.
-      tuple: With a list of joysticks IDs
+    Returns:
+        False: If there is none joystick connected.
+        tuple: With a list of joysticks IDs
     """
     pygame.joystick.init()
     count = pygame.joystick.get_count()
-    # Create joystick list
+
+    if count == 0:
+        return False
+
     joystick_list = []
     for i in range(count):
         joystick_list.append(i)
-    if count == 0:
-        return False
+
     return tuple(joystick_list)

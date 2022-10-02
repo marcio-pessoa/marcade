@@ -15,9 +15,14 @@ contributors:
   - name: Gus
 """
 
+import sys
 import random
 import pygame
-from pygame.locals import K_ESCAPE, SRCALPHA, K_w, K_s, K_UP, K_DOWN  # pylint: disable=no-name-in-module
+try:
+    from pygame.locals import K_ESCAPE, SRCALPHA, K_w, K_s, K_UP, K_DOWN
+except ImportError as err:
+    print("Could not load module. " + str(err))
+    sys.exit(True)
 
 from tools.font import Font
 from tools.sound import Sound
@@ -77,9 +82,11 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.screen_size = [self.screen.get_size()[0],
                             self.screen.get_size()[1]]
         self.court = pygame.Surface(self.screen_size)
-        self.play_area = pygame.Surface([self.court.get_size()[0] - 2,
-                                         self.court.get_size()[1] - 2],
-                                         SRCALPHA, 32)
+        self.play_area = pygame.Surface(
+            [self.court.get_size()[0] - 2, self.court.get_size()[1] - 2],
+            SRCALPHA,
+            32,
+        )
         self.play_area.convert_alpha()
         self.ball_radius = int(self.play_area.get_size()[0] * 0.03 / 2)
         self.pad_height_half = int(self.play_area.get_size()[1] * 0.2 / 2)
@@ -127,10 +134,15 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         description:
         """
         pygame.draw.rect(
-            self.play_area, (200, 200, 200),
-            [self.ball_position[0] - self.ball_radius,
-            self.ball_position[1] - self.ball_radius,
-            self.ball_radius * 2, self.ball_radius * 2])
+            self.play_area,
+            (200, 200, 200),
+            [
+                self.ball_position[0] - self.ball_radius,
+                self.ball_position[1] - self.ball_radius,
+                self.ball_radius * 2,
+                self.ball_radius * 2
+            ]
+        )
 
     def draw_pad1(self):
         """
@@ -139,14 +151,20 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.pad1_position += self.pad1_vel
         if self.pad1_position - self.pad_height_half < 0:
             self.pad1_position = 0 + self.pad_height_half
-        if self.pad1_position + self.pad_height_half > self.court.get_size()[1]:
-            self.pad1_position = self.court.get_size()[1] - self.pad_height_half
+        if self.pad1_position + self.pad_height_half > \
+           self.court.get_size()[1]:
+            self.pad1_position = \
+                self.court.get_size()[1] - self.pad_height_half
         pygame.draw.rect(
-            self.play_area, (160, 160, 160),
-            [0,
-            self.pad1_position - self.pad_height_half,
-            self.pad_width,
-            self.pad_height])
+            self.play_area,
+            (160, 160, 160),
+            [
+                0,
+                self.pad1_position - self.pad_height_half,
+                self.pad_width,
+                self.pad_height
+            ]
+        )
         self.pad1_vel *= 0.9
 
     def draw_pad2(self):
@@ -156,13 +174,20 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.pad2_position += self.pad2_vel
         if self.pad2_position - self.pad_height_half < 0:
             self.pad2_position = 0 + self.pad_height_half
-        if self.pad2_position + self.pad_height_half > self.court.get_size()[1]:
-            self.pad2_position = self.court.get_size()[1] - self.pad_height_half
-        pygame.draw.rect(self.play_area, (160, 160, 160),
-                         [self.play_area.get_size()[0] - self.pad_width,
-                          self.pad2_position - self.pad_height_half,
-                          self.pad_width,
-                          self.pad_height])
+        if self.pad2_position + self.pad_height_half > \
+           self.court.get_size()[1]:
+            self.pad2_position = self.court.get_size()[1] - \
+                self.pad_height_half
+        pygame.draw.rect(
+            self.play_area,
+            (160, 160, 160),
+            [
+                self.play_area.get_size()[0] - self.pad_width,
+                self.pad2_position - self.pad_height_half,
+                self.pad_width,
+                self.pad_height
+            ]
+        )
         self.pad2_vel *= 0.9
 
     def run(self):
@@ -193,17 +218,25 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         """
         if joystick:
             if joystick['axis'][1] < 0:
-                self.pad1_vel -= self.pad_acceleration * abs(joystick['axis'][1])
-                self.pad1_pressed += self.delta_increment * abs(joystick['axis'][1])
+                self.pad1_vel -= self.pad_acceleration * \
+                    abs(joystick['axis'][1])
+                self.pad1_pressed += self.delta_increment * \
+                    abs(joystick['axis'][1])
             if joystick['axis'][1] > 0:
-                self.pad1_vel += self.pad_acceleration * abs(joystick['axis'][1])
-                self.pad1_pressed += self.delta_increment * abs(joystick['axis'][1])
+                self.pad1_vel += self.pad_acceleration * \
+                    abs(joystick['axis'][1])
+                self.pad1_pressed += self.delta_increment * \
+                    abs(joystick['axis'][1])
             if joystick['axis'][4] < 0:
-                self.pad2_vel -= self.pad_acceleration * abs(joystick['axis'][4])
-                self.pad2_pressed += self.delta_increment * abs(joystick['axis'][4])
+                self.pad2_vel -= self.pad_acceleration * \
+                    abs(joystick['axis'][4])
+                self.pad2_pressed += self.delta_increment * \
+                    abs(joystick['axis'][4])
             if joystick['axis'][4] > 0:
-                self.pad2_vel += self.pad_acceleration * abs(joystick['axis'][4])
-                self.pad2_pressed += self.delta_increment * abs(joystick['axis'][4])
+                self.pad2_vel += self.pad_acceleration * \
+                    abs(joystick['axis'][4])
+                self.pad2_pressed += self.delta_increment * \
+                    abs(joystick['axis'][4])
             if joystick['button'][10]:
                 self.reset()
         if K_ESCAPE in keys:
@@ -290,7 +323,7 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
             if ((self.ball_position[1] + self.ball_radius) >
                     (self.pad1_position - self.pad_height_half)) and \
                ((self.ball_position[1] - self.ball_radius) <
-                (self.pad1_position + self.pad_height_half)):
+                    (self.pad1_position + self.pad_height_half)):
                 self.ball_velocity[0] *= -1.1
                 self.ball_velocity[1] *= 1.1
                 self.sound.tone(900)
@@ -305,7 +338,7 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
             if ((self.ball_position[1] + self.ball_radius) >
                     (self.pad2_position - self.pad_height_half)) and \
                ((self.ball_position[1] - self.ball_radius) <
-                (self.pad2_position + self.pad_height_half)):
+                    (self.pad2_position + self.pad_height_half)):
                 self.ball_velocity[0] *= -1.1
                 self.ball_velocity[1] *= 1.1
                 self.sound.tone(900)

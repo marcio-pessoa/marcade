@@ -10,8 +10,10 @@ people:
 
 import os
 import sys
+import contextlib
 try:
-    import pygame
+    with contextlib.redirect_stdout(None):
+        import pygame
     from pygame.locals import DOUBLEBUF, QUIT, KEYDOWN, K_ESCAPE, KEYUP
 except ImportError as err:
     print("Could not load module. " + str(err))

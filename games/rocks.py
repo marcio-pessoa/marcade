@@ -18,10 +18,16 @@ contributors:
   - name: Gus
 """
 
+import sys
 import math
 import random
 import pygame
-from pygame.locals import SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, K_SPACE, K_a  # pylint: disable=no-name-in-module
+try:
+    from pygame.locals import SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, \
+        K_SPACE, K_a
+except ImportError as err:
+    print("Could not load module. " + str(err))
+    sys.exit(True)
 
 from tools.font import Font
 from tools.sound import Sound
@@ -233,9 +239,7 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
 
 
 class Ship:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Ship class """
 
     def __init__(self, screen):
         self.screen = screen
@@ -273,8 +277,10 @@ class Ship:  # pylint: disable=too-many-instance-attributes
         pygame.draw.polygon(ship, (200, 200, 200),
                             [(0, 30), (15, 0), (30, 30), (15, 23)], 0)
         ship = pygame.transform.rotate(ship, 90)
-        position[0] = self.ship.get_rect().center[0] - ship.get_rect().center[0]
-        position[1] = self.ship.get_rect().center[1] - ship.get_rect().center[1]
+        position[0] = self.ship.get_rect().center[0] - \
+            ship.get_rect().center[0]
+        position[1] = self.ship.get_rect().center[1] - \
+            ship.get_rect().center[1]
         self.ship.blit(ship, position)
         self.__rect = ship.get_rect()
         self.radius = self.ship.get_rect().center[1]
@@ -378,11 +384,10 @@ class Ship:  # pylint: disable=too-many-instance-attributes
 
 
 class Missile:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Missile class """
 
-    def __init__(self, screen, ship_position, ship_radius, ship_speed, ship_angle,):  # pylint: disable=too-many-arguments
+    def __init__(self,  # pylint: disable=too-many-arguments
+                 screen, ship_position, ship_radius, ship_speed, ship_angle):
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0],
                             self.screen.get_size()[1]]
@@ -394,9 +399,12 @@ class Missile:  # pylint: disable=too-many-instance-attributes
                       ship_speed[1] + 5 * forward[1]]
         self.radius = 3
         size = [self.radius * 2, self.radius * 2]
-        position = [self.radius, self.radius]
         self.missile = pygame.Surface(size, SRCALPHA)
-        pygame.draw.circle(self.missile, (210, 210, 210), position, self.radius)
+        pygame.draw.circle(
+            self.missile,
+            (210, 210, 210),
+            [self.radius, self.radius],
+            self.radius)
         self.time_born = pygame.time.get_ticks()
         self.update()
 
@@ -433,9 +441,7 @@ class Missile:  # pylint: disable=too-many-instance-attributes
 
 
 class Sprite:  # pylint: disable=too-many-instance-attributes
-    """
-    description:
-    """
+    """ Sprite class """
 
     def __init__(self, screen):
         self.screen = screen
@@ -455,22 +461,27 @@ class Sprite:  # pylint: disable=too-many-instance-attributes
         pygame.draw.polygon(
             ship,
             [color_tone, color_tone, color_tone],
-            [(random.uniform(0, size[1] / 4),
-                random.uniform(0, size[1] / 3)),
-                (random.uniform(size[0] / 4, size[1] / 1.5),
-                random.uniform(0, size[1] / 2)),
-                (random.uniform(size[0] / 1.5, size[1]),
-                random.uniform(0, size[1] / 2)),
-                (random.uniform(size[0] / 1.1, size[1]),
-                random.uniform(size[0] / 1.5, size[1])),
-                (random.uniform(size[0] / 3, size[1] / 1.5),
-                random.uniform(size[0] / 1.5, size[1])),
+            [
                 (random.uniform(0, size[1] / 4),
-                random.uniform(size[0] / 1.5, size[1])),
-                ], 0)
+                 random.uniform(0, size[1] / 3)),
+                (random.uniform(size[0] / 4, size[1] / 1.5),
+                 random.uniform(0, size[1] / 2)),
+                (random.uniform(size[0] / 1.5, size[1]),
+                 random.uniform(0, size[1] / 2)),
+                (random.uniform(size[0] / 1.1, size[1]),
+                 random.uniform(size[0] / 1.5, size[1])),
+                (random.uniform(size[0] / 3, size[1] / 1.5),
+                 random.uniform(size[0] / 1.5, size[1])),
+                (random.uniform(0, size[1] / 4),
+                 random.uniform(size[0] / 1.5, size[1])),
+            ],
+            0
+        )
         self.ship = pygame.Surface([48, 48], SRCALPHA)
-        position[0] = self.ship.get_rect().center[0] - ship.get_rect().center[0]
-        position[1] = self.ship.get_rect().center[1] - ship.get_rect().center[1]
+        position[0] = self.ship.get_rect().center[0] - \
+            ship.get_rect().center[0]
+        position[1] = self.ship.get_rect().center[1] - \
+            ship.get_rect().center[1]
         self.ship.blit(ship, position)
         self.__rect = ship.get_rect()
         # __spawn_far = pygame.Surface([80, 80], SRCALPHA).get_rect()
