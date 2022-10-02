@@ -1,4 +1,4 @@
-name: Pylint
+name: SAST
 on: [push, pull_request]
 jobs:
   build:
