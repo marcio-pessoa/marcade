@@ -21,6 +21,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r test-requirements.txt
-    - name: Code analysis with pylint
+    - name: Static Application Security Testing (SAST)
       run: |
-        pylint $(find . -name "*.py")
+        bandit -r *.py
