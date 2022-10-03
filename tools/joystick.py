@@ -9,7 +9,6 @@ people:
 """
 
 import pygame
-from pygame.locals import *  # pylint: disable=wildcard-import, unused-import, unused-wildcard-import
 
 
 class Joystick():
