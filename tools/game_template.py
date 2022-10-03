@@ -29,8 +29,11 @@ class Game(ABC):
             keys (_type_): Keyboard commands
             joystick (_type_): Joystick commands
         """
-        return
 
     @abstractmethod
-    def run(self) -> None:
+    def update(self) -> None:
         """ Update game """
+
+    def stop(self) -> None:
+        """ Stop game """
+        pygame.event.clear()

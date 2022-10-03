@@ -37,6 +37,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
 
     def __init__(self, screen: pygame.Surface) -> None:
         super().__init__(screen)
+
         self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
         self.space.convert_alpha()
         self.ship_burst = set()
@@ -101,7 +102,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         self._match()
         self._level_up()
 
-    def run(self):
+    def update(self):
         """
         description:
         """
@@ -134,7 +135,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             if joystick['button'][0] or joystick['button'][7]:
                 self._ship_shoot()
         if K_ESCAPE in keys:
-            self._stop()
+            self.stop()
         if K_RIGHT in keys:
             self.ship.move_right()
         if K_LEFT in keys:
@@ -330,9 +331,6 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 self.explosions.remove(i)
                 return
 
-    def _stop(self):
-        pygame.event.clear()
-
     def _ship_shoot(self):
         # Limit shoot frequency
         if not self.shoot_timer.check():
@@ -381,7 +379,6 @@ class Ship:
             self.__screen.get_size()[1]
         ]
         self.position = [screen_size[0] / 2, screen_size[1] - self.__size[1]]
-        self.start()
 
     def update(self):
         """
@@ -415,12 +412,6 @@ class Ship:
         description:
         """
         return self.position
-
-    def start(self):
-        """
-        description:
-        """
-        self.enable = True
 
     def stop(self):
         """
