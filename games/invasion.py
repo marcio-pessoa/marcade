@@ -27,18 +27,16 @@ except ImportError as err:
 from tools.font import Font
 from tools.sound import Sound
 from tools.timer import Timer
+from tools.game_template import Game
 
 
-class Invasion():  # pylint: disable=too-many-instance-attributes
+class Invasion(Game):  # pylint: disable=too-many-instance-attributes
     """ Invasion game class """
 
     __version__ = '0.5.2'
 
     def __init__(self, screen: pygame.Surface) -> None:
-        self.screen = screen
-        self.screen_size = [
-            self.screen.get_size()[0], self.screen.get_size()[1]
-        ]
+        super().__init__(screen)
         self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
         self.space.convert_alpha()
         self.ship_burst = set()
@@ -47,24 +45,29 @@ class Invasion():  # pylint: disable=too-many-instance-attributes
         self.aliens = set()
         self.explosions = set()
         self.ship = Ship(self.space)
+
+        self.start_march_period = 600
         self.shoot_timer = Timer(50)
-        self.march_timer = Timer(1)
+        self.march_timer = Timer(self.start_march_period)
+
         self.scoreboard = Font(self.space)
         self.scoreboard.size = 3
         self.scoreboard.position = [10, 5]
+
         self.livesboard = Font(self.space)
         self.livesboard.size = 3
         self.livesboard.position = [330, 5]
+
         self.levelboard = Font(self.space)
         self.levelboard.size = 3
         self.levelboard.position = [580, 5]
+
         self.gameovermessage = Font(self.space)
         self.gameovermessage.size = 9
         self.gameovermessage.position = [180, 60]
         self.gameovermessage.color = (230, 230, 230)
+
         self.alien_burst_seed = 2000
-        self.start_march_period = 600
-        self.march_period = self.start_march_period
         self.way = True
         self.drop = False
         self.sound = Sound()
@@ -80,8 +83,7 @@ class Invasion():  # pylint: disable=too-many-instance-attributes
         self.aliens = set()
         self.explosions = set()
         self.alien_burst_seed = 2000
-        self.march_period = self.start_march_period
-        self.march_timer.set(self.march_period)
+        self.march_timer.period = self.start_march_period
         self.way = True
         self.drop = False
         self.ship.reset()
@@ -263,8 +265,7 @@ class Invasion():  # pylint: disable=too-many-instance-attributes
                     self.way = not self.way
                     if self.way:
                         self.drop = True
-                        self.march_period /= 1.15
-                        self.march_timer.set(self.march_period)
+                        self.march_timer.period /= 1.15
                     break
             # Aliens fall down
             for i in self.aliens:
