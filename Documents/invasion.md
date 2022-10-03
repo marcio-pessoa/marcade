@@ -64,6 +64,10 @@ To start game:
 - Name: Raken
 - Points: 5
 
+## Concept art
+
+![Raken](Pictures/concept_art.jpg)
+
 ## Contributors
 
 ### Developers
