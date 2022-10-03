@@ -31,18 +31,18 @@ except ImportError as err:
 
 from tools.font import Font
 from tools.sound import Sound
+from tools.game_template import Game
 
 
-class Rocks:  # pylint: disable=too-many-instance-attributes
+class Rocks(Game):  # pylint: disable=too-many-instance-attributes
     """ Rocks game class """
 
     __version__ = '0.5.2'
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.running = False
+    def __init__(self, screen: pygame.Surface):
+        super().__init__(screen)
+
         self.sound = Sound()
-        self.running = True
         self.size_set()
         self.pad_acceleration = 1
         self.court_side = 1
@@ -97,7 +97,7 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
         self.burst = set()
         self.ship.reset()
 
-    def run(self):
+    def update(self):
         """
         description:
         """
@@ -181,13 +181,6 @@ class Rocks:  # pylint: disable=too-many-instance-attributes
             if i.age() >= 3000:
                 self.burst.remove(i)
                 break
-
-    def stop(self):
-        """
-        description:
-        """
-        pygame.event.clear()
-        self.running = False
 
     def shoot(self):
         """

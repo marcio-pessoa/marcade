@@ -26,16 +26,17 @@ except ImportError as err:
 
 from tools.font import Font
 from tools.sound import Sound
+from tools.game_template import Game
 
 
-class Pongue:  # pylint: disable=too-many-instance-attributes
+class Pongue(Game):  # pylint: disable=too-many-instance-attributes
     """ Pongue game class """
 
     __version__ = '0.6.4'
 
-    def __init__(self, screen):
-        self.screen = screen
-        self.running = False
+    def __init__(self, screen: pygame.Surface):
+        super().__init__(screen)
+
         self.pad1_position = [0, 0]
         self.pad2_position = [0, 0]
         self.pad1_vel = 0
@@ -58,7 +59,6 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.play_area = 0
         self.score_player1 = 0
         self.score_player2 = 0
-        self.running = True
         self.size_set()
         self.pad_acceleration = 1
         self.delta_increment = 6
@@ -190,7 +190,7 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         )
         self.pad2_vel *= 0.9
 
-    def run(self):
+    def update(self):
         """
         description:
         """
@@ -204,13 +204,6 @@ class Pongue:  # pylint: disable=too-many-instance-attributes
         self.screen.blit(self.court, [0, 0])
         self.screen.blit(self.play_area, [1, 1])
         return False
-
-    def stop(self):
-        """
-        description:
-        """
-        pygame.event.clear()
-        self.running = False
 
     def control(self, keys, joystick):
         """
