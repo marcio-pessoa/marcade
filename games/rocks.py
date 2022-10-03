@@ -191,7 +191,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
                 self.reset()
             if joystick['button'][0]:
                 self.shoot()
-        if K_ESCAPE in keys:  # pylint: disable=undefined-variable
+        if K_ESCAPE in keys:
             self.stop()
         if K_UP in keys:
             self.ship.thrust_on()
