@@ -23,4 +23,4 @@ jobs:
         pip install -r test-requirements.txt
     - name: Code analysis with Flake8
       run: |
-        flake8 . --count --max-complexity=10 --statistics
+        flake8 . --count --max-complexity=20 --statistics
