@@ -38,46 +38,36 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
     def __init__(self, screen: pygame.Surface) -> None:
         super().__init__(screen)
 
-        self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
-        self.space.convert_alpha()
         self.ship_burst = set()
         self.alien_burst = set()
         self.walls = set()
         self.aliens = set()
         self.explosions = set()
-        self.ship = Ship(self.space)
+        self.ship = Ship(self.canvas)
 
         self.start_march_period = 600
         self.shoot_timer = Timer(50)
         self.march_timer = Timer(self.start_march_period)
 
-        self.scoreboard = Font(self.space)
+        self.scoreboard = Font(self.canvas)
         self.scoreboard.size = 3
         self.scoreboard.position = [10, 5]
 
-        self.livesboard = Font(self.space)
+        self.livesboard = Font(self.canvas)
         self.livesboard.size = 3
         self.livesboard.position = [330, 5]
 
-        self.levelboard = Font(self.space)
+        self.levelboard = Font(self.canvas)
         self.levelboard.size = 3
         self.levelboard.position = [580, 5]
-
-        self.gameovermessage = Font(self.space)
-        self.gameovermessage.size = 9
-        self.gameovermessage.position = [180, 60]
-        self.gameovermessage.color = (230, 230, 230)
 
         self.alien_burst_seed = 2000
         self.way = True
         self.drop = False
         self.sound = Sound()
-        self._reset_match()
+        self.reset()
 
-    def _match(self):
-        """
-        description:
-        """
+    def start(self):
         self.ship_burst = set()
         self.alien_burst = set()
         self.walls = set()
@@ -91,22 +81,16 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         self._walls_deploy()
         self._aliens_deploy()
 
-    def _reset_match(self):
-        """
-        description:
-        """
+    def reset(self):
         self.level = 0
         self.lives = 2
         self.score = 0
         self.start_march_period = 600
-        self._match()
+        self.start()
         self._level_up()
 
     def update(self):
-        """
-        description:
-        """
-        self.space.fill([0, 0, 0])  # Black
+        self.canvas.fill([0, 0, 0])  # Black
         self._score_update()
         self._burst_update()
         self._walls_update()
@@ -116,13 +100,10 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         self._collision_check()
         self._aliens_check()
         self._lives_check()
-        self.screen.blit(self.space, [0, 0])
+        self.screen.blit(self.canvas, [0, 0])
         return False
 
     def control(self, keys, joystick):
-        """
-        description:
-        """
         if joystick:
             if joystick['hat'][0]['x'] < 0 or \
                joystick['axis'][0] < 0:
@@ -131,7 +112,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                joystick['axis'][0] > 0:
                 self.ship.move_right()
             if joystick['button'][10]:
-                self._reset_match()
+                self.reset()
             if joystick['button'][0] or joystick['button'][7]:
                 self._ship_shoot()
         if K_ESCAPE in keys:
@@ -143,7 +124,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         if K_SPACE in keys or K_a in keys:
             self._ship_shoot()
         if K_RETURN in keys:
-            self._reset_match()
+            self.reset()
 
     def _lives_check(self):
         if self.lives == 0:
@@ -155,7 +136,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             for j in self.ship_burst:
                 if i.rect.colliderect(j.rect):
                     position = i.get_position()
-                    explosion = Explosion(self.space, position)
+                    explosion = Explosion(self.canvas, position)
                     self.explosions.add(explosion)
                     self.score += i.points
                     self.aliens.remove(i)
@@ -186,10 +167,10 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             for j in self.walls:
                 if i.rect.colliderect(j.rect):
                     position = i.get_position()
-                    explosion = Explosion(self.space, position)
+                    explosion = Explosion(self.canvas, position)
                     self.explosions.add(explosion)
                     position = j.get_position()
-                    explosion = Explosion(self.space, position)
+                    explosion = Explosion(self.canvas, position)
                     self.explosions.add(explosion)
                     self.aliens.remove(i)
                     self.walls.remove(j)
@@ -199,10 +180,10 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.aliens:
             if i.rect.colliderect(self.ship.rect):
                 position = i.get_position()
-                explosion = Explosion(self.space, position)
+                explosion = Explosion(self.canvas, position)
                 self.explosions.add(explosion)
                 position = self.ship.get_position()
-                explosion = Explosion(self.space, position)
+                explosion = Explosion(self.canvas, position)
                 self.explosions.add(explosion)
                 self.aliens.remove(i)
                 self.lives -= 1
@@ -212,7 +193,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.alien_burst:
             if i.rect.colliderect(self.ship.rect):
                 position = self.ship.get_position()
-                explosion = Explosion(self.space, position)
+                explosion = Explosion(self.canvas, position)
                 self.explosions.add(explosion)
                 self.alien_burst.remove(i)
                 self.lives -= 1
@@ -236,7 +217,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for cartesian_y in range(formation[1]):
             for cartesian_x in range(formation[0]):
                 monster = Monster(
-                    self.space,
+                    self.canvas,
                     cartesian_y,
                     [
                         (
@@ -262,7 +243,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             self.sound.tone(600)
             # Aliens lateral boundaries
             for i in self.aliens:
-                if not self.space.get_rect().contains(i.rect):
+                if not self.canvas.get_rect().contains(i.rect):
                     self.way = not self.way
                     if self.way:
                         self.drop = True
@@ -281,7 +262,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.aliens:
             i.update()
             if random.randrange(self.alien_burst_seed) == 1:
-                shoot = Missile(self.space,
+                shoot = Missile(self.canvas,
                                 i.get_position(), i.get_radius(), 4, -1)
                 self.alien_burst.add(shoot)
                 break
@@ -294,7 +275,11 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             i.stop()
         for i in self.alien_burst:
             i.stop()
-        self.gameovermessage.echo("GAME OVER")
+        message = Font(self.canvas)
+        message.size = 9
+        message.position = [180, 60]
+        message.color = (96, 5, 5)
+        message.echo("GAME OVER")
 
     def _aliens_check(self):
         if len(self.aliens) == 0:
@@ -305,14 +290,14 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         self.lives += 1
         self.alien_burst_seed -= self.level * 100
         self.start_march_period -= self.start_march_period * self.level / 20
-        self._match()
+        self.start()
 
     def _walls_deploy(self):
         quantity = 4
         for i in range(quantity):
             position = (self.screen.get_size()[0] / quantity * i +
                         (self.screen.get_size()[0] / quantity / 2 - 24), 400)
-            barrier = Barrier(self.space, position)
+            barrier = Barrier(self.canvas, position)
             self.walls.add(barrier)
 
     def _walls_update(self):
@@ -339,7 +324,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         if len(self.ship_burst) >= 1:
             return
         # Shoot!
-        shoot = Missile(self.space,
+        shoot = Missile(self.canvas,
                         self.ship.get_position(), self.ship.radius, 5)
         self.ship_burst.add(shoot)
         self.sound.tone(1200)
@@ -379,6 +364,7 @@ class Ship:
             self.__screen.get_size()[1]
         ]
         self.position = [screen_size[0] / 2, screen_size[1] - self.__size[1]]
+        self.enable = True
 
     def update(self):
         """

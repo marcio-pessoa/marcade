@@ -54,8 +54,6 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.court_side = 1
         self.pad_acceleration = 1
         self.delta_increment = 6
-        self.screen_size = []
-        self.court = 0
         self.play_area = 0
         self.score_player1 = 0
         self.score_player2 = 0
@@ -64,12 +62,14 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.delta_increment = 6
         self.court_side = 1
         self.reset()
-        self.set()
+        self.start()
         self.ball_spawn()
+
         self.score_player1 = Font(self.play_area)
         self.score_player1.size = 5
         self.score_player1.position = [290, 20]
         self.score_player1.color = (120, 120, 120)
+
         self.score_player2 = Font(self.play_area)
         self.score_player2.size = 5
         self.score_player2.position = [480, 20]
@@ -79,11 +79,8 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        self.screen_size = [self.screen.get_size()[0],
-                            self.screen.get_size()[1]]
-        self.court = pygame.Surface(self.screen_size)
         self.play_area = pygame.Surface(
-            [self.court.get_size()[0] - 2, self.court.get_size()[1] - 2],
+            [self.canvas.get_size()[0] - 2, self.canvas.get_size()[1] - 2],
             SRCALPHA,
             32,
         )
@@ -93,26 +90,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.pad_width = int(self.play_area.get_size()[0] * 0.015)
         self.pad_height = self.pad_height_half * 2
 
-    def size_reset(self):
-        """
-        description:
-        """
-        # Discover new size factor
-        x_factor = self.screen.get_size()[0] / self.screen_size[0]
-        y_factor = self.screen.get_size()[1] / self.screen_size[1]
-        # Set objects new size
-        self.ball_position[0] *= x_factor
-        self.ball_position[1] *= y_factor
-        self.pad1_position *= y_factor
-        self.pad2_position *= y_factor
-        self.ball_velocity[0] *= x_factor
-        self.ball_velocity[1] *= y_factor
-        self.size_set()
-
-    def set(self):
-        """
-        description:
-        """
+    def start(self):
         self.pad1_position = int(self.play_area.get_size()[1] / 2)
         self.pad2_position = int(self.play_area.get_size()[1] / 2)
         self.pad1_vel = 0
@@ -124,9 +102,6 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
                               self.play_area.get_size()[1] / 2]
 
     def reset(self):
-        """
-        description:
-        """
         self.score = [0, 0]
 
     def draw_ball(self):
@@ -152,9 +127,9 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         if self.pad1_position - self.pad_height_half < 0:
             self.pad1_position = 0 + self.pad_height_half
         if self.pad1_position + self.pad_height_half > \
-           self.court.get_size()[1]:
+           self.canvas.get_size()[1]:
             self.pad1_position = \
-                self.court.get_size()[1] - self.pad_height_half
+                self.canvas.get_size()[1] - self.pad_height_half
         pygame.draw.rect(
             self.play_area,
             (160, 160, 160),
@@ -175,8 +150,8 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         if self.pad2_position - self.pad_height_half < 0:
             self.pad2_position = 0 + self.pad_height_half
         if self.pad2_position + self.pad_height_half > \
-           self.court.get_size()[1]:
-            self.pad2_position = self.court.get_size()[1] - \
+           self.canvas.get_size()[1]:
+            self.pad2_position = self.canvas.get_size()[1] - \
                 self.pad_height_half
         pygame.draw.rect(
             self.play_area,
@@ -191,9 +166,6 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.pad2_vel *= 0.9
 
     def update(self):
-        """
-        description:
-        """
         self.draw_court()
         self.draw_pad1()
         self.draw_pad2()
@@ -201,14 +173,11 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.ball_check()
         self.score_player1.echo(str(self.score[0]))
         self.score_player2.echo(str(self.score[1]))
-        self.screen.blit(self.court, [0, 0])
+        self.screen.blit(self.canvas, [0, 0])
         self.screen.blit(self.play_area, [1, 1])
         return False
 
     def control(self, keys, joystick):
-        """
-        description:
-        """
         if joystick:
             if joystick['axis'][1] < 0:
                 self.pad1_vel -= self.pad_acceleration * \
@@ -253,7 +222,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         if direction is RIGHT, the ball's velocity is upper right, else
         upper left
         """
-        self.set()
+        self.start()
         self.ball_velocity[0] = (random.randrange(100, 200) / 50.0 *
                                  self.court_side)
         self.ball_velocity[1] = 0
@@ -268,25 +237,25 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         description:
         """
         # Clear court
-        self.court.fill([0, 0, 0])  # Black
+        self.canvas.fill([0, 0, 0])  # Black
         self.play_area.fill([0, 0, 0])  # Black
         # Draw gutters
-        pygame.draw.line(self.court, (100, 100, 100),
+        pygame.draw.line(self.canvas, (100, 100, 100),
                          [0, 0],
                          [0,
-                          self.court.get_size()[1] - 1])
-        pygame.draw.line(self.court, (100, 100, 100),
+                          self.canvas.get_size()[1] - 1])
+        pygame.draw.line(self.canvas, (100, 100, 100),
                          [0, 0],
-                         [self.court.get_size()[0] - 1, 0])
-        pygame.draw.line(self.court, (100, 100, 100),
-                         [self.court.get_size()[0] - 1, 0],
-                         [self.court.get_size()[0] - 1,
-                          self.court.get_size()[1]])
-        pygame.draw.line(self.court, (100, 100, 100),
+                         [self.canvas.get_size()[0] - 1, 0])
+        pygame.draw.line(self.canvas, (100, 100, 100),
+                         [self.canvas.get_size()[0] - 1, 0],
+                         [self.canvas.get_size()[0] - 1,
+                          self.canvas.get_size()[1]])
+        pygame.draw.line(self.canvas, (100, 100, 100),
                          [0,
-                          self.court.get_size()[1] - 1],
-                         [self.court.get_size()[0] - 1,
-                          self.court.get_size()[1] - 1])
+                          self.canvas.get_size()[1] - 1],
+                         [self.canvas.get_size()[0] - 1,
+                          self.canvas.get_size()[1] - 1])
         # Draw mid dashed line
         for i in range(0, self.play_area.get_size()[1], 5):
             pygame.draw.line(self.play_area, (128, 128, 128),

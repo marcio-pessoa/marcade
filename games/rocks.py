@@ -43,54 +43,32 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         super().__init__(screen)
 
         self.sound = Sound()
-        self.size_set()
         self.pad_acceleration = 1
         self.court_side = 1
-        self.set()
-        self.ship.start()
-        self.scoreboard = Font(self.space)
+
+        self.scoreboard = Font(self.canvas)
         self.scoreboard.size = 3
         self.scoreboard.position = [10, 10]
         self.scoreboard.color = (100, 100, 100)
-        self.livesboard = Font(self.space)
+
+        self.livesboard = Font(self.canvas)
         self.livesboard.size = 3
         self.livesboard.position = [300, 10]
         self.livesboard.color = (100, 100, 100)
+
         self.lives = 3
         self.score = 0
         self.rock_group = set()
         self.burst = set()
 
-    def size_set(self):
-        """
-        description:
-        """
-        self.screen_size = [
-            self.screen.get_size()[0],
-            self.screen.get_size()[1]]
-        self.space = pygame.Surface(self.screen_size, SRCALPHA, 32)
-        self.space.convert_alpha()
+        self.ship = Ship(self.canvas)
+        self.start()
 
-    def set(self):
-        """
-        description:
-        """
-        self.ship = Ship(self.space)
+    def start(self):
+        self.ship.start()
         self.reset()
 
-    def size_reset(self):
-        """
-        description:
-        """
-        # Discover new size factor
-        # x_factor = self.screen.get_size()[0] / self.screen_size[0]
-        # y_factor = self.screen.get_size()[1] / self.screen_size[1]
-        self.size_set()
-
     def reset(self):
-        """
-        description:
-        """
         self.lives = 3
         self.score = 0
         self.rock_group = set()
@@ -98,11 +76,8 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         self.ship.reset()
 
     def update(self):
-        """
-        description:
-        """
         # Draw Space
-        self.space.fill([0, 0, 0])  # Black
+        self.canvas.fill([0, 0, 0])  # Black
         # Draw objects (ship, rocks, missiles, etc...)
         self.ship.update()
         self.burst_update()
@@ -112,7 +87,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         if not self.lives:
             self.reset()
         # Join everything
-        self.screen.blit(self.space, [0, 0])
+        self.screen.blit(self.canvas, [0, 0])
         return False
 
     def update_scoreboard(self):
@@ -162,7 +137,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         """
         # Need more?
         while len(self.rock_group) < 8:
-            rock = Sprite(self.space)
+            rock = Sprite(self.canvas)
             if not rock.get_rect().colliderect(self.ship.get_double_rect()):
                 self.rock_group.add(rock)
         # Update position
@@ -191,7 +166,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
             return
         # Shoot!
         shoot = Missile(
-            self.space,
+            self.canvas,
             self.ship.get_position(), self.ship.get_radius(),
             self.ship.get_speed(), self.ship.get_angle())
         self.burst.add(shoot)
@@ -420,12 +395,6 @@ class Missile:  # pylint: disable=too-many-instance-attributes
         """
         return pygame.time.get_ticks() - self.time_born
 
-    def get_radius(self):
-        """
-        description:
-        """
-        return self.radius
-
     def get_rect(self):
         """
         description:
@@ -437,9 +406,9 @@ class Sprite:  # pylint: disable=too-many-instance-attributes
     """ Sprite class """
 
     def __init__(self, screen):
-        self.screen = screen
-        self.screen_size = [self.screen.get_size()[0],
-                            self.screen.get_size()[1]]
+        self.__screen = screen
+        self.screen_size = [self.__screen.get_size()[0],
+                            self.__screen.get_size()[1]]
         self.position = [random.uniform(0.0, 1.0) * self.screen_size[0],
                          random.uniform(0.0, 1.0) * self.screen_size[1]]
         self.speed = [random.uniform(-0.5, 0.5),
@@ -532,7 +501,7 @@ class Sprite:  # pylint: disable=too-many-instance-attributes
         ship = rot_image.subsurface(rot_rect).copy()
         self.radius = ship.get_rect().center[0]
         self.rect = self.__rect.move(position)
-        self.screen.blit(ship, position)
+        self.__screen.blit(ship, position)
 
     def get_size(self):
         """
