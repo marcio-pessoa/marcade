@@ -21,6 +21,7 @@ except ImportError as err:
 
 from tools import joystick
 from tools.log import log
+from tools.game_template import Game
 
 
 RATE = 60  # FPS
@@ -34,7 +35,7 @@ class Arcade():
         game (class): The desired game class
     """
 
-    def __init__(self, game_class) -> None:
+    def __init__(self, game_class: Game) -> None:
         self.__game_class = game_class
         log.info(
             "Starting %s version %s",
@@ -56,11 +57,11 @@ class Arcade():
     def run(self) -> None:
         """ Run game """
         self.__running = True
-        game = self.__game_class(self.__screen)
+        game: Game = self.__game_class(self.__screen)
         while self.__running:
             keyboard, joypad = self.__check_event()
             game.control(keyboard, joypad)
-            game.run()
+            game.update()
             self.__clock.tick(RATE)
             pygame.display.flip()
 
