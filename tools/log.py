@@ -26,11 +26,9 @@ class Log:
 
     def start(self) -> None:
         """ Start log system """
-        formatter = logging.Formatter(
-            fmt=self.name + ' [%(process)d]: %(levelname)s: %(message)s'
-        )
+        fmt = self.name + ' [%(process)d]: %(levelname)s: %(message)s'
         handler = logging.StreamHandler(sys.stdout)
-        handler.setFormatter(formatter)
+        handler.setFormatter(CustomFormatter(fmt))
         self.logger.addHandler(handler)
         self.logger.setLevel(self.__verbosity)
 
@@ -58,6 +56,32 @@ class Log:
         else:
             self.__verbosity = logging.ERROR
         self.start()
+
+
+class CustomFormatter(logging.Formatter):
+    """ Add colors to log """
+    grey = '\x1b[38;21m'
+    blue = '\x1b[38;5;39m'
+    yellow = '\x1b[38;5;226m'
+    red = '\x1b[38;5;196m'
+    bold_red = '\x1b[31;1m'
+    reset = '\x1b[0m'
+
+    def __init__(self, fmt):
+        super().__init__()
+        self.fmt = fmt
+        self.formats = {
+            logging.DEBUG: self.grey + self.fmt + self.reset,
+            logging.INFO: self.blue + self.fmt + self.reset,
+            logging.WARNING: self.yellow + self.fmt + self.reset,
+            logging.ERROR: self.red + self.fmt + self.reset,
+            logging.CRITICAL: self.bold_red + self.fmt + self.reset
+        }
+
+    def format(self, record):
+        log_fmt = self.formats.get(record.levelno)
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
 
 
 log = Log().logger
