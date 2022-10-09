@@ -262,8 +262,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.aliens:
             i.update()
             if random.randrange(self.alien_burst_seed) == 1:
-                shoot = Missile(self.canvas,
-                                i.get_position(), i.get_radius(), 4, -1)
+                shoot = Missile(self.canvas, i.get_position(), 4, -1)
                 self.alien_burst.add(shoot)
                 break
 
@@ -324,8 +323,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         if len(self.ship_burst) >= 1:
             return
         # Shoot!
-        shoot = Missile(self.canvas,
-                        self.ship.get_position(), self.ship.radius, 5)
+        shoot = Missile(self.canvas, self.ship.get_position(), 5)
         self.ship_burst.add(shoot)
         self.sound.tone(1200)
 
@@ -406,27 +404,28 @@ class Ship:
         self.enable = False
 
 
-class Missile:   # pylint: disable=too-many-arguments
+class Missile:
     """ Missile class """
 
-    def __init__(self, screen, ship_position, offset, speed, direction=1):
+    def __init__(self, screen, ship_position, speed, direction=1):
         self.screen = screen
         self.out = False
         self.speed = speed * direction
-        size = [8, 16]
         sprite = (
             "##",
             "##",
             "##",
             "##",
         )
+        size = [8, 16]
         self.shape = pygame.Surface(size, SRCALPHA)
         _draw(self.shape, sprite, (250, 250, 250), 4)
+        radius = 24
         if direction == 1:
-            self.position = [ship_position[0] + offset - size[0] / 2,
+            self.position = [ship_position[0] + radius - size[0] / 2,
                              ship_position[1] - size[1]]
         elif direction == -1:
-            self.position = [ship_position[0] + offset - size[0] / 2,
+            self.position = [ship_position[0] + radius - size[0] / 2,
                              ship_position[1] + size[1] + 20]
         self.enable = True
         self.update()
@@ -455,7 +454,7 @@ class Missile:   # pylint: disable=too-many-arguments
         self.enable = False
 
 
-class Monster:  # pylint: disable=too-many-instance-attributes
+class Monster:
     """ Monster class """
     __aliens = (
         (
@@ -635,50 +634,51 @@ class Monster:  # pylint: disable=too-many-instance-attributes
         (100, 100, 200),
         (200, 100, 100)
     )
+    __size = [48, 32]
 
     def __init__(self, screen, aspect, position):
-        self.screen = screen
-        self.aspect = aspect % 6
-        self.position = position
-        self.alien = self.__aliens[self.aspect]
-        self.size = [48, 32]
-        self._color = self.__color[self.aspect]
-        self.shape = pygame.Surface(self.size, SRCALPHA)
+        self.__screen = screen
+        self.__aspect = aspect % 6
+        self.__position = position
+        self.points = 10 - self.__aspect
+        self.alien = self.__aliens[self.__aspect]
+        self.__shape = pygame.Surface(self.__size, SRCALPHA)
         self.caray = 0
-        self.radius = self.shape.get_rect().center[0]
-        _draw(self.shape, self.alien[0], self._color, 4)
-        self.points = 10 - aspect
+        self.radius = self.__shape.get_rect().center[0]
         self.enable = True
-        self.rect = self.shape.get_rect().move(self.position)
+
+        color = self.__color[self.__aspect]
+        _draw(self.__shape, self.alien[0], color, 4)
+
+        self.update()
 
     def update(self):
-        """
-        description:
-        """
-        self.rect = self.shape.get_rect().move(self.position)
-        self.screen.blit(self.shape, self.position)
+        """ Update shape and position """
+        self.rect = self.__shape.get_rect().move(self.__position)
+        self.__screen.blit(self.__shape, self.__position)
 
     def march(self, way, drop):
         """
         description:
         """
+        color = self.__color[self.__aspect]
         if not self.enable:
             return
         if way:
             increment = 1
         else:
             increment = -1
-        self.position[0] += increment * 4
+        self.__position[0] += increment * 4
         if drop:
-            self.position[1] += increment * 16
-        _draw(self.shape, self.alien[self.caray], self._color, 4)
+            self.__position[1] += increment * 16
+        _draw(self.__shape, self.alien[self.caray], color, 4)
         self.caray = (self.caray + 1) % 2
 
     def get_position(self):
         """
         description:
         """
-        return self.position
+        return self.__position
 
     def get_radius(self):
         """
@@ -690,7 +690,7 @@ class Monster:  # pylint: disable=too-many-instance-attributes
         """
         description:
         """
-        return self.size
+        return self.__size
 
     def stop(self):
         """
