@@ -22,12 +22,7 @@ from games.rocks import Rocks
 
 
 class MArcade():
-    """ MArcade class
-
-    argparse reference:
-      - https://docs.python.org/2/library/argparse.html
-      - http://chase-seibert.github.io/blog/
-    """
+    """ MArcade class """
 
     __version__ = '0.3.4'
     __date__ = "2022-10-01"
@@ -41,10 +36,10 @@ class MArcade():
             formatter_class=argparse.RawDescriptionHelpFormatter,
             add_help=True,
             usage=(
-                'marcade <game> [<args>]\n\n' +
-                'Games:\n' +
-                '  invasion       based on memorable Space Invaders\n' +
-                '  pongue         based on classic Pong\n' +
+                'marcade <game> [<args>]\n\n'
+                'Games:\n'
+                '  invasion       based on memorable Space Invaders\n'
+                '  pongue         based on classic Pong\n'
                 '  rocks          based on amazing Asteroids\n\n'
             ),
             epilog=(
