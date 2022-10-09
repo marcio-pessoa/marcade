@@ -388,28 +388,33 @@ class Ship:
 class Missile:
     """ Missile class """
 
+    __sprite = (
+        "##",
+        "##",
+        "##",
+        "##",
+    )
+    __size = [8, 16]
+    __radius = 24
+
     def __init__(self, screen, ship_position, speed, direction=1):
         self.screen = screen
         self.out = False
         self.speed = speed * direction
-        sprite = (
-            "##",
-            "##",
-            "##",
-            "##",
-        )
-        size = [8, 16]
-        self.shape = pygame.Surface(size, SRCALPHA)
-        _draw(self.shape, sprite, (250, 250, 250), 4)
-        radius = 24
-        if direction == 1:
-            self.position = [ship_position[0] + radius - size[0] / 2,
-                             ship_position[1] - size[1]]
-        elif direction == -1:
-            self.position = [ship_position[0] + radius - size[0] / 2,
-                             ship_position[1] + size[1] + 20]
+        self.shape = pygame.Surface(self.__size, SRCALPHA)
         self.enable = True
+        self.position = self._position_calc(ship_position, direction)
+        _draw(self.shape, self.__sprite, (250, 250, 250), 4)
         self.update()
+
+    def _position_calc(self, ship_position, direction):
+        position = [0, 0]
+        position[0] = ship_position[0] + self.__radius - self.__size[0] / 2
+        if direction == 1:
+            position[1] = ship_position[1] - self.__size[1]
+        elif direction == -1:
+            position[1] = ship_position[1] + self.__size[1] + 20
+        return position
 
     def update(self):
         """
@@ -721,6 +726,7 @@ class Barrier:
             "###      ###",
         )
     )
+    points = 1
 
     def __init__(self, screen, position):
         self.__screen = screen
@@ -728,7 +734,6 @@ class Barrier:
         self.status = len(self.__sprites) - 1
         self.shape = pygame.Surface([48, 32], SRCALPHA)
         _draw(self.shape, self.__sprites[self.status], self.__color, 4)
-        self.points = 1
         self.rect = self.shape.get_rect().move(self.position)
 
     def update(self):
