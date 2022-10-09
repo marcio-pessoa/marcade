@@ -33,7 +33,7 @@ from tools.game_template import Game
 class Invasion(Game):  # pylint: disable=too-many-instance-attributes
     """ Invasion game class """
 
-    __version__ = '0.5.2'
+    __version__ = '0.5.3'
 
     def __init__(self, screen: pygame.Surface) -> None:
         super().__init__(screen)
@@ -44,6 +44,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         self.aliens = set()
         self.explosions = set()
         self.ship = Ship(self.canvas)
+        self.lives = 0
 
         self.start_march_period = 600
         self.shoot_timer = Timer(50)
@@ -135,8 +136,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.aliens:
             for j in self.ship_burst:
                 if i.rect.colliderect(j.rect):
-                    position = i.get_position()
-                    explosion = Explosion(self.canvas, position)
+                    explosion = Explosion(self.canvas, i.position)
                     self.explosions.add(explosion)
                     self.score += i.points
                     self.aliens.remove(i)
@@ -166,11 +166,9 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         for i in self.aliens:
             for j in self.walls:
                 if i.rect.colliderect(j.rect):
-                    position = i.get_position()
-                    explosion = Explosion(self.canvas, position)
+                    explosion = Explosion(self.canvas, i.position)
                     self.explosions.add(explosion)
-                    position = j.get_position()
-                    explosion = Explosion(self.canvas, position)
+                    explosion = Explosion(self.canvas, j.position)
                     self.explosions.add(explosion)
                     self.aliens.remove(i)
                     self.walls.remove(j)
@@ -179,11 +177,9 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         # Ship against Alien
         for i in self.aliens:
             if i.rect.colliderect(self.ship.rect):
-                position = i.get_position()
-                explosion = Explosion(self.canvas, position)
+                explosion = Explosion(self.canvas, i.position)
                 self.explosions.add(explosion)
-                position = self.ship.get_position()
-                explosion = Explosion(self.canvas, position)
+                explosion = Explosion(self.canvas, self.ship.position)
                 self.explosions.add(explosion)
                 self.aliens.remove(i)
                 self.lives -= 1
@@ -192,8 +188,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         # Alien Missle againt Ship
         for i in self.alien_burst:
             if i.rect.colliderect(self.ship.rect):
-                position = self.ship.get_position()
-                explosion = Explosion(self.canvas, position)
+                explosion = Explosion(self.canvas, self.ship.position)
                 self.explosions.add(explosion)
                 self.alien_burst.remove(i)
                 self.lives -= 1
@@ -255,25 +250,25 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             self.drop = False
         # Aliens landing
         for i in self.aliens:
-            if i.get_position()[1] + i.get_size()[1] >= self.screen_size[1]:
-                self._game_over()
+            if i.position[1] + i.size[1] >= self.screen_size[1]:
+                self.lives = 0
                 break
         # Fire
         for i in self.aliens:
             i.update()
             if random.randrange(self.alien_burst_seed) == 1:
-                shoot = Missile(self.canvas, i.get_position(), 4, -1)
+                shoot = Missile(self.canvas, i.position, 4, -1)
                 self.alien_burst.add(shoot)
                 break
 
     def _game_over(self):
-        self.ship.stop()
+        self.ship.enable = False
         for i in self.aliens:
-            i.stop()
+            i.enable = False
         for i in self.ship_burst:
-            i.stop()
+            i.enable = False
         for i in self.alien_burst:
-            i.stop()
+            i.enable = False
         message = Font(self.canvas)
         message.size = 9
         message.position = [180, 60]
@@ -323,7 +318,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         if len(self.ship_burst) >= 1:
             return
         # Shoot!
-        shoot = Missile(self.canvas, self.ship.get_position(), 5)
+        shoot = Missile(self.canvas, self.ship.position, 5)
         self.ship_burst.add(shoot)
         self.sound.tone(1200)
 
@@ -379,29 +374,15 @@ class Ship:
         """
         description:
         """
-        if not self.enable:
-            return
-        self.position[0] += self.__move_increment
+        if self.enable:
+            self.position[0] += self.__move_increment
 
     def move_left(self):
         """
         description:
         """
-        if not self.enable:
-            return
-        self.position[0] -= self.__move_increment
-
-    def get_position(self):
-        """
-        description:
-        """
-        return self.position
-
-    def stop(self):
-        """
-        description:
-        """
-        self.enable = False
+        if self.enable:
+            self.position[0] -= self.__move_increment
 
 
 class Missile:
@@ -446,12 +427,6 @@ class Missile:
         description:
         """
         return self.out
-
-    def stop(self):
-        """
-        description:
-        """
-        self.enable = False
 
 
 class Monster:
@@ -634,28 +609,33 @@ class Monster:
         (100, 100, 200),
         (200, 100, 100)
     )
-    __size = [48, 32]
+    size = [48, 32]
 
     def __init__(self, screen, aspect, position):
+        self.__shape = pygame.Surface(self.size, SRCALPHA)
         self.__screen = screen
         self.__aspect = aspect % 6
-        self.__position = position
-        self.points = 10 - self.__aspect
-        self.alien = self.__aliens[self.__aspect]
-        self.__shape = pygame.Surface(self.__size, SRCALPHA)
-        self.caray = 0
-        self.radius = self.__shape.get_rect().center[0]
+        self.position = position
+        self.pose = 0
         self.enable = True
 
         color = self.__color[self.__aspect]
-        _draw(self.__shape, self.alien[0], color, 4)
-
+        _draw(self.__shape, self.__aliens[self.__aspect][self.pose], color, 4)
         self.update()
+
+    @property
+    def points(self) -> int:
+        """ Points per monster getter
+
+        Returns:
+            int: Monster points
+        """
+        return 10 - self.__aspect
 
     def update(self):
         """ Update shape and position """
-        self.rect = self.__shape.get_rect().move(self.__position)
-        self.__screen.blit(self.__shape, self.__position)
+        self.rect = self.__shape.get_rect().move(self.position)
+        self.__screen.blit(self.__shape, self.position)
 
     def march(self, way, drop):
         """
@@ -668,119 +648,95 @@ class Monster:
             increment = 1
         else:
             increment = -1
-        self.__position[0] += increment * 4
+        self.position[0] += increment * 4
         if drop:
-            self.__position[1] += increment * 16
-        _draw(self.__shape, self.alien[self.caray], color, 4)
-        self.caray = (self.caray + 1) % 2
-
-    def get_position(self):
-        """
-        description:
-        """
-        return self.__position
-
-    def get_radius(self):
-        """
-        description:
-        """
-        return self.radius
-
-    def get_size(self):
-        """
-        description:
-        """
-        return self.__size
-
-    def stop(self):
-        """
-        description:
-        """
-        self.enable = False
+            self.position[1] += increment * 16
+        _draw(self.__shape, self.__aliens[self.__aspect][self.pose], color, 4)
+        self.pose = (self.pose + 1) % 2
 
 
 class Barrier:
     """ Barrier class """
 
     __color = (139, 105, 20)
+    __sprites = (
+        (
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "     ####   ",
+            "  ######### ",
+            "###      ###",
+        ),
+        (
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "      ##    ",
+            "    #####   ",
+            " ########## ",
+            "###      ###",
+        ),
+        (
+            "            ",
+            "            ",
+            "     ##     ",
+            "   ######   ",
+            "    ######  ",
+            "  ########  ",
+            "############",
+            "###      ###",
+        ),
+        (
+            "            ",
+            "            ",
+            "     ##     ",
+            "   ######   ",
+            "   #######  ",
+            " ########## ",
+            "############",
+            "###      ###",
+        ),
+        (
+            "            ",
+            "    ###     ",
+            "   #####    ",
+            "  ########  ",
+            "  ########  ",
+            "########### ",
+            "############",
+            "###      ###",
+        ),
+        (
+            "    ####    ",
+            "  ########  ",
+            " ########## ",
+            " ########## ",
+            " ########## ",
+            "############",
+            "############",
+            "###      ###",
+        )
+    )
 
     def __init__(self, screen, position):
         self.__screen = screen
-        self.__position = position
-        self.__sprites = (
-            (
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "     ####   ",
-                "  ######### ",
-                "###      ###",
-            ),
-            (
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "      ##    ",
-                "    #####   ",
-                " ########## ",
-                "###      ###",
-            ),
-            (
-                "            ",
-                "            ",
-                "     ##     ",
-                "   ######   ",
-                "    ######  ",
-                "  ########  ",
-                "############",
-                "###      ###",
-            ),
-            (
-                "            ",
-                "            ",
-                "     ##     ",
-                "   ######   ",
-                "   #######  ",
-                " ########## ",
-                "############",
-                "###      ###",
-            ),
-            (
-                "            ",
-                "    ###     ",
-                "   #####    ",
-                "  ########  ",
-                "  ########  ",
-                "########### ",
-                "############",
-                "###      ###",
-            ),
-            (
-                "    ####    ",
-                "  ########  ",
-                " ########## ",
-                " ########## ",
-                " ########## ",
-                "############",
-                "############",
-                "###      ###",
-            )
-        )
+        self.position = position
         self.status = len(self.__sprites) - 1
         self.shape = pygame.Surface([48, 32], SRCALPHA)
         _draw(self.shape, self.__sprites[self.status], self.__color, 4)
         self.points = 1
-        self.rect = self.shape.get_rect().move(self.__position)
+        self.rect = self.shape.get_rect().move(self.position)
 
     def update(self):
         """
         description:
         """
         _draw(self.shape, self.__sprites[self.status], self.__color, 4)
-        self.__screen.blit(self.shape, self.__position)
+        self.__screen.blit(self.shape, self.position)
 
     def add_damage(self):
         """
@@ -790,123 +746,118 @@ class Barrier:
         _draw(self.shape, self.__sprites[self.status], self.__color, 4)
         return self.status
 
-    def get_position(self):
-        """
-        description:
-        """
-        return self.__position
-
 
 class Explosion:  # pylint: disable=too-few-public-methods
     """ Explosion class """
+
+    __sprites = (
+        (
+            "     ##     ",
+            "   ######   ",
+            " ########## ",
+            "############",
+            "############",
+            " ########## ",
+            "   ######   ",
+            "     ##     ",
+        ),
+        (
+            "            ",
+            "     ##     ",
+            "   ######   ",
+            " ########## ",
+            " ########## ",
+            "   ######   ",
+            "     ##     ",
+            "            ",
+        ),
+        (
+            "            ",
+            "            ",
+            "     ##     ",
+            "   ######   ",
+            "   ######   ",
+            "     ##     ",
+            "            ",
+            "            ",
+        ),
+        (
+            "            ",
+            "            ",
+            "            ",
+            "     ##     ",
+            "     ##     ",
+            "            ",
+            "            ",
+            "            ",
+        ),
+        (
+            "            ",
+            "            ",
+            "    #  #    ",
+            "     ##     ",
+            "     ##     ",
+            "    #  #    ",
+            "            ",
+            "            ",
+        ),
+        (
+            "            ",
+            "   #    #   ",
+            "    #  #    ",
+            "     ##     ",
+            "     ##     ",
+            "    #  #    ",
+            "   #    #   ",
+            "            ",
+        ),
+        (
+            "  #      #  ",
+            "   #    #   ",
+            "    #  #    ",
+            "     ##     ",
+            "     ##     ",
+            "    #  #    ",
+            "   #    #   ",
+            "  #      #  ",
+        ),
+        (
+            "  #      #  ",
+            "   #    #   ",
+            "    #  #  # ",
+            "            ",
+            " #          ",
+            "    #  #    ",
+            "   #    #   ",
+            "  #      #  ",
+        ),
+        (
+            "  #      #  ",
+            "   #    #   ",
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "   #    #   ",
+            "  #      #  ",
+        ),
+        (
+            "  #      #  ",
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "            ",
+            "  #      #  ",
+        )
+    )
 
     def __init__(self, screen, position):
         self.__screen = screen
         self.__position = position
         self.__update_timer = Timer(50)
         self.__frame = 0
-        self.__sprites = (
-            (
-                "     ##     ",
-                "   ######   ",
-                " ########## ",
-                "############",
-                "############",
-                " ########## ",
-                "   ######   ",
-                "     ##     ",
-            ),
-            (
-                "            ",
-                "     ##     ",
-                "   ######   ",
-                " ########## ",
-                " ########## ",
-                "   ######   ",
-                "     ##     ",
-                "            ",
-            ),
-            (
-                "            ",
-                "            ",
-                "     ##     ",
-                "   ######   ",
-                "   ######   ",
-                "     ##     ",
-                "            ",
-                "            ",
-            ),
-            (
-                "            ",
-                "            ",
-                "            ",
-                "     ##     ",
-                "     ##     ",
-                "            ",
-                "            ",
-                "            ",
-            ),
-            (
-                "            ",
-                "            ",
-                "    #  #    ",
-                "     ##     ",
-                "     ##     ",
-                "    #  #    ",
-                "            ",
-                "            ",
-            ),
-            (
-                "            ",
-                "   #    #   ",
-                "    #  #    ",
-                "     ##     ",
-                "     ##     ",
-                "    #  #    ",
-                "   #    #   ",
-                "            ",
-            ),
-            (
-                "  #      #  ",
-                "   #    #   ",
-                "    #  #    ",
-                "     ##     ",
-                "     ##     ",
-                "    #  #    ",
-                "   #    #   ",
-                "  #      #  ",
-            ),
-            (
-                "  #      #  ",
-                "   #    #   ",
-                "    #  #  # ",
-                "            ",
-                " #          ",
-                "    #  #    ",
-                "   #    #   ",
-                "  #      #  ",
-            ),
-            (
-                "  #      #  ",
-                "   #    #   ",
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "   #    #   ",
-                "  #      #  ",
-            ),
-            (
-                "  #      #  ",
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "            ",
-                "  #      #  ",
-            )
-        )
         self.done = False
 
     def update(self):

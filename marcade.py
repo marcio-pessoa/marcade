@@ -24,8 +24,8 @@ from games.rocks import Rocks
 class MArcade():
     """ MArcade class """
 
-    __version__ = '0.3.4'
-    __date__ = "2022-10-01"
+    __version__ = '0.3.5'
+    __date__ = "2022-10-09"
 
     def __init__(self):
         Log().name = 'marcade'
