@@ -255,7 +255,6 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 break
         # Fire
         for i in self.aliens:
-            i.update()
             if random.randrange(self.alien_burst_seed) == 1:
                 shoot = Missile(self.canvas, i.position, 4, -1)
                 self.alien_burst.add(shoot)
@@ -344,9 +343,9 @@ class Ship:
         )
         self.reset()
         self.shape = pygame.Surface(self.__size, SRCALPHA)
-        _draw(self.shape, sprite, (180, 180, 240), 4)
         self.radius = self.shape.get_rect().center[0]
         self.rect = self.shape.get_rect().move(self.position)
+        _draw(self.shape, sprite, (180, 180, 240), 4)
 
     def reset(self):
         """
@@ -623,9 +622,6 @@ class Monster:
         self.position = position
         self.pose = 0
         self.enable = True
-
-        color = self.__color[self.__aspect]
-        _draw(self.__shape, self.__aliens[self.__aspect][self.pose], color, 4)
         self.update()
 
     @property
@@ -639,6 +635,8 @@ class Monster:
 
     def update(self):
         """ Update shape and position """
+        color = self.__color[self.__aspect]
+        _draw(self.__shape, self.__aliens[self.__aspect][self.pose], color, 4)
         self.rect = self.__shape.get_rect().move(self.position)
         self.__screen.blit(self.__shape, self.position)
 
@@ -646,7 +644,6 @@ class Monster:
         """
         description:
         """
-        color = self.__color[self.__aspect]
         if not self.enable:
             return
         if way:
@@ -656,8 +653,8 @@ class Monster:
         self.position[0] += increment * 4
         if drop:
             self.position[1] += increment * 16
-        _draw(self.__shape, self.__aliens[self.__aspect][self.pose], color, 4)
         self.pose = (self.pose + 1) % 2
+        self.update()
 
 
 class Barrier:
@@ -733,8 +730,8 @@ class Barrier:
         self.position = position
         self.status = len(self.__sprites) - 1
         self.shape = pygame.Surface([48, 32], SRCALPHA)
-        _draw(self.shape, self.__sprites[self.status], self.__color, 4)
         self.rect = self.shape.get_rect().move(self.position)
+        self.update()
 
     def update(self):
         """
