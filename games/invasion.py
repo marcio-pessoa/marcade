@@ -384,7 +384,7 @@ class Ship:
             self.position[0] -= self.__move_increment
 
 
-class Missile:
+class Missile:  # pylint: disable=too-few-public-methods
     """ Missile class """
 
     __sprite = (

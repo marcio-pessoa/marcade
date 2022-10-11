@@ -25,7 +25,7 @@ class MArcade():
     """ MArcade class """
 
     __version__ = '0.3.5'
-    __date__ = "2022-10-09"
+    __date__ = "2022-10-11"
 
     def __init__(self):
         Log().name = 'marcade'
