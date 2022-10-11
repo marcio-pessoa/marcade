@@ -203,7 +203,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             i.update()
         # Check shoot age
         for i in self.ship_burst:
-            if i.is_out():
+            if i.out:
                 self.ship_burst.remove(i)
                 break
 
@@ -327,25 +327,25 @@ class Ship:
 
     __move_increment = 5
     __size = [48, 32]
+    __sprite = (
+        "            ",
+        "     ##     ",
+        "    ####    ",
+        "   ######   ",
+        " ########## ",
+        "  ########  ",
+        " ########## ",
+        "############",
+    )
 
     def __init__(self, screen):
         self.__screen = screen
         self.enable = True
-        sprite = (
-            "            ",
-            "     ##     ",
-            "    ####    ",
-            "   ######   ",
-            " ########## ",
-            "  ########  ",
-            " ########## ",
-            "############",
-        )
         self.reset()
         self.shape = pygame.Surface(self.__size, SRCALPHA)
         self.radius = self.shape.get_rect().center[0]
         self.rect = self.shape.get_rect().move(self.position)
-        _draw(self.shape, sprite, (180, 180, 240), 4)
+        _draw(self.shape, self.__sprite, (180, 180, 240), 4)
 
     def reset(self):
         """
@@ -425,12 +425,6 @@ class Missile:
             self.out = True
         self.rect = self.shape.get_rect().move(self.position)
         self.screen.blit(self.shape, self.position)
-
-    def is_out(self):
-        """
-        description:
-        """
-        return self.out
 
 
 class Monster:
