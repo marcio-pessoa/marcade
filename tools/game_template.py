@@ -17,6 +17,8 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
+from tools.log import log
+
 
 class Game(ABC):
     """ Generic game class
@@ -56,4 +58,5 @@ class Game(ABC):
 
     def stop(self) -> None:
         """ Stop game match """
+        log.info('Finishing...')
         pygame.event.clear()

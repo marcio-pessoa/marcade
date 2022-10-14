@@ -29,7 +29,8 @@ class MArcade():
 
     def __init__(self):
         Log().name = 'marcade'
-        Log().verbosity = 'ERROR'
+        Log().verbosity = 'WARNING'
+        Log().start()
 
         parser = argparse.ArgumentParser(
             prog='marcade',
