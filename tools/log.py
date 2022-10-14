@@ -17,7 +17,7 @@ class Log:
     """ Log Singleton """
     name: str = 'Default log'
     logger = logging.getLogger(name)
-    __verbosity: int = logging.INFO  # example: logging.ERROR
+    __verbosity: int = logging.WARNING  # example: logging.ERROR
 
     def __new__(cls):
         if not hasattr(cls, 'instance') or not cls.instance:
@@ -25,12 +25,11 @@ class Log:
         return cls.instance
 
     def start(self) -> None:
-        """ Start log system """
+        """ Start the log system """
         fmt = self.name + ' [%(process)d]: %(levelname)s: %(message)s'
         handler = logging.StreamHandler(sys.stdout)
         handler.setFormatter(CustomFormatter(fmt))
         self.logger.addHandler(handler)
-        self.logger.setLevel(self.__verbosity)
 
     @property
     def verbosity(self) -> int:
@@ -55,7 +54,8 @@ class Log:
             self.__verbosity = logging.CRITICAL
         else:
             self.__verbosity = logging.ERROR
-        self.start()
+
+        self.logger.setLevel(self.__verbosity)
 
 
 class CustomFormatter(logging.Formatter):

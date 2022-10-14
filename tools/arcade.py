@@ -64,6 +64,7 @@ class Arcade():
             game.update()
             self.__clock.tick(RATE)
             pygame.display.flip()
+        log.debug('Finished.')
 
     def __screen_start(self) -> None:
         os.environ['SDL_VIDEO_CENTERED'] = '1'
