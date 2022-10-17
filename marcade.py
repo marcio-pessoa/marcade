@@ -19,13 +19,14 @@ from tools.arcade import Arcade
 from games.invasion import Invasion
 from games.pongue import Pongue
 from games.rocks import Rocks
+from games.serpent import Serpent
 
 
 class MArcade():
     """ MArcade class """
 
-    __version__ = '0.3.5'
-    __date__ = "2022-10-11"
+    __version__ = '0.4.0'
+    __date__ = "2022-10-17"
 
     def __init__(self):
         Log().name = 'marcade'
@@ -65,7 +66,7 @@ class MArcade():
         )
 
         if len(sys.argv) < 2:  # When no args given, run random game
-            game = random.choice(['invasion', 'pongue', 'rocks'])
+            game = random.choice(['invasion', 'pongue', 'rocks', 'serpent'])
             getattr(self, game)()
             sys.exit()
 
@@ -98,6 +99,12 @@ class MArcade():
 
     @staticmethod
     @__common_arguments
+    def invasion():
+        """ Invasion """
+        Arcade(Invasion).run()
+
+    @staticmethod
+    @__common_arguments
     def pongue():
         """ Pongue """
         Arcade(Pongue).run()
@@ -110,9 +117,9 @@ class MArcade():
 
     @staticmethod
     @__common_arguments
-    def invasion():
-        """ Invasion """
-        Arcade(Invasion).run()
+    def serpent():
+        """ Serpent """
+        Arcade(Serpent).run()
 
 
 if __name__ == '__main__':
