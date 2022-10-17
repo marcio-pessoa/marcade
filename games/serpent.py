@@ -9,7 +9,6 @@ contributors:
   designers:
   - name: Marcio Pessoa
     email: marcio.pessoa@gmail.com
-  - name: Gus
   beta-testers:
   - name: Nicolas Masaishi Oi Pessoa
     email: masaishi.pessoa@gmail.com
@@ -196,8 +195,8 @@ class Serpent(Game):
 
     def _random_position(self):
         return (
-            random.randint(1, self.__matrix[0]),
-            random.randint(1, self.__matrix[1])
+            random.randint(1, self.__matrix[0]-1),
+            random.randint(1, self.__matrix[1]-1)
         )
 
     def _draw_grid(self):

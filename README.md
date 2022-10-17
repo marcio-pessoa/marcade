@@ -50,12 +50,6 @@ For help:
 
 ## Games available
 
-### Rocks
-
-Based on amazing Asteroids
-
-[![Rocks](Screenshots/rocks.png)](Documents/rocks.md)
-
 ### Invasion
 
 Based on memorable Space Invaders
@@ -67,6 +61,18 @@ Based on memorable Space Invaders
 Based on classic Pong
 
 [![Pongue](Screenshots/pongue.png)](Documents/pongue.md)
+
+### Rocks
+
+Based on amazing Asteroids
+
+[![Rocks](Screenshots/rocks.png)](Documents/rocks.md)
+
+### Serpent
+
+Based on fun Snake
+
+[![Rocks](Screenshots/serpent.png)](Documents/serpent.md)
 
 ## Contributing
 
