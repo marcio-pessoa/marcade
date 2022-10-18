@@ -42,6 +42,7 @@ class MArcade():
                 'Games:\n'
                 '  invasion       based on memorable Space Invaders\n'
                 '  pongue         based on classic Pong\n'
+                '  serpent        based on fun Snake\n'
                 '  rocks          based on amazing Asteroids\n\n'
             ),
             epilog=(
