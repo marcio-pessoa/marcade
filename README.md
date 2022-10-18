@@ -4,7 +4,7 @@ Márcio's Arcade games
 
 ## Changes
 
-All notable changes to this project will be documented in this [Change log](CHANGELOG.md).
+All notable changes to this project will be documented in this [Change log](CHANGELOG.yaml).
 
 ## Installing
 

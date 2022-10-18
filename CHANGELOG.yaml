@@ -1,0 +1,43 @@
+---
+
+0.4.0:
+  date: 2022-10-16
+  add:
+    - Serpent game
+
+0.3.4:
+  date: 2020-01-07
+  add:
+    - Logging
+
+0.3.3:
+  date: 2019-09-01
+  add:
+    - Joystick support
+  remove:
+    - Python 2 support
+
+0.3.1:
+  date: 2019-01-30
+  add:
+    - Sound FX on all games
+
+0.3.0:
+  date: 2018-12-25
+  add:
+    - Invasion game
+
+0.2.1:
+  date: 2018-11-14
+  add:
+    - Random game when run `marcade` without any option
+
+0.2.0:
+  date: 2018-10-27
+  add:
+    - Rocks game
+
+0.1.0:
+  date: 2014-06-06
+  add:
+    - Pongue game
