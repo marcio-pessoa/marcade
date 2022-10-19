@@ -57,13 +57,13 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.play_area = 0
         self.score_player1 = 0
         self.score_player2 = 0
-        self.size_set()
+        self._size_set()
         self.pad_acceleration = 1
         self.delta_increment = 6
         self.court_side = 1
         self.reset()
         self.start()
-        self.ball_spawn()
+        self._ball_spawn()
 
         self.score_player1 = Font(self.play_area)
         self.score_player1.size = 5
@@ -75,10 +75,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.score_player2.position = [480, 20]
         self.score_player2.color = (120, 120, 120)
 
-    def size_set(self):
-        """
-        description:
-        """
+    def _size_set(self):
         self.play_area = pygame.Surface(
             [self.canvas.get_size()[0] - 2, self.canvas.get_size()[1] - 2],
             SRCALPHA,
@@ -104,10 +101,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
     def reset(self):
         self.score = [0, 0]
 
-    def draw_ball(self):
-        """
-        description:
-        """
+    def _draw_ball(self):
         pygame.draw.rect(
             self.play_area,
             (200, 200, 200),
@@ -119,10 +113,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
             ]
         )
 
-    def draw_pad1(self):
-        """
-        description:
-        """
+    def _draw_pad1(self):
         self.pad1_position += self.pad1_vel
         if self.pad1_position - self.pad_height_half < 0:
             self.pad1_position = 0 + self.pad_height_half
@@ -142,10 +133,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         )
         self.pad1_vel *= 0.9
 
-    def draw_pad2(self):
-        """
-        description:
-        """
+    def _draw_pad2(self):
         self.pad2_position += self.pad2_vel
         if self.pad2_position - self.pad_height_half < 0:
             self.pad2_position = 0 + self.pad_height_half
@@ -166,11 +154,11 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         self.pad2_vel *= 0.9
 
     def update(self):
-        self.draw_court()
-        self.draw_pad1()
-        self.draw_pad2()
-        self.draw_ball()
-        self.ball_check()
+        self._draw_court()
+        self._draw_pad1()
+        self._draw_pad2()
+        self._draw_ball()
+        self._ball_check()
         self.score_player1.echo(str(self.score[0]))
         self.score_player2.echo(str(self.score[1]))
         self.screen.blit(self.canvas, [0, 0])
@@ -216,12 +204,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
             self.pad2_vel += self.pad_acceleration
             self.pad2_pressed += self.delta_increment
 
-    def ball_spawn(self):
-        """
-        initialize ball_pos and ball_vel for new bal in middle of table
-        if direction is RIGHT, the ball's velocity is upper right, else
-        upper left
-        """
+    def _ball_spawn(self):
         self.start()
         self.ball_velocity[0] = (random.randrange(100, 200) / 50.0 *
                                  self.court_side)
@@ -232,13 +215,10 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
         if self.ball_velocity[1] >= -0.6 or self.ball_velocity[1] <= 0.6:
             self.ball_velocity[1] *= 2
 
-    def draw_court(self):
-        """
-        description:
-        """
+    def _draw_court(self):
         # Clear court
-        self.canvas.fill([0, 0, 0])  # Black
-        self.play_area.fill([0, 0, 0])  # Black
+        self.canvas.fill((0, 0, 0))  # Black
+        self.play_area.fill((0, 0, 0))  # Black
         # Draw gutters
         pygame.draw.line(self.canvas, (100, 100, 100),
                          [0, 0],
@@ -264,10 +244,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
                              [self.play_area.get_size()[0] / 2,
                               16 + (i * 5)])
 
-    def ball_check(self):
-        """
-        description:
-        """
+    def _ball_check(self):
         # update ball position
         self.ball_position[0] += self.ball_velocity[0]
         self.ball_position[1] += self.ball_velocity[1]
@@ -291,7 +268,7 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
                 self.sound.tone(900)
             else:
                 self.court_side = -1
-                self.ball_spawn()
+                self._ball_spawn()
                 self.score[1] += 1
                 self.sound.tone(200)
         # Bounces off of the right
@@ -306,6 +283,6 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
                 self.sound.tone(900)
             else:
                 self.court_side = 1
-                self.ball_spawn()
+                self._ball_spawn()
                 self.score[0] += 1
                 self.sound.tone(200)
