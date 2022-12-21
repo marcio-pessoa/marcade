@@ -1,0 +1,25 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    - id: check-yaml
+    - id: end-of-file-fixer
+    - id: trailing-whitespace
+    - id: requirements-txt-fixer
+-    repo: https://github.com/PyCQA/flake8.git
+     rev: 5.0.4
+     hooks:
+     - id: flake8
+       stages: [commit]
+-    repo: https://github.com/PyCQA/pylint.git
+     rev: 2.15.5
+     hooks:
+     - id: pylint
+       entry: pylint
+       language: system
+       types: [python]
+       stages: [commit]
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.27.1
+  hooks:
+  - id: markdownlint
