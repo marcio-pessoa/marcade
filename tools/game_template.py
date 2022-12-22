@@ -56,7 +56,8 @@ class Game(ABC):
     def reset(self) -> None:
         """ Restart game match """
 
-    def stop(self) -> None:
+    @staticmethod
+    def stop() -> None:
         """ Stop game match """
         log.info('Finishing...')
         pygame.event.clear()
