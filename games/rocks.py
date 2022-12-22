@@ -23,8 +23,8 @@ import math
 import random
 import pygame
 try:
-    from pygame.locals import SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT, \
-        K_SPACE, K_a
+    from pygame.locals import (SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT,
+                               K_SPACE, K_a)
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)

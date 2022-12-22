@@ -18,8 +18,8 @@ import sys
 import random
 import pygame
 try:
-    from pygame.locals import SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE, \
-        K_a, K_RETURN
+    from pygame.locals import (SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE,
+                               K_a, K_RETURN)
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
