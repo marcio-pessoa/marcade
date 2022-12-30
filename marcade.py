@@ -62,7 +62,7 @@ class MArcade():
             action='version',
             help='show version information and exit',
             version=(
-                f'MArcade {self.__version__} {self.__date__})'
+                f'MArcade {self.__version__} {self.__date__}'
             ),
         )
 
