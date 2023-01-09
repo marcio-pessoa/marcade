@@ -129,7 +129,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
 
     def _lives_check(self):
         if self.lives == 0:
-            self._game_over()
+            self.game_over()
 
     def _collision_check(self):  # pylint: disable=too-many-branches
         # Ship Missle against Alien
@@ -260,7 +260,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 self.alien_burst.add(shoot)
                 break
 
-    def _game_over(self):
+    def game_over(self):
         self.ship.enable = False
         for i in self.aliens:
             i.enable = False
@@ -273,6 +273,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         message.position = [180, 60]
         message.color = (96, 5, 5)
         message.echo("GAME OVER")
+        return super().game_over()
 
     def _aliens_check(self):
         if len(self.aliens) == 0:

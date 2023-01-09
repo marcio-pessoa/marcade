@@ -101,6 +101,9 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
     def reset(self):
         self.score = [0, 0]
 
+    def game_over(self) -> None:
+        return  # super().game_over()
+
     def _draw_ball(self):
         pygame.draw.rect(
             self.play_area,

@@ -75,7 +75,7 @@ class Serpent(Game):
         if self.__alive:
             self._serpent_move()
         else:
-            self._game_over()
+            self.game_over()
 
     def control(self, keys, joystick) -> None:
         if joystick:
@@ -173,7 +173,7 @@ class Serpent(Game):
         fruit.fill((192, 0, 0))
         self.screen.blit(fruit, coordinate)
 
-    def _game_over(self):
+    def game_over(self):
         message = Font(self.screen)
         message.size = 9
         message.position = [161, 120]
@@ -184,6 +184,7 @@ class Serpent(Game):
         score.position = [186, 300]
         score.color = (96, 5, 5)
         score.echo(f'SCORE {self.__score}')
+        return super().game_over()
 
     def _position(self, position: int, padding: int = 0) -> list[int]:
         return (

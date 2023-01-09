@@ -53,6 +53,10 @@ class Game(ABC):
         """ Start game match """
 
     @abstractmethod
+    def game_over(self) -> None:
+        """ Game over """
+
+    @abstractmethod
     def reset(self) -> None:
         """ Restart game match """
 
