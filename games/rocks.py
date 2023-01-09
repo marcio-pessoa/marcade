@@ -24,7 +24,7 @@ import random
 import pygame
 try:
     from pygame.locals import (SRCALPHA, K_ESCAPE, K_UP, K_RIGHT, K_LEFT,
-                               K_SPACE, K_a)
+                               K_RETURN, K_SPACE, K_a)
 except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
@@ -85,7 +85,8 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         self.check_collision()
         self.update_scoreboard()
         if not self.lives:
-            self.reset()
+            self.game_over()
+            # self.reset()
         # Join everything
         self.screen.blit(self.canvas, [0, 0])
         return False
@@ -177,20 +178,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         description:
         """
         if joystick:
-            if joystick['hat'][0]['x'] < 0 or \
-               joystick['axis'][0] < 0:
-                self.ship.increment_angle_vel()
-            if joystick['hat'][0]['x'] > 0 or \
-               joystick['axis'][0] > 0:
-                self.ship.decrement_angle_vel()
-            if joystick['hat'][0]['y'] > 0 or \
-               joystick['axis'][1] < 0:
-                self.ship.thrust_on()
-                return
-            if joystick['button'][10]:
-                self.reset()
-            if joystick['button'][0]:
-                self.shoot()
+            self._control_joystick(joystick)
         if K_ESCAPE in keys:
             self.stop()
         if K_UP in keys:
@@ -201,9 +189,32 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
             self.ship.decrement_angle_vel()
         if K_LEFT in keys:
             self.ship.increment_angle_vel()
+        if K_RETURN in keys:
+            self.reset()
         if K_SPACE in keys or \
            K_a in keys:
             self.shoot()
+
+    def _control_joystick(self, joystick):
+        if joystick['hat'][0]['x'] < 0 or joystick['axis'][0] < 0:
+            self.ship.increment_angle_vel()
+        if joystick['hat'][0]['x'] > 0 or joystick['axis'][0] > 0:
+            self.ship.decrement_angle_vel()
+        if joystick['hat'][0]['y'] > 0 or joystick['axis'][1] < 0:
+            self.ship.thrust_on()
+            return
+        if joystick['button'][10]:
+            self.reset()
+        if joystick['button'][0]:
+            self.shoot()
+
+    def game_over(self) -> None:
+        message = Font(self.screen)
+        message.size = 9
+        message.position = [161, 120]
+        message.color = (96, 5, 5)
+        message.echo("GAME OVER")
+        return super().game_over()
 
 
 class Ship:  # pylint: disable=too-many-instance-attributes
