@@ -79,16 +79,16 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         # Draw Space
         self.canvas.fill([0, 0, 0])  # Black
         # Draw objects (ship, rocks, missiles, etc...)
-        self.ship.update()
-        self.burst_update()
-        self.rock_update()
-        self.check_collision()
         self.update_scoreboard()
-        if not self.lives:
+        if self.lives:
+            self.ship.update()
+            self.burst_update()
+            self.rock_update()
+            self.check_collision()
+            self.screen.blit(self.canvas, [0, 0])
+        else:
             self.game_over()
-            # self.reset()
         # Join everything
-        self.screen.blit(self.canvas, [0, 0])
         return False
 
     def update_scoreboard(self):
@@ -212,7 +212,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         message = Font(self.screen)
         message.size = 9
         message.position = [161, 120]
-        message.color = (96, 5, 5)
+        message.color = (128, 128, 128)
         message.echo("GAME OVER")
         return super().game_over()
 
