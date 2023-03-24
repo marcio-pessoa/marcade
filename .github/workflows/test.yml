@@ -23,7 +23,7 @@ jobs:
           pip install -r test-requirements.txt
       - name: Bandit - A security linter from PyCQA
         run: |
-          bandit --skip B311 -r *.py
+          bandit --skip B311 --recursive .
   flake8:
     runs-on: ubuntu-latest
     strategy:
