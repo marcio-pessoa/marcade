@@ -32,7 +32,7 @@ To start game:
 
 ### Beta testers
 
-- Nícolas Masaishi Oi Pessoa <masaishi.pessoa@gmail.com>
+- [Nícolas Masaishi Oi Pessoa](https://github.com/masaishi-pessoa)
 
 ## Contributing
 
@@ -44,7 +44,7 @@ Licensed under the [GPLv2](LICENSE).
 
 ## Donations
 
-I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my PayPal: marcio.pessoa@gmail.com. Thank you very much!
+I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my PayPal: <marcio.pessoa@gmail.com>. Thank you very much!
 
 ---
 <!-- [YouTube]: https://youtu.be/T_esCvHf8K4 -->
