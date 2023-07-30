@@ -2,7 +2,7 @@
 
 Serpent Márcio's Arcade games
 
-Based on fun Snake
+Based on the fun Snake
 
 ## Screenshot
 

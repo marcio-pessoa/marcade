@@ -70,7 +70,7 @@ Based on amazing Asteroids
 
 ### Serpent
 
-Based on fun Snake
+Based on the fun Snake
 
 [![Rocks](Screenshots/serpent.png)](Documents/serpent.md)
 
@@ -84,4 +84,4 @@ Licensed under the [GPLv2](LICENSE).
 
 ## Donations
 
-I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my PayPal: marcio.pessoa@gmail.com. Thank you very much!
+I made this in my spare time, and it's hosted on GitHub (which means I don't have any hosting costs), but if you enjoyed the game and feel like buying me coffee, you can donate at my PayPal: <marcio.pessoa@gmail.com>. Thank you very much!
