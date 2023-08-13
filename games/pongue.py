@@ -24,9 +24,9 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from tools.font import Font
-from tools.sound import Sound
-from tools.game_template import Game
+from src.font import Font
+from src.sound import Sound
+from src.game_template import Game
 
 
 class Pongue(Game):  # pylint: disable=too-many-instance-attributes

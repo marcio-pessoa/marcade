@@ -24,10 +24,10 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from tools.font import Font
-from tools.sound import Sound
-from tools.timer import Timer
-from tools.game_template import Game
+from src.font import Font
+from src.sound import Sound
+from src.timer import Timer
+from src.game_template import Game
 
 
 class Invasion(Game):  # pylint: disable=too-many-instance-attributes

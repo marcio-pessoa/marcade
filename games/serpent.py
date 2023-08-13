@@ -23,11 +23,11 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from tools.log import log
-from tools.font import Font
-from tools.game_template import Game
-from tools.sound import Sound
-from tools.timer import Timer
+from src.log import log
+from src.font import Font
+from src.game_template import Game
+from src.sound import Sound
+from src.timer import Timer
 
 
 class Serpent(Game):
