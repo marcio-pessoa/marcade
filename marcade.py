@@ -14,8 +14,8 @@ import sys
 import random
 import argparse
 
-from tools.log import Log
-from tools.arcade import Arcade
+from src.log import Log
+from src.arcade import Arcade
 from games.invasion import Invasion
 from games.pongue import Pongue
 from games.rocks import Rocks

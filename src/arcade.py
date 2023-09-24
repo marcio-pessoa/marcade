@@ -19,9 +19,9 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from tools import joystick
-from tools.log import log
-from tools.game_template import Game
+from src import joystick
+from src.log import log
+from src.game_template import Game
 
 
 RATE = 60  # FPS

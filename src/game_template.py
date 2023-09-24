@@ -17,7 +17,7 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from tools.log import log
+from src.log import log
 
 
 class Game(ABC):
