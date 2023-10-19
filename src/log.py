@@ -1,7 +1,7 @@
 """
 ---
 name: log.py
-description: Log Singleton package
+description: Log package
 people:
   developers:
   - name: Marcio Pessoa
@@ -14,15 +14,16 @@ import logging.handlers
 
 
 class Log:
-    """ Log Singleton """
+    """ Log pattern Borg """
+    _shared_state = {}
     name: str = 'Default log'
     logger = logging.getLogger(name)
     __verbosity: int = logging.WARNING  # example: logging.ERROR
 
     def __new__(cls):
-        if not hasattr(cls, 'instance') or not cls.instance:
-            cls.instance = super().__new__(cls)
-        return cls.instance
+        inst = super().__new__(cls)
+        inst.__dict__ = cls._shared_state
+        return inst
 
     def start(self) -> None:
         """ Start the log system """
