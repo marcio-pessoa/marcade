@@ -14,7 +14,7 @@ import logging.handlers
 
 
 class Log:
-    """ Log pattern Borg """
+    """ Log Borg pattern """
     _shared_state = {}
     name: str = 'Default log'
     logger = logging.getLogger(name)
