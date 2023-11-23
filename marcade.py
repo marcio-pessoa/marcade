@@ -61,9 +61,7 @@ class MArcade():
             '-V', '--version',
             action='version',
             help='show version information and exit',
-            version=(
-                f'MArcade {self.__version__} {self.__date__}'
-            ),
+            version=(f'MArcade {self.__version__} {self.__date__}'),
         )
 
         if len(sys.argv) < 2:  # When no args given, run random game
