@@ -28,7 +28,7 @@ cd marcade
 pip3 install -r requirements.txt
 ```
 
-## Running
+## Usage
 
 To start a random game:
 
@@ -36,7 +36,7 @@ To start a random game:
 ./marcade.py
 ```
 
-To start a game:
+To start a game (ie: Invasion):
 
 ``` sh
 ./marcade.py invasion
