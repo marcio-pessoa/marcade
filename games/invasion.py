@@ -132,7 +132,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
             self.game_over()
 
     def _collision_check(self):  # pylint: disable=too-many-branches
-        # Ship Missle against Alien
+        # Ship Missile against Alien
         for i in self.aliens:
             for j in self.ship_burst:
                 if i.rect.colliderect(j.rect):
@@ -143,7 +143,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                     self.ship_burst.remove(j)
                     self.sound.tone(400)
                     return
-        # Ship Missle against Wall
+        # Ship Missile against Wall
         for i in self.walls:
             for j in self.ship_burst:
                 if i.rect.colliderect(j.rect):
@@ -153,7 +153,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                     self.ship_burst.remove(j)
                     self.sound.tone(200)
                     return
-        # Alien Missle against Wall
+        # Alien Missile against Wall
         for i in self.walls:
             for j in self.alien_burst:
                 if i.rect.colliderect(j.rect):
@@ -185,7 +185,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 self.lives -= 1
                 self.sound.tone(200)
                 return
-        # Alien Missle againt Ship
+        # Alien Missile againt Ship
         for i in self.alien_burst:
             if i.rect.colliderect(self.ship.rect):
                 explosion = Explosion(self.canvas, self.ship.position)
