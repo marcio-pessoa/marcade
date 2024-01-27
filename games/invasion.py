@@ -185,7 +185,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 self.lives -= 1
                 self.sound.tone(200)
                 return
-        # Alien Missile againt Ship
+        # Alien Missile against Ship
         for i in self.alien_burst:
             if i.rect.colliderect(self.ship.rect):
                 explosion = Explosion(self.canvas, self.ship.position)
