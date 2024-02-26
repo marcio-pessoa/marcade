@@ -50,7 +50,7 @@ class MArcade():
                 '  marcade invasion\n'
                 '  marcade\n'
                 '\n'
-                'Copyleft (c) 2014-2022 Marcio Pessoa\n'
+                'Copyleft (c) 2014-2024 Marcio Pessoa\n'
                 'License: GPLv2\n'
                 'Website: https://github.com/marcio-pessoa/marcade\n'
                 'Contact: Marcio Pessoa <marcio.pessoa@gmail.com>\n'
