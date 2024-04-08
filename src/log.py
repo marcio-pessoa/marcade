@@ -18,7 +18,7 @@ class Log:
     _shared_state = {}
     name: str = 'Default log'
     logger = logging.getLogger(name)
-    __verbosity: int = logging.WARNING  # example: logging.ERROR
+    __verbosity: int = logging.WARNING
 
     def __new__(cls):
         inst = super().__new__(cls)
