@@ -16,10 +16,7 @@ import argparse
 
 from src.log import Log
 from src.arcade import Arcade
-from games.invasion import Invasion
-from games.pongue import Pongue
-from games.rocks import Rocks
-from games.serpent import Serpent
+from src.game_manager import GameManager
 
 
 class MArcade():
@@ -64,61 +61,40 @@ class MArcade():
             version=(f'MArcade {self.__version__} {self.__date__}'),
         )
 
+        game_manager = GameManager()
+        games = game_manager.get_games()
+
         if len(sys.argv) < 2:  # When no args given, run random game
-            game = random.choice(['invasion', 'pongue', 'rocks', 'serpent'])
-            getattr(self, game)()
+            game_name = random.choice(list(games.keys()))
+            self.run_game(games[game_name])
             sys.exit()
 
         args = parser.parse_args(sys.argv[1:2])
-        if not hasattr(self, args.game):
+        game = game_manager.get_game(args.game)
+
+        if not game:
             print('Unrecognized command')
             parser.print_help()
             sys.exit(True)
 
-        getattr(self, args.game)()
+        self.run_game(game)
 
-    @staticmethod
-    def __common_arguments(func):
-        def wrapper():
-            parser = argparse.ArgumentParser()
-            parser.add_argument(
-                '-v', '--verbosity',
-                type=str,
-                choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
-                default='ERROR',
-                help=(
-                    'verbose mode, options: '
-                    'CRITICAL, ERROR (default), WARNING, INFO, DEBUG'
-                )
+    def run_game(self, game):
+        """ Run a game """
+        parser = argparse.ArgumentParser()
+        parser.add_argument(
+            '-v', '--verbosity',
+            type=str,
+            choices=['CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG'],
+            default='ERROR',
+            help=(
+                'verbose mode, options: '
+                'CRITICAL, ERROR (default), WARNING, INFO, DEBUG'
             )
-            args = parser.parse_args(sys.argv[2:])
-            Log().verbosity = args.verbosity
-            func()
-        return wrapper
-
-    @staticmethod
-    @__common_arguments
-    def invasion():
-        """ Invasion """
-        Arcade(Invasion).run()
-
-    @staticmethod
-    @__common_arguments
-    def pongue():
-        """ Pongue """
-        Arcade(Pongue).run()
-
-    @staticmethod
-    @__common_arguments
-    def rocks():
-        """ Rocks """
-        Arcade(Rocks).run()
-
-    @staticmethod
-    @__common_arguments
-    def serpent():
-        """ Serpent """
-        Arcade(Serpent).run()
+        )
+        args = parser.parse_args(sys.argv[2:])
+        Log().verbosity = args.verbosity
+        Arcade(game).run()
 
 
 if __name__ == '__main__':
