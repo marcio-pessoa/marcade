@@ -22,8 +22,8 @@ from src.game_manager import GameManager
 class MArcade():
     """ MArcade class """
 
-    __version__ = '0.4.0'
-    __date__ = "2022-10-17"
+    __version__ = '0.4.1'
+    __date__ = "2025-11-19"
 
     def __init__(self):
         Log().name = 'marcade'
@@ -47,7 +47,7 @@ class MArcade():
                 '  marcade invasion\n'
                 '  marcade\n'
                 '\n'
-                'Copyleft (c) 2014-2024 Marcio Pessoa\n'
+                'Copyleft (c) 2014-2025 Marcio Pessoa\n'
                 'License: GPLv2\n'
                 'Website: https://github.com/marcio-pessoa/marcade\n'
                 'Contact: Marcio Pessoa <marcio.pessoa@gmail.com>\n'
