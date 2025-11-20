@@ -36,7 +36,7 @@ jobs:
           pip install flake8
       - name: Code analysis with Flake8
         run: |
-          flake8 . --count --max-complexity=20 --statistics
+          flake8 . --count --max-complexity=20 --statistics --exclude venv
   pylint:
     runs-on: ubuntu-latest
     strategy:
