@@ -18,7 +18,7 @@ import sys
 import random
 import pygame
 try:
-    from pygame.locals import (SRCALPHA, K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE,
+    from pygame.locals import (K_ESCAPE, K_RIGHT, K_LEFT, K_SPACE,
                                K_a, K_RETURN)
 except ImportError as err:
     print("Could not load module. " + str(err))
@@ -322,5 +322,3 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
         shoot = Missile(self.canvas, self.ship.position, 5)
         self.ship_burst.add(shoot)
         self.sound.tone(1200)
-
-
