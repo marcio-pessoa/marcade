@@ -16,8 +16,16 @@ git clone https://github.com/marcio-pessoa/marcade.git
 
 ### Installing SO dependencies
 
+On Ubuntu:
+
 ``` sh
 sudo apt install portaudio19-dev python3-all-dev
+```
+
+On Mac:
+
+``` sh
+brew install portaudio
 ```
 
 ### Installing required Python modules
