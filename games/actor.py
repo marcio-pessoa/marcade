@@ -9,7 +9,7 @@ people:
 """
 
 import pygame
-from pygame.locals import SRCALPHA
+from pygame.locals import SRCALPHA  # pylint: disable=no-name-in-module
 from src.timer import Timer
 
 

@@ -365,7 +365,7 @@ class Ship:  # pylint: disable=too-many-instance-attributes
 class Missile:  # pylint: disable=too-many-instance-attributes
     """ Missile class """
 
-    def __init__(self,  # pylint: disable=too-many-arguments
+    def __init__(self,  # pylint: disable=too-many-positional-arguments
                  screen, ship_position, ship_radius, ship_speed, ship_angle):
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0],

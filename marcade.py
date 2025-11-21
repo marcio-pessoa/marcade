@@ -19,7 +19,7 @@ from src.arcade import Arcade
 from src.game_manager import GameManager
 
 
-class MArcade():
+class MArcade():  # pylint: disable=too-few-public-methods
     """ MArcade class """
 
     __version__ = '0.4.1'
