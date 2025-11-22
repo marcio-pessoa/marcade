@@ -1,0 +1,10 @@
+[MAIN]
+# A comma-separated list of package or module names from which C extensions may
+# be loaded. Extensions are loading into secure pylint process, so it is
+# important to mention ones which are safe to load.
+extension-pkg-whitelist=
+ignore-paths=./venv
+
+[MESSAGES CONTROL]
+# Disable the given message-ids.
+disable=C0114,C0301,R0913,R0801
