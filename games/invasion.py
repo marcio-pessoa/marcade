@@ -29,6 +29,7 @@ from src.sound import Sound
 from src.timer import Timer
 from src.game_template import Game
 
+
 class Ship:
     """ Ship class """
 
@@ -594,7 +595,6 @@ def _draw(shape, sprite, tone, zoom, offset=None):
             x_axis += zoom
         y_axis += zoom
         x_axis = offset[0]
-
 
 
 class Invasion(Game):  # pylint: disable=too-many-instance-attributes
