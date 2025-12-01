@@ -12,19 +12,39 @@ import unittest
 from unittest.mock import MagicMock, patch
 import sys
 
-# Mock pygame before importing invasion
-sys.modules['pygame'] = MagicMock()
-sys.modules['pygame.locals'] = MagicMock()
+class TestInvasion(unittest.TestCase):
+    """ Test Invasion Game """
 
-# Mock src modules that invasion imports
-sys.modules['src.font'] = MagicMock()
-sys.modules['src.sound'] = MagicMock()
-sys.modules['src.timer'] = MagicMock()
-sys.modules['src.game_template'] = MagicMock()
+    @classmethod
+    def setUpClass(cls):
+        # Create mocks
+        cls.mock_pygame = MagicMock()
+        cls.mock_pygame.locals = MagicMock()
+        cls.mock_src_font = MagicMock()
+        cls.mock_src_sound = MagicMock()
+        cls.mock_src_timer = MagicMock()
+        cls.mock_src_game_template = MagicMock()
 
-from games.invasion import Ship, Missile, Monster, Barrier, Invasion
+        # Apply patches
+        cls.modules_patcher = patch.dict(sys.modules, {
+            'pygame': cls.mock_pygame,
+            'pygame.locals': cls.mock_pygame.locals,
+            'src.font': cls.mock_src_font,
+            'src.sound': cls.mock_src_sound,
+            'src.timer': cls.mock_src_timer,
+            'src.game_template': cls.mock_src_game_template
+        })
+        cls.modules_patcher.start()
 
-class TestShip(unittest.TestCase):
+        # Import modules AFTER patching
+        global Ship, Missile, Monster, Barrier, Invasion
+        from games.invasion import Ship, Missile, Monster, Barrier, Invasion
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.modules_patcher.stop()
+
+class TestShip(TestInvasion):
     """ Test Ship Class """
 
     def setUp(self):
@@ -60,7 +80,7 @@ class TestShip(unittest.TestCase):
         self.ship.update()
         self.assertEqual(self.ship.position[0], screen_width - 48)
 
-class TestMissile(unittest.TestCase):
+class TestMissile(TestInvasion):
     """ Test Missile Class """
 
     def setUp(self):
@@ -84,7 +104,7 @@ class TestMissile(unittest.TestCase):
         self.missile.update()
         self.assertTrue(self.missile.out)
 
-class TestMonster(unittest.TestCase):
+class TestMonster(TestInvasion):
     """ Test Monster Class """
 
     def setUp(self):
@@ -108,7 +128,7 @@ class TestMonster(unittest.TestCase):
         self.assertEqual(self.monster.position[0], initial_x + 4 - 4) # Back to start
         self.assertEqual(self.monster.position[1], 16) # Dropped 16
 
-class TestBarrier(unittest.TestCase):
+class TestBarrier(TestInvasion):
     """ Test Barrier Class """
 
     def setUp(self):

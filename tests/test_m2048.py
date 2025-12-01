@@ -12,16 +12,30 @@ import unittest
 from unittest.mock import MagicMock, patch
 import sys
 
-# Mock pygame before importing m2048
-sys.modules['pygame'] = MagicMock()
-sys.modules['pygame.locals'] = MagicMock()
-
-# Now we can import the game
-from games.m2048 import M2048
-from src.game_template import Game
 
 class TestM2048(unittest.TestCase):
     """ Test M2048 Game """
+
+    @classmethod
+    def setUpClass(cls):
+        # Create mocks
+        cls.mock_pygame = MagicMock()
+        cls.mock_pygame.locals = MagicMock()
+
+        # Apply patches
+        cls.modules_patcher = patch.dict(sys.modules, {
+            'pygame': cls.mock_pygame,
+            'pygame.locals': cls.mock_pygame.locals,
+        })
+        cls.modules_patcher.start()
+
+        # Import modules AFTER patching
+        global M2048
+        from games.m2048 import M2048
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.modules_patcher.stop()
 
     @patch('src.game_template.Game.__init__', autospec=True)
     def setUp(self, mock_game_init):
