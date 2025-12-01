@@ -10,13 +10,16 @@ contributors:
 
 import random
 import pygame
-from pygame.locals import K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r
+# pylint: disable=no-name-in-module
+from pygame.locals import (
+    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r
+)
 
 from src.game_template import Game
 from src.font import Font
 
 
-class M2048(Game):
+class M2048(Game):  # pylint: disable=too-many-instance-attributes
     """ 2048 Game class """
 
     __version__ = '0.1.0'
@@ -49,7 +52,7 @@ class M2048(Game):
         self.animations = []
         self.animating = False
         self.animation_start_time = 0
-        self.ANIMATION_DURATION = 150  # ms
+        self.animation_duration = 150  # ms
 
         self.reset()
 
@@ -78,12 +81,15 @@ class M2048(Game):
         current_time = pygame.time.get_ticks()
 
         if self.animating:
-            progress = (current_time - self.animation_start_time) / self.ANIMATION_DURATION
+            progress = (
+                (current_time - self.animation_start_time) /
+                self.animation_duration
+            )
             if progress >= 1.0:
                 progress = 1.0
                 self.animating = False
                 self.animations = []
-                self._spawn_tile() # Spawn tile after animation
+                self._spawn_tile()  # Spawn tile after animation
                 if self._check_game_over():
                     self.game_over()
 
@@ -95,7 +101,8 @@ class M2048(Game):
             # Draw animating tiles
             for anim in self.animations:
                 value = anim['value']
-                if value == 0: continue
+                if value == 0:
+                    continue
 
                 start_r, start_c = anim['from']
                 end_r, end_c = anim['to']
@@ -124,7 +131,8 @@ class M2048(Game):
             self.tile_size,
             self.tile_size
         )
-        pygame.draw.rect(self.canvas, (205, 193, 180), rect) # Empty cell color
+        # Empty cell color
+        pygame.draw.rect(self.canvas, (205, 193, 180), rect)
 
     def _draw_tile_at(self, r, c, value):
         color = self.__colors.get(value, (60, 58, 50))
@@ -167,47 +175,43 @@ class M2048(Game):
             # Spawn tile is now handled in update() after animation finishes
 
     def _spawn_tile(self):
-        empty_cells = [(r, c) for r in range(self.grid_size) for c in range(self.grid_size) if self.grid[r][c] == 0]
+        empty_cells = [
+            (r, c) for r in range(self.grid_size)
+            for c in range(self.grid_size) if self.grid[r][c] == 0
+        ]
         if empty_cells:
             r, c = random.choice(empty_cells)
             self.grid[r][c] = 2 if random.random() < 0.9 else 4
 
     def _move(self, direction):
+        if direction in ('UP', 'DOWN'):
+            return self._move_vertical(direction)
+        if direction in ('LEFT', 'RIGHT'):
+            return self._move_horizontal(direction)
+        return False
+
+    def _move_vertical(self, direction):
         moves = []
         grid_changed = False
+        is_down = direction == 'DOWN'
 
-        if direction == 'UP':
-            for c in range(self.grid_size):
-                col = [self.grid[r][c] for r in range(self.grid_size)]
-                new_col, col_moves = self._merge(col)
-                if new_col != col:
-                    grid_changed = True
-                for r in range(self.grid_size):
-                    self.grid[r][c] = new_col[r]
+        for c in range(self.grid_size):
+            col = [self.grid[r][c] for r in range(self.grid_size)]
+            if is_down:
+                col = col[::-1]
 
-                for m in col_moves:
-                    moves.append({
-                        'value': m['value'],
-                        'from': (m['from'], c),
-                        'to': (m['to'], c)
-                    })
+            new_col, col_moves = self._merge(col)
+            if is_down:
+                new_col = new_col[::-1]
 
-        elif direction == 'DOWN':
-            for c in range(self.grid_size):
-                col = [self.grid[r][c] for r in range(self.grid_size)]
-                # Pass reversed column to merge
-                new_col_rev, col_moves = self._merge(col[::-1])
-                new_col = new_col_rev[::-1]
+            if new_col != [self.grid[r][c] for r in range(self.grid_size)]:
+                grid_changed = True
 
-                if new_col != col:
-                    grid_changed = True
-                for r in range(self.grid_size):
-                    self.grid[r][c] = new_col[r]
+            for r in range(self.grid_size):
+                self.grid[r][c] = new_col[r]
 
-                for m in col_moves:
-                    # Adjust indices for reversed column
-                    # from index i in reversed list corresponds to len-1-i in original
-                    # to index j in reversed list corresponds to len-1-j in original
+            for m in col_moves:
+                if is_down:
                     orig_from = self.grid_size - 1 - m['from']
                     orig_to = self.grid_size - 1 - m['to']
                     moves.append({
@@ -215,39 +219,50 @@ class M2048(Game):
                         'from': (orig_from, c),
                         'to': (orig_to, c)
                     })
-
-        elif direction == 'LEFT':
-            for r in range(self.grid_size):
-                row = self.grid[r]
-                new_row, row_moves = self._merge(row)
-                if new_row != row:
-                    grid_changed = True
-                self.grid[r] = new_row
-
-                for m in row_moves:
+                else:
                     moves.append({
                         'value': m['value'],
-                        'from': (r, m['from']),
-                        'to': (r, m['to'])
+                        'from': (m['from'], c),
+                        'to': (m['to'], c)
                     })
 
-        elif direction == 'RIGHT':
-            for r in range(self.grid_size):
-                row = self.grid[r]
-                new_row_rev, row_moves = self._merge(row[::-1])
-                new_row = new_row_rev[::-1]
+        if grid_changed:
+            self.animations = moves
+            return True
+        return False
 
-                if new_row != row:
-                    grid_changed = True
-                self.grid[r] = new_row
+    def _move_horizontal(self, direction):
+        moves = []
+        grid_changed = False
+        is_right = direction == 'RIGHT'
 
-                for m in row_moves:
+        for r in range(self.grid_size):
+            row = self.grid[r]
+            if is_right:
+                row = row[::-1]
+
+            new_row, row_moves = self._merge(row)
+            if is_right:
+                new_row = new_row[::-1]
+
+            if new_row != self.grid[r]:
+                grid_changed = True
+            self.grid[r] = new_row
+
+            for m in row_moves:
+                if is_right:
                     orig_from = self.grid_size - 1 - m['from']
                     orig_to = self.grid_size - 1 - m['to']
                     moves.append({
                         'value': m['value'],
                         'from': (r, orig_from),
                         'to': (r, orig_to)
+                    })
+                else:
+                    moves.append({
+                        'value': m['value'],
+                        'from': (r, m['from']),
+                        'to': (r, m['to'])
                     })
 
         if grid_changed:
@@ -266,27 +281,41 @@ class M2048(Game):
         skip = False
 
         target_index = 0
-        for i in range(len(non_zero)):
+        for i, current in enumerate(non_zero):
             if skip:
                 skip = False
                 continue
 
-            current = non_zero[i]
-
-            if i + 1 < len(non_zero) and current['val'] == non_zero[i + 1]['val']:
+            if (i + 1 < len(non_zero) and
+                    current['val'] == non_zero[i + 1]['val']):
                 # Merge
-                next_tile = non_zero[i+1]
+                next_tile = non_zero[i + 1]
                 new_val = current['val'] * 2
                 self.score += new_val
 
-                moves.append({'from': current['orig_index'], 'to': target_index, 'value': current['val'], 'merged': False})
-                moves.append({'from': next_tile['orig_index'], 'to': target_index, 'value': next_tile['val'], 'merged': True})
+                moves.append({
+                    'from': current['orig_index'],
+                    'to': target_index,
+                    'value': current['val'],
+                    'merged': False
+                })
+                moves.append({
+                    'from': next_tile['orig_index'],
+                    'to': target_index,
+                    'value': next_tile['val'],
+                    'merged': True
+                })
 
                 merged_line.append(new_val)
                 skip = True
             else:
                 # No merge
-                moves.append({'from': current['orig_index'], 'to': target_index, 'value': current['val'], 'merged': False})
+                moves.append({
+                    'from': current['orig_index'],
+                    'to': target_index,
+                    'value': current['val'],
+                    'merged': False
+                })
                 merged_line.append(current['val'])
 
             target_index += 1
@@ -306,9 +335,11 @@ class M2048(Game):
         # Check for possible merges
         for r in range(self.grid_size):
             for c in range(self.grid_size):
-                if c + 1 < self.grid_size and self.grid[r][c] == self.grid[r][c+1]:
+                if (c + 1 < self.grid_size and
+                        self.grid[r][c] == self.grid[r][c + 1]):
                     return False
-                if r + 1 < self.grid_size and self.grid[r][c] == self.grid[r+1][c]:
+                if (r + 1 < self.grid_size and
+                        self.grid[r][c] == self.grid[r + 1][c]):
                     return False
 
         return True

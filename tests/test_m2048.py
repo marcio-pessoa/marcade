@@ -12,12 +12,15 @@ import unittest
 from unittest.mock import MagicMock, patch
 import sys
 
+# pylint: disable=protected-access
+
 
 class TestM2048(unittest.TestCase):
     """ Test M2048 Game """
 
     @classmethod
     def setUpClass(cls):
+        """ Set up class patches """
         # Create mocks
         cls.mock_pygame = MagicMock()
         cls.mock_pygame.locals = MagicMock()
@@ -30,15 +33,18 @@ class TestM2048(unittest.TestCase):
         cls.modules_patcher.start()
 
         # Import modules AFTER patching
-        global M2048
+        # pylint: disable=import-outside-toplevel
         from games.m2048 import M2048
+        cls.M2048 = M2048
 
     @classmethod
     def tearDownClass(cls):
+        """ Tear down class patches """
         cls.modules_patcher.stop()
 
     @patch('src.game_template.Game.__init__', autospec=True)
-    def setUp(self, mock_game_init):
+    def setUp(self, mock_game_init):  # pylint: disable=arguments-differ
+        """ Set up test """
         # Mock Game.__init__ to set canvas
         def game_init_side_effect(instance, screen):
             instance.screen = screen
@@ -48,7 +54,7 @@ class TestM2048(unittest.TestCase):
         mock_game_init.side_effect = game_init_side_effect
 
         self.screen = MagicMock()
-        self.game = M2048(self.screen)
+        self.game = self.M2048(self.screen)
 
         # Reset grid for testing
         self.game.grid = [[0] * 4 for _ in range(4)]
@@ -85,7 +91,7 @@ class TestM2048(unittest.TestCase):
     def test_no_move(self):
         """ Test no move """
         line = [4, 2, 0, 0]
-        new_line, moves = self.game._merge(line)
+        new_line, _ = self.game._merge(line)
         self.assertEqual(new_line, [4, 2, 0, 0])
 
     def test_move_up(self):
@@ -108,7 +114,7 @@ class TestM2048(unittest.TestCase):
             [2, 4, 2, 4],
             [4, 2, 4, 2],
             [2, 4, 2, 4],
-            [4, 2, 4, 0] # One empty spot
+            [4, 2, 4, 0]  # One empty spot
         ]
         self.assertFalse(self.game._check_game_over())
 
@@ -118,9 +124,10 @@ class TestM2048(unittest.TestCase):
             [2, 4, 2, 4],
             [4, 2, 4, 2],
             [2, 4, 2, 4],
-            [4, 2, 4, 2] # No moves possible
+            [4, 2, 4, 2]  # No moves possible
         ]
         self.assertTrue(self.game._check_game_over())
+
 
 if __name__ == '__main__':
     unittest.main()

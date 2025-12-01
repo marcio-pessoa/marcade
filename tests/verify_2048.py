@@ -1,7 +1,10 @@
+"""
+Verify 2048 Game Logic Script
+"""
 
 import sys
 import os
-import pygame
+import pygame  # pylint: disable=no-member
 
 # Add current directory to path so we can import modules
 sys.path.append(os.getcwd())
@@ -11,7 +14,7 @@ try:
 
     # Initialize pygame headless
     os.environ["SDL_VIDEODRIVER"] = "dummy"
-    pygame.init()
+    pygame.init()  # pylint: disable=no-member
     pygame.font.init()
 
     screen = pygame.display.set_mode((800, 600))
@@ -26,10 +29,10 @@ try:
     print("Game updated successfully")
 
     # Test a move
-    game._move('UP')
+    game._move('UP')  # pylint: disable=protected-access
     print("Game move logic executed successfully")
 
-except Exception as e:
+except Exception as e:  # pylint: disable=broad-exception-caught
     print(f"FAILED: {e}")
     sys.exit(1)
 
