@@ -354,7 +354,7 @@ class Monster:
             increment = -1
         self.position[0] += increment * 4
         if drop:
-            self.position[1] += increment * 16
+            self.position[1] += 16
         self.pose = (self.pose + 1) % 2
         self.update()
 
