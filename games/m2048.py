@@ -163,7 +163,10 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                 "Press R to Restart or U to Undo", True, (119, 110, 101)
             )
             instr_rect = instr_surface.get_rect(
-                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 + 20)
+                center=(
+                    self.canvas.get_width() / 2,
+                    self.canvas.get_height() / 2 + 20
+                )
             )
             self.screen.blit(instr_surface, instr_rect)
 
@@ -182,7 +185,10 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             font_large = pygame.font.SysFont('Arial', 60, bold=True)
             text_surface = font_large.render("You Win!", True, (249, 246, 242))
             text_rect = text_surface.get_rect(
-                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 - 50)
+                center=(
+                    self.canvas.get_width() / 2,
+                    self.canvas.get_height() / 2 - 50
+                )
             )
             self.screen.blit(text_surface, text_rect)
 
@@ -192,13 +198,21 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                 "Press C to Continue", True, (249, 246, 242)
             )
             instr_rect = instr_surface.get_rect(
-                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 + 20)
+                center=(
+                    self.canvas.get_width() / 2,
+                    self.canvas.get_height() / 2 + 20
+                )
             )
             self.screen.blit(instr_surface, instr_rect)
 
             # Draw fireworks
             for fw in self.fireworks:
-                pygame.draw.circle(self.screen, fw['color'], (int(fw['x']), int(fw['y'])), int(fw['size']))
+                pygame.draw.circle(
+                    self.screen,
+                    fw['color'],
+                    (int(fw['x']), int(fw['y'])),
+                    int(fw['size'])
+                )
 
     def _draw_tile_bg(self, r, c):
         rect = pygame.Rect(
@@ -225,11 +239,11 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             text_rect = text_surface.get_rect(center=rect.center)
             self.canvas.blit(text_surface, text_rect)
 
-    def save_state(self, moves):
+    def save_state(self, grid, score, moves):
         """ Save current game state """
         self.history.append({
-            'grid': [row[:] for row in self.grid],
-            'score': self.score,
+            'grid': grid,
+            'score': score,
             'moves': moves
         })
 
@@ -294,9 +308,7 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
 
         if moved:
             # If move was successful, push the PREVIOUS state to history
-            # We need to capture the moves that transitioned FROM current_grid TO self.grid
-            # self.animations currently holds these moves.
-            self.save_state(self.animations)
+            self.save_state(current_grid, current_score, self.animations)
 
             self.animating = True
             self.animation_start_time = pygame.time.get_ticks()

@@ -145,7 +145,9 @@ class TestM2048(unittest.TestCase):
         self.game.history.append({
             'grid': [row[:] for row in self.game.grid],
             'score': self.game.score,
-            'moves': [{'value': 2, 'from': (0, 0), 'to': (0, 1)}]  # Add dummy move
+            'moves': [
+                {'value': 2, 'from': (0, 0), 'to': (0, 1)}
+            ]  # Add dummy move
         })
 
         # Change state
