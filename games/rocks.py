@@ -365,7 +365,7 @@ class Ship:  # pylint: disable=too-many-instance-attributes
 class Missile:  # pylint: disable=too-many-instance-attributes
     """ Missile class """
 
-    def __init__(self,  # pylint: disable=too-many-positional-arguments
+    def __init__(self,
                  screen, ship_position, ship_radius, ship_speed, ship_angle):
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0],
@@ -420,33 +420,39 @@ class Sprite:  # pylint: disable=too-many-instance-attributes
         self.__screen = screen
         self.screen_size = [self.__screen.get_size()[0],
                             self.__screen.get_size()[1]]
-        self.position = [random.uniform(0.0, 1.0) * self.screen_size[0],
-                         random.uniform(0.0, 1.0) * self.screen_size[1]]
-        self.speed = [random.uniform(-0.5, 0.5),
-                      random.uniform(-0.5, 0.5)]
+        self.position = [
+            random.uniform(0.0, 1.0) * self.screen_size[0],  # nosec
+            random.uniform(0.0, 1.0) * self.screen_size[1]  # nosec
+        ]
+        self.speed = [
+            random.uniform(-0.5, 0.5),  # nosec
+            random.uniform(-0.5, 0.5)  # nosec
+        ]
         self.angle = 0
-        self.angle_vel = math.radians(math.pi / (random.uniform(-1, 1) * 10.1))
+        self.angle_vel = math.radians(
+            math.pi / (random.uniform(-1, 1) * 10.1)  # nosec
+        )
         self.size = [31, 31]
         size = self.size
         position = [0, 0]
         ship = pygame.Surface(self.size, SRCALPHA)
-        color_tone = random.randrange(50, 100)
+        color_tone = random.randrange(50, 100)  # nosec
         pygame.draw.polygon(
             ship,
             [color_tone, color_tone, color_tone],
             [
-                (random.uniform(0, size[1] / 4),
-                 random.uniform(0, size[1] / 3)),
-                (random.uniform(size[0] / 4, size[1] / 1.5),
-                 random.uniform(0, size[1] / 2)),
-                (random.uniform(size[0] / 1.5, size[1]),
-                 random.uniform(0, size[1] / 2)),
-                (random.uniform(size[0] / 1.1, size[1]),
-                 random.uniform(size[0] / 1.5, size[1])),
-                (random.uniform(size[0] / 3, size[1] / 1.5),
-                 random.uniform(size[0] / 1.5, size[1])),
-                (random.uniform(0, size[1] / 4),
-                 random.uniform(size[0] / 1.5, size[1])),
+                (random.uniform(0, size[1] / 4),  # nosec
+                 random.uniform(0, size[1] / 3)),  # nosec
+                (random.uniform(size[0] / 4, size[1] / 1.5),  # nosec
+                 random.uniform(0, size[1] / 2)),  # nosec
+                (random.uniform(size[0] / 1.5, size[1]),  # nosec
+                 random.uniform(0, size[1] / 2)),  # nosec
+                (random.uniform(size[0] / 1.1, size[1]),  # nosec
+                 random.uniform(size[0] / 1.5, size[1])),  # nosec
+                (random.uniform(size[0] / 3, size[1] / 1.5),  # nosec
+                 random.uniform(size[0] / 1.5, size[1])),  # nosec
+                (random.uniform(0, size[1] / 4),  # nosec
+                 random.uniform(size[0] / 1.5, size[1])),  # nosec
             ],
             0
         )
@@ -469,22 +475,22 @@ class Sprite:  # pylint: disable=too-many-instance-attributes
         self.size[1] += size[1]
         size = self.size
         self.ship = pygame.Surface(self.size, SRCALPHA)
-        color_tone = random.randrange(50, 100)
+        color_tone = random.randrange(50, 100)  # nosec
         pygame.draw.polygon(
             self.ship,
             [color_tone, color_tone, color_tone],
-            [(random.uniform(0, size[1] / 4),
-              random.uniform(0, size[1] / 3)),
-             (random.uniform(size[0] / 4, size[1] / 1.5),
-              random.uniform(0, size[1] / 2)),
-             (random.uniform(size[0] / 1.5, size[1]),
-              random.uniform(0, size[1] / 2)),
-             (random.uniform(size[0] / 1.1, size[1]),
-              random.uniform(size[0] / 1.5, size[1])),
-             (random.uniform(size[0] / 3, size[1] / 1.5),
-              random.uniform(size[0] / 1.5, size[1])),
-             (random.uniform(0, size[1] / 4),
-              random.uniform(size[0] / 1.5, size[1])),
+            [(random.uniform(0, size[1] / 4),  # nosec
+              random.uniform(0, size[1] / 3)),  # nosec
+             (random.uniform(size[0] / 4, size[1] / 1.5),  # nosec
+              random.uniform(0, size[1] / 2)),  # nosec
+             (random.uniform(size[0] / 1.5, size[1]),  # nosec
+              random.uniform(0, size[1] / 2)),  # nosec
+             (random.uniform(size[0] / 1.1, size[1]),  # nosec
+              random.uniform(size[0] / 1.5, size[1])),  # nosec
+             (random.uniform(size[0] / 3, size[1] / 1.5),  # nosec
+              random.uniform(size[0] / 1.5, size[1])),  # nosec
+             (random.uniform(0, size[1] / 4),  # nosec
+              random.uniform(size[0] / 1.5, size[1])),  # nosec
              ], 0)
         self.radius = self.ship.get_rect().center[1]
         self.__rect = self.ship.get_rect()

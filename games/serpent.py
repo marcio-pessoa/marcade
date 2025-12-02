@@ -196,8 +196,8 @@ class Serpent(Game):
 
     def _random_position(self):
         return (
-            random.randint(1, self.__matrix[0]-1),
-            random.randint(1, self.__matrix[1]-1)
+            random.randint(1, self.__matrix[0]-1),  # nosec
+            random.randint(1, self.__matrix[1]-1)  # nosec
         )
 
     def _draw_grid(self):

@@ -209,12 +209,14 @@ class Pongue(Game):  # pylint: disable=too-many-instance-attributes
 
     def _ball_spawn(self):
         self.start()
-        self.ball_velocity[0] = (random.randrange(100, 200) / 50.0 *
+        self.ball_velocity[0] = (random.randrange(100, 200) / 50.0 *  # nosec
                                  self.court_side)
         self.ball_velocity[1] = 0
         # Make sure ball will never run without an angle
         while self.ball_velocity[1] == 0:
-            self.ball_velocity[1] = (random.randrange(-50, 50) / 100.0) * -1
+            self.ball_velocity[1] = (
+                random.randrange(-50, 50) / 100.0  # nosec
+            ) * -1
         if self.ball_velocity[1] >= -0.6 or self.ball_velocity[1] <= 0.6:
             self.ball_velocity[1] *= 2
 

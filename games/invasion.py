@@ -822,7 +822,7 @@ class Invasion(Game):  # pylint: disable=too-many-instance-attributes
                 break
         # Fire
         for i in self.aliens:
-            if random.randrange(self.alien_burst_seed) == 1:
+            if random.randrange(self.alien_burst_seed) == 1:  # nosec
                 shoot = Missile(self.canvas, i.position, 4, -1)
                 self.alien_burst.add(shoot)
                 break

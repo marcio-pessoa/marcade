@@ -320,8 +320,8 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             for c in range(self.grid_size) if self.grid[r][c] == 0
         ]
         if empty_cells:
-            r, c = random.choice(empty_cells)
-            self.grid[r][c] = 2 if random.random() < 0.9 else 4
+            r, c = random.choice(empty_cells)  # nosec
+            self.grid[r][c] = 2 if random.random() < 0.9 else 4  # nosec
 
     def _move(self, direction):
         if direction in ('UP', 'DOWN'):
