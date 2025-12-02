@@ -12,7 +12,7 @@ import random
 import pygame
 # pylint: disable=no-name-in-module
 from pygame.locals import (
-    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r
+    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE
 )
 
 from src.game_template import Game
@@ -47,10 +47,13 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         self.grid = []
         self.font = Font(self.canvas)
         self.font.size = 5
+        self.history = []
 
         # Animation state
         self.animations = []
+        self.animations = []
         self.animating = False
+        self.undoing = False
         self.animation_start_time = 0
         self.animation_duration = 150  # ms
 
@@ -60,8 +63,11 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         """ Start game match """
         self.grid = [[0] * self.grid_size for _ in range(self.grid_size)]
         self.score = 0
+        self.history = []
+        self.animations = []
         self.animations = []
         self.animating = False
+        self.undoing = False
         self._spawn_tile()
         self._spawn_tile()
 
@@ -89,9 +95,11 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                 progress = 1.0
                 self.animating = False
                 self.animations = []
-                self._spawn_tile()  # Spawn tile after animation
-                if self._check_game_over():
-                    self.game_over()
+                if not self.undoing:
+                    self._spawn_tile()  # Spawn tile after animation
+                    if self._check_game_over():
+                        self.game_over()
+                self.undoing = False
 
             # Draw static background grid
             for r in range(self.grid_size):
@@ -149,15 +157,52 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             text_rect = text_surface.get_rect(center=rect.center)
             self.canvas.blit(text_surface, text_rect)
 
+    def save_state(self, moves):
+        """ Save current game state """
+        self.history.append({
+            'grid': [row[:] for row in self.grid],
+            'score': self.score,
+            'moves': moves
+        })
+
+    def undo(self):
+        """ Undo last move """
+        if not self.history:
+            return
+
+        state = self.history.pop()
+        self.grid = state['grid']
+        self.score = state['score']
+
+        # Reverse animations
+        reverse_moves = []
+        for move in state['moves']:
+            reverse_moves.append({
+                'value': move['value'],
+                'from': move['to'],
+                'to': move['from']
+            })
+
+        self.animations = reverse_moves
+        self.animating = True
+        self.undoing = True
+        self.animation_start_time = pygame.time.get_ticks()
+
     def control(self, keys, joystick) -> None:
         """ Receive control commands """
         if K_ESCAPE in keys:
             self.stop()
         if K_r in keys:
             self.reset()
+        if K_u in keys or K_BACKSPACE in keys:
+            self.undo()
 
         if self.animating:
             return
+
+        # Save state before attempting move
+        current_grid = [row[:] for row in self.grid]
+        current_score = self.score
 
         moved = False
         if K_UP in keys:
@@ -170,6 +215,11 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             moved = self._move('RIGHT')
 
         if moved:
+            # If move was successful, push the PREVIOUS state to history
+            # We need to capture the moves that transitioned FROM current_grid TO self.grid
+            # self.animations currently holds these moves.
+            self.save_state(self.animations)
+
             self.animating = True
             self.animation_start_time = pygame.time.get_ticks()
             # Spawn tile is now handled in update() after animation finishes

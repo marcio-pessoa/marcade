@@ -128,6 +128,55 @@ class TestM2048(unittest.TestCase):
         ]
         self.assertTrue(self.game._check_game_over())
 
+    def test_undo(self):
+        """ Test undo functionality """
+        # Setup initial state
+        self.game.grid = [
+            [2, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.game.score = 0
+        self.game.history = []
+
+        # Simulate a move
+        # Manually save state as control() does
+        self.game.history.append({
+            'grid': [row[:] for row in self.game.grid],
+            'score': self.game.score,
+            'moves': [{'value': 2, 'from': (0, 0), 'to': (0, 1)}]  # Add dummy move
+        })
+
+        # Change state
+        self.game.grid[0][0] = 4
+        self.game.score = 4
+
+        # Perform undo
+        self.game.undo()
+
+        # Verify state restored
+        self.assertEqual(self.game.grid[0][0], 2)
+        self.assertEqual(self.game.score, 0)
+        self.assertEqual(len(self.game.history), 0)
+
+        # Verify animation state
+        self.assertTrue(self.game.animating)
+        self.assertTrue(self.game.undoing)
+        self.assertTrue(len(self.game.animations) > 0)
+
+    def test_undo_empty_history(self):
+        """ Test undo with empty history """
+        self.game.grid = [[2, 0, 0, 0] for _ in range(4)]
+        self.game.score = 10
+        self.game.history = []
+
+        self.game.undo()
+
+        # Should remain unchanged
+        self.assertEqual(self.game.grid[0][0], 2)
+        self.assertEqual(self.game.score, 10)
+
 
 if __name__ == '__main__':
     unittest.main()
