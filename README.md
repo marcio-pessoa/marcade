@@ -86,6 +86,43 @@ Based on the fun Snake
 
 Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into `main`! If you can, please make sure the game fully works before sending the Pull Request, as that will help speed up the process.
 
+
+Make sure your contribution meets the [Functionality and Code Quality Criteria](#functionality-and-code-quality-criteria).
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## Functionality and Code Quality Criteria
+
+Make sure every development contribution meets the following functionality and code quality criteria.
+
+Pylint:
+
+```sh
+pylint $(find . -name "*.py")
+```
+
+Flake8:
+
+```sh
+flake8 . --count --max-complexity=20 --statistics --exclude venv
+```
+
+pytest:
+
+```sh
+export PYTHONPATH=.; pytest tests
+```
+
+Bandit:
+
+```sh
+bandit --recursive marcade.py src games
+```
+
 ## License
 
 Licensed under the [GPLv2](LICENSE).
