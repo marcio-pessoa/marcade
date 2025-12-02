@@ -12,7 +12,8 @@ import random
 import pygame
 # pylint: disable=no-name-in-module
 from pygame.locals import (
-    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE, K_c
+    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE, K_c,
+    SRCALPHA
 )
 
 from src.game_template import Game
@@ -109,110 +110,18 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                         self.game_over()
                 self.undoing = False
 
-            # Draw static background grid
-            for r in range(self.grid_size):
-                for c in range(self.grid_size):
-                    self._draw_tile_bg(r, c)
-
-            # Draw animating tiles
-            for anim in self.animations:
-                value = anim['value']
-                if value == 0:
-                    continue
-
-                start_r, start_c = anim['from']
-                end_r, end_c = anim['to']
-
-                # Interpolate position
-                curr_r = start_r + (end_r - start_r) * progress
-                curr_c = start_c + (end_c - start_c) * progress
-
-                self._draw_tile_at(curr_r, curr_c, value)
+            self._draw_grid(progress)
 
         else:
-            # Draw static grid
-            for r in range(self.grid_size):
-                for c in range(self.grid_size):
-                    self._draw_tile_bg(r, c)
-                    value = self.grid[r][c]
-                    if value != 0:
-                        self._draw_tile_at(r, c, value)
+            self._draw_grid()
 
         self.screen.blit(self.canvas, (0, 0))
 
         if self.game_over_active:
-            # Draw overlay
-            overlay = pygame.Surface(
-                (self.canvas.get_width(), self.canvas.get_height()),
-                pygame.SRCALPHA
-            )
-            overlay.fill((238, 228, 218, 180))  # Semi-transparent background
-            self.screen.blit(overlay, (0, 0))
-
-            # Draw Game Over text
-            font_large = pygame.font.SysFont('Arial', 60, bold=True)
-            text_surface = font_large.render("Game Over!", True, (119, 110, 101))
-            text_rect = text_surface.get_rect(
-                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 - 50)
-            )
-            self.screen.blit(text_surface, text_rect)
-
-            # Draw instructions
-            font_small = pygame.font.SysFont('Arial', 30)
-            instr_surface = font_small.render(
-                "Press R to Restart or U to Undo", True, (119, 110, 101)
-            )
-            instr_rect = instr_surface.get_rect(
-                center=(
-                    self.canvas.get_width() / 2,
-                    self.canvas.get_height() / 2 + 20
-                )
-            )
-            self.screen.blit(instr_surface, instr_rect)
+            self._draw_game_over_screen()
 
         if self.game_won:
-            self._update_fireworks()
-
-            # Draw overlay
-            overlay = pygame.Surface(
-                (self.canvas.get_width(), self.canvas.get_height()),
-                pygame.SRCALPHA
-            )
-            overlay.fill((237, 194, 46, 180))  # Gold semi-transparent background
-            self.screen.blit(overlay, (0, 0))
-
-            # Draw You Win text
-            font_large = pygame.font.SysFont('Arial', 60, bold=True)
-            text_surface = font_large.render("You Win!", True, (249, 246, 242))
-            text_rect = text_surface.get_rect(
-                center=(
-                    self.canvas.get_width() / 2,
-                    self.canvas.get_height() / 2 - 50
-                )
-            )
-            self.screen.blit(text_surface, text_rect)
-
-            # Draw instructions
-            font_small = pygame.font.SysFont('Arial', 30)
-            instr_surface = font_small.render(
-                "Press C to Continue", True, (249, 246, 242)
-            )
-            instr_rect = instr_surface.get_rect(
-                center=(
-                    self.canvas.get_width() / 2,
-                    self.canvas.get_height() / 2 + 20
-                )
-            )
-            self.screen.blit(instr_surface, instr_rect)
-
-            # Draw fireworks
-            for fw in self.fireworks:
-                pygame.draw.circle(
-                    self.screen,
-                    fw['color'],
-                    (int(fw['x']), int(fw['y'])),
-                    int(fw['size'])
-                )
+            self._draw_win_screen()
 
     def _draw_tile_bg(self, r, c):
         rect = pygame.Rect(
@@ -486,6 +395,113 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                     return False
 
         return True
+
+    def _draw_grid(self, progress=None):
+        if self.animating and progress is not None:
+            # Draw static background grid
+            for r in range(self.grid_size):
+                for c in range(self.grid_size):
+                    self._draw_tile_bg(r, c)
+
+            # Draw animating tiles
+            for anim in self.animations:
+                value = anim['value']
+                if value == 0:
+                    continue
+
+                start_r, start_c = anim['from']
+                end_r, end_c = anim['to']
+
+                # Interpolate position
+                curr_r = start_r + (end_r - start_r) * progress
+                curr_c = start_c + (end_c - start_c) * progress
+
+                self._draw_tile_at(curr_r, curr_c, value)
+        else:
+            # Draw static grid
+            for r in range(self.grid_size):
+                for c in range(self.grid_size):
+                    self._draw_tile_bg(r, c)
+                    value = self.grid[r][c]
+                    if value != 0:
+                        self._draw_tile_at(r, c, value)
+
+    def _draw_game_over_screen(self):
+        # Draw overlay
+        overlay = pygame.Surface(
+            (self.canvas.get_width(), self.canvas.get_height()),
+            pygame.SRCALPHA
+        )
+        overlay.fill((238, 228, 218, 180))  # Semi-transparent background
+        self.screen.blit(overlay, (0, 0))
+
+        # Draw Game Over text
+        font_large = pygame.font.SysFont('Arial', 60, bold=True)
+        text_surface = font_large.render("Game Over!", True, (119, 110, 101))
+        text_rect = text_surface.get_rect(
+            center=(
+                self.canvas.get_width() / 2,
+                self.canvas.get_height() / 2 - 50
+            )
+        )
+        self.screen.blit(text_surface, text_rect)
+
+        # Draw instructions
+        font_small = pygame.font.SysFont('Arial', 30)
+        instr_surface = font_small.render(
+            "Press R to Restart or U to Undo", True, (119, 110, 101)
+        )
+        instr_rect = instr_surface.get_rect(
+            center=(
+                self.canvas.get_width() / 2,
+                self.canvas.get_height() / 2 + 20
+            )
+        )
+        self.screen.blit(instr_surface, instr_rect)
+
+    def _draw_win_screen(self):
+        self._update_fireworks()
+
+        # Draw overlay
+        overlay = pygame.Surface(
+            (self.canvas.get_width(), self.canvas.get_height()),
+            pygame.SRCALPHA
+        )
+        overlay.fill((237, 194, 46, 180))  # Gold semi-transparent background
+        self.screen.blit(overlay, (0, 0))
+
+        # Draw You Win text
+        font_large = pygame.font.SysFont('Arial', 60, bold=True)
+        text_surface = font_large.render("You Win!", True, (249, 246, 242))
+        text_rect = text_surface.get_rect(
+            center=(
+                self.canvas.get_width() / 2,
+                self.canvas.get_height() / 2 - 50
+            )
+        )
+        self.screen.blit(text_surface, text_rect)
+
+        # Draw instructions
+        font_small = pygame.font.SysFont('Arial', 30)
+        instr_surface = font_small.render(
+            "Press C to Continue", True, (249, 246, 242)
+        )
+        instr_rect = instr_surface.get_rect(
+            center=(
+                self.canvas.get_width() / 2,
+                self.canvas.get_height() / 2 + 20
+            )
+        )
+        self.screen.blit(instr_surface, instr_rect)
+
+        # Draw fireworks
+        for fw in self.fireworks:
+            pygame.draw.circle(
+                self.screen,
+                fw['color'],
+                (int(fw['x']), int(fw['y'])),
+                int(fw['size'])
+            )
 
     def _update_fireworks(self):
         # Spawn new fireworks

@@ -166,10 +166,7 @@ class Rocks(Game):  # pylint: disable=too-many-instance-attributes
         if len(self.burst) >= 10:
             return
         # Shoot!
-        shoot = Missile(
-            self.canvas,
-            self.ship.get_position(), self.ship.get_radius(),
-            self.ship.get_speed(), self.ship.get_angle())
+        shoot = Missile(self.canvas, self.ship)
         self.burst.add(shoot)
         self.sound.tone(800)
 
@@ -365,15 +362,17 @@ class Ship:  # pylint: disable=too-many-instance-attributes
 class Missile:  # pylint: disable=too-many-instance-attributes
     """ Missile class """
 
-    def __init__(self,
-                 screen, ship_position, ship_radius, ship_speed, ship_angle):
+    def __init__(self, screen, ship):
         self.screen = screen
         self.screen_size = [self.screen.get_size()[0],
                             self.screen.get_size()[1]]
-        self.angle = ship_angle
+        self.angle = ship.get_angle()
         forward = [-math.cos(self.angle), math.sin(self.angle)]
+        ship_position = ship.get_position()
+        ship_radius = ship.get_radius()
         self.position = [ship_position[0] + ship_radius * forward[0],
                          ship_position[1] + ship_radius * forward[1]]
+        ship_speed = ship.get_speed()
         self.speed = [ship_speed[0] + 5 * forward[0],
                       ship_speed[1] + 5 * forward[1]]
         self.radius = 3
