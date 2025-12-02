@@ -190,6 +190,36 @@ class TestM2048(unittest.TestCase):
         self.game.undo()
         self.assertFalse(self.game.game_over_active)
 
+    def test_win_condition(self):
+        """ Test win condition """
+        self.assertFalse(self.game.game_won)
+
+        # Simulate merge to 2048
+        self.game.grid = [
+            [1024, 1024, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.game._move('LEFT')
+
+        self.assertTrue(self.game.game_won)
+        self.assertEqual(self.game.grid[0][0], 2048)
+
+        # Test continue
+        self.game.game_won = False
+        self.game.keep_playing = True
+
+        # Simulate another 2048 merge (should not trigger win again)
+        self.game.grid = [
+            [1024, 1024, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
+        ]
+        self.game._move('LEFT')
+        self.assertFalse(self.game.game_won)
+
 
 if __name__ == '__main__':
     unittest.main()

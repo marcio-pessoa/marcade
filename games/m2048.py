@@ -12,7 +12,7 @@ import random
 import pygame
 # pylint: disable=no-name-in-module
 from pygame.locals import (
-    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE
+    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE, K_c
 )
 
 from src.game_template import Game
@@ -54,6 +54,12 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         self.animating = False
         self.undoing = False
         self.game_over_active = False
+        self.animating = False
+        self.undoing = False
+        self.game_over_active = False
+        self.game_won = False
+        self.keep_playing = False
+        self.fireworks = []
         self.animation_start_time = 0
         self.animation_duration = 150  # ms
 
@@ -67,6 +73,9 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         self.animating = False
         self.undoing = False
         self.game_over_active = False
+        self.game_won = False
+        self.keep_playing = False
+        self.fireworks = []
         self._spawn_tile()
         self._spawn_tile()
 
@@ -158,6 +167,39 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             )
             self.screen.blit(instr_surface, instr_rect)
 
+        if self.game_won:
+            self._update_fireworks()
+
+            # Draw overlay
+            overlay = pygame.Surface(
+                (self.canvas.get_width(), self.canvas.get_height()),
+                pygame.SRCALPHA
+            )
+            overlay.fill((237, 194, 46, 180))  # Gold semi-transparent background
+            self.screen.blit(overlay, (0, 0))
+
+            # Draw You Win text
+            font_large = pygame.font.SysFont('Arial', 60, bold=True)
+            text_surface = font_large.render("You Win!", True, (249, 246, 242))
+            text_rect = text_surface.get_rect(
+                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 - 50)
+            )
+            self.screen.blit(text_surface, text_rect)
+
+            # Draw instructions
+            font_small = pygame.font.SysFont('Arial', 30)
+            instr_surface = font_small.render(
+                "Press C to Continue", True, (249, 246, 242)
+            )
+            instr_rect = instr_surface.get_rect(
+                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 + 20)
+            )
+            self.screen.blit(instr_surface, instr_rect)
+
+            # Draw fireworks
+            for fw in self.fireworks:
+                pygame.draw.circle(self.screen, fw['color'], (int(fw['x']), int(fw['y'])), int(fw['size']))
+
     def _draw_tile_bg(self, r, c):
         rect = pygame.Rect(
             c * (self.tile_size + self.tile_margin) + self.tile_margin,
@@ -223,11 +265,17 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             self.reset()
         if K_u in keys or K_BACKSPACE in keys:
             self.undo()
+        if self.game_won and K_c in keys:
+            self.game_won = False
+            self.keep_playing = True
 
         if self.animating:
             return
 
         if self.game_over_active:
+            return
+
+        if self.game_won:
             return
 
         # Save state before attempting move
@@ -373,6 +421,9 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                 new_val = current['val'] * 2
                 self.score += new_val
 
+                if new_val == 2048 and not self.keep_playing:
+                    self.game_won = True
+
                 moves.append({
                     'from': current['orig_index'],
                     'to': target_index,
@@ -423,3 +474,30 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                     return False
 
         return True
+
+    def _update_fireworks(self):
+        # Spawn new fireworks
+        if random.random() < 0.1:
+            self.fireworks.append({
+                'x': random.randint(0, self.canvas.get_width()),
+                'y': self.canvas.get_height(),
+                'vx': random.uniform(-2, 2),
+                'vy': random.uniform(-15, -10),
+                'color': (
+                    random.randint(100, 255),
+                    random.randint(100, 255),
+                    random.randint(100, 255)
+                ),
+                'size': random.randint(2, 5),
+                'life': 1.0
+            })
+
+        # Update existing fireworks
+        for fw in self.fireworks[:]:
+            fw['x'] += fw['vx']
+            fw['y'] += fw['vy']
+            fw['vy'] += 0.5  # Gravity
+            fw['life'] -= 0.02
+
+            if fw['life'] <= 0 or fw['y'] > self.canvas.get_height() + 10:
+                self.fireworks.remove(fw)
