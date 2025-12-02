@@ -51,9 +51,9 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
 
         # Animation state
         self.animations = []
-        self.animations = []
         self.animating = False
         self.undoing = False
+        self.game_over_active = False
         self.animation_start_time = 0
         self.animation_duration = 150  # ms
 
@@ -63,11 +63,10 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         """ Start game match """
         self.grid = [[0] * self.grid_size for _ in range(self.grid_size)]
         self.score = 0
-        self.history = []
-        self.animations = []
         self.animations = []
         self.animating = False
         self.undoing = False
+        self.game_over_active = False
         self._spawn_tile()
         self._spawn_tile()
 
@@ -77,7 +76,7 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
 
     def game_over(self) -> None:
         """ Game over """
-        # Simple game over indication for now, could be improved
+        self.game_over_active = True
         print("Game Over!")
 
     def update(self) -> None:
@@ -131,6 +130,33 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
                         self._draw_tile_at(r, c, value)
 
         self.screen.blit(self.canvas, (0, 0))
+
+        if self.game_over_active:
+            # Draw overlay
+            overlay = pygame.Surface(
+                (self.canvas.get_width(), self.canvas.get_height()),
+                pygame.SRCALPHA
+            )
+            overlay.fill((238, 228, 218, 180))  # Semi-transparent background
+            self.screen.blit(overlay, (0, 0))
+
+            # Draw Game Over text
+            font_large = pygame.font.SysFont('Arial', 60, bold=True)
+            text_surface = font_large.render("Game Over!", True, (119, 110, 101))
+            text_rect = text_surface.get_rect(
+                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 - 50)
+            )
+            self.screen.blit(text_surface, text_rect)
+
+            # Draw instructions
+            font_small = pygame.font.SysFont('Arial', 30)
+            instr_surface = font_small.render(
+                "Press R to Restart or U to Undo", True, (119, 110, 101)
+            )
+            instr_rect = instr_surface.get_rect(
+                center=(self.canvas.get_width() / 2, self.canvas.get_height() / 2 + 20)
+            )
+            self.screen.blit(instr_surface, instr_rect)
 
     def _draw_tile_bg(self, r, c):
         rect = pygame.Rect(
@@ -186,6 +212,7 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         self.animations = reverse_moves
         self.animating = True
         self.undoing = True
+        self.game_over_active = False
         self.animation_start_time = pygame.time.get_ticks()
 
     def control(self, keys, joystick) -> None:
@@ -198,6 +225,9 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
             self.undo()
 
         if self.animating:
+            return
+
+        if self.game_over_active:
             return
 
         # Save state before attempting move

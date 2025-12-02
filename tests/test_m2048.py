@@ -177,6 +177,19 @@ class TestM2048(unittest.TestCase):
         self.assertEqual(self.game.grid[0][0], 2)
         self.assertEqual(self.game.score, 10)
 
+    def test_game_over_state(self):
+        """ Test game over state """
+        self.assertFalse(self.game.game_over_active)
+        self.game.game_over()
+        self.assertTrue(self.game.game_over_active)
+
+        # Undo should clear game over
+        self.game.history.append({
+            'grid': [], 'score': 0, 'moves': []
+        })
+        self.game.undo()
+        self.assertFalse(self.game.game_over_active)
+
 
 if __name__ == '__main__':
     unittest.main()
