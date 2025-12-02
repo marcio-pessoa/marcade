@@ -66,7 +66,7 @@ class MArcade():  # pylint: disable=too-few-public-methods
         games = game_manager.get_games()
 
         if len(sys.argv) < 2:  # When no args given, run random game
-            game_name = random.choice(list(games.keys()))
+            game_name = random.choice(list(games.keys()))  # nosec
             self.run_game(games[game_name])
             sys.exit()
 
