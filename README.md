@@ -82,6 +82,12 @@ Based on the fun Snake
 
 [![Rocks](Screenshots/serpent.png)](Documents/serpent.md)
 
+### 2048
+
+Based on the addictive 2048
+
+[![2048](Screenshots/2048.png)](Documents/2048.md)
+
 ## Contributing
 
 Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into `main`! If you can, please make sure the game fully works before sending the Pull Request, as that will help speed up the process.
@@ -108,13 +114,13 @@ pylint $(find . -name "*.py")
 Flake8:
 
 ```sh
-flake8 . --count --max-complexity=20 --statistics --exclude venv
+flake8 . --count --statistics
 ```
 
 pytest:
 
 ```sh
-export PYTHONPATH=.; pytest tests
+./run_tests.sh
 ```
 
 Bandit:
