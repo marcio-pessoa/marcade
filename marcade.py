@@ -22,8 +22,8 @@ from src.game_manager import GameManager
 class MArcade():  # pylint: disable=too-few-public-methods
     """ MArcade class """
 
-    __version__ = '0.4.1'
-    __date__ = "2025-11-19"
+    __version__ = '0.5.0'
+    __date__ = "2025-12-02"
 
     def __init__(self):
         Log().name = 'marcade'
