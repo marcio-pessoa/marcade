@@ -12,9 +12,7 @@ import random
 import pygame
 # pylint: disable=no-name-in-module
 from pygame.locals import (
-    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE, K_c,
-    SRCALPHA
-)
+    K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, K_r, K_u, K_BACKSPACE, K_c)
 
 from src.game_template import Game
 from src.font import Font
@@ -430,7 +428,6 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         # Draw overlay
         overlay = pygame.Surface(
             (self.canvas.get_width(), self.canvas.get_height()),
-            pygame.SRCALPHA
         )
         overlay.fill((238, 228, 218, 180))  # Semi-transparent background
         self.screen.blit(overlay, (0, 0))
@@ -465,7 +462,6 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
         # Draw overlay
         overlay = pygame.Surface(
             (self.canvas.get_width(), self.canvas.get_height()),
-            pygame.SRCALPHA
         )
         overlay.fill((237, 194, 46, 180))  # Gold semi-transparent background
         self.screen.blit(overlay, (0, 0))
