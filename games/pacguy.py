@@ -280,8 +280,11 @@ class PacGuy(Game):
                 )
 
     def _draw_score(self):
-        # Simple score display
-        pass
+        message = Font(self.screen)
+        message.size = 9
+        message.position = [620, 100]
+        message.color = (255, 255, 255)
+        message.echo(f'SCORE {self.__score}')
 
     def game_over(self):
         message = Font(self.screen)
