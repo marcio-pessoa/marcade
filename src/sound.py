@@ -27,18 +27,22 @@ class Sound():
         description:
         """
         self.socket = PyAudio()
-        self.stream = self.socket.open(
-            format=self.socket.get_format_from_width(1),
-            channels=1,
-            rate=self.bitrate,
-            output=True)
+        try:
+            self.stream = self.socket.open(
+                format=self.socket.get_format_from_width(1),
+                channels=1,
+                rate=self.bitrate,
+                output=True)
+        except OSError:
+            self.stream = None
 
     def close(self):
         """
         description:
         """
-        self.stream.stop_stream()
-        self.stream.close()
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
         self.socket.terminate()
 
     def wave(self, frequency, length=0.015):
@@ -62,8 +66,9 @@ class Sound():
         """
         description:
         """
-        sample = self.wave(frequency)
-        self.stream.write(sample)
+        if self.stream:
+            sample = self.wave(frequency)
+            self.stream.write(sample)
 
     def demo(self):
         """
