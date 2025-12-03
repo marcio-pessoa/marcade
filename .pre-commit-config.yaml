@@ -19,6 +19,14 @@ repos:
     hooks:
     -   id: pytest
         name: pytest
-        entry: ./run_tests.sh
-        language: script
+        entry: pytest tests/
+        language: python
         types: [python]
+        additional_dependencies:
+        - pygame
+        - pyaudio
+        - pylint
+        - flake8
+        - bandit
+        - pytest
+        - pre-commit
