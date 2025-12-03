@@ -1,6 +1,7 @@
+-r requirements.txt
+
 pylint
 flake8
 bandit
 pytest
 pre-commit
-pygame
