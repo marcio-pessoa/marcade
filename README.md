@@ -88,6 +88,12 @@ Based on the addictive 2048
 
 [![2048](Screenshots/2048.png)](Documents/2048.md)
 
+### Pac-Guy
+
+Based on classic Pac-Man
+
+[![Pac-Guy](Screenshots/pacguy.png)](Documents/pacguy.md)
+
 ## Contributing
 
 Changes and improvements are more than welcome! Feel free to fork and open a pull request. Please make your changes in a specific branch and request to pull into `main`! If you can, please make sure the game fully works before sending the Pull Request, as that will help speed up the process.
