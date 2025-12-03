@@ -78,6 +78,8 @@ class PacGuy(Game):
         self.__dots: list[tuple[int, int]]
         self.__sound = Sound()
         self.__update = Timer(150)  # Speed of the game
+        self.__mouth_open = True
+        self.__mouth_animation = Timer(100)
         self.start()
 
     def start(self) -> None:
@@ -85,6 +87,7 @@ class PacGuy(Game):
         self.__ghosts_pos = []
         self.__score = 0
         self.__alive = True
+        self.__mouth_open = True
         self.__direction = self.__right
         self.__next_direction = self.__right
 
@@ -106,6 +109,9 @@ class PacGuy(Game):
         self.start()
 
     def update(self) -> None:
+        if self.__mouth_animation.check():
+            self.__mouth_open = not self.__mouth_open
+
         if not self.__update.check():
             return
 
@@ -236,12 +242,46 @@ class PacGuy(Game):
             pygame.draw.circle(self.screen, (255, 184, 174), center, 3)
 
     def _draw_player(self):
-        center = (self.__player_pos[0] * self.__tile_size +
-                  self.__tile_size // 2,
-                  self.__player_pos[1] * self.__tile_size +
-                  self.__tile_size // 2)
+        center_x = (
+            self.__player_pos[0] * self.__tile_size + self.__tile_size // 2
+        )
+        center_y = (
+            self.__player_pos[1] * self.__tile_size + self.__tile_size // 2
+        )
+        center = (center_x, center_y)
         radius = self.__tile_size // 2 - 2
-        pygame.draw.circle(self.screen, (255, 255, 0), center, radius)
+
+        if not self.__mouth_open:
+            pygame.draw.circle(self.screen, (255, 255, 0), center, radius)
+            return
+
+        # Angle of the center of the mouth
+        if self.__direction == self.__up:
+            angle = math.pi / 2
+        elif self.__direction == self.__left:
+            angle = math.pi
+        elif self.__direction == self.__down:
+            angle = 3 * math.pi / 2
+        else:  # self.__direction == self.__right
+            angle = 0
+
+        mouth_angle = math.pi / 4
+        start_angle = angle - mouth_angle
+        end_angle = angle + mouth_angle
+
+        # Create a list of points for the polygon
+        points = [center]
+        num_segments = 20  # Smoothness of the arc
+        # Iterate from end_angle to start_angle+2pi to draw the body
+        for i in range(num_segments + 1):
+            theta = end_angle + \
+                (start_angle + 2 * math.pi - end_angle) * \
+                float(i) / num_segments
+            points.append(
+                (center[0] + radius * math.cos(theta),
+                 center[1] - radius * math.sin(theta))  # Y-axis is inverted
+            )
+        pygame.draw.polygon(self.screen, (255, 255, 0), points)
 
     def _draw_ghosts(self):
         colors = [(255, 0, 0), (255, 184, 255),
