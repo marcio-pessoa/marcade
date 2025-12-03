@@ -17,7 +17,6 @@ except ImportError as err:
     print("Could not load module. " + str(err))
     sys.exit(True)
 
-from src.log import log
 from src.font import Font
 from src.game_template import Game
 from src.sound import Sound
@@ -77,7 +76,7 @@ class PacGuy(Game):
         self.__alive: bool
         self.__dots: list[tuple[int, int]]
         self.__sound = Sound()
-        self.__update = Timer(150) # Speed of the game
+        self.__update = Timer(150)  # Speed of the game
         self.start()
 
     def start(self) -> None:
@@ -100,7 +99,7 @@ class PacGuy(Game):
 
         # If no player found, default to top left
         if not hasattr(self, '_PacGuy__player_pos'):
-             self.__player_pos = [1, 1]
+            self.__player_pos = [1, 1]
 
     def reset(self) -> None:
         self.start()
@@ -163,16 +162,20 @@ class PacGuy(Game):
             self.__player_pos[0] = 0
 
     def _move_ghosts(self):
-        for i, ghost in enumerate(self.__ghosts_pos):
+        for ghost in self.__ghosts_pos:
             # Simple random movement for now
             options = []
-            if self._can_move(ghost, self.__up): options.append(self.__up)
-            if self._can_move(ghost, self.__right): options.append(self.__right)
-            if self._can_move(ghost, self.__down): options.append(self.__down)
-            if self._can_move(ghost, self.__left): options.append(self.__left)
+            if self._can_move(ghost, self.__up):
+                options.append(self.__up)
+            if self._can_move(ghost, self.__right):
+                options.append(self.__right)
+            if self._can_move(ghost, self.__down):
+                options.append(self.__down)
+            if self._can_move(ghost, self.__left):
+                options.append(self.__left)
 
             if options:
-                move = random.choice(options)
+                move = random.choice(options)  # nosec
                 if move == self.__up:
                     ghost[1] -= 1
                 elif move == self.__right:
@@ -219,23 +222,32 @@ class PacGuy(Game):
         for y, row in enumerate(self.__map_layout):
             for x, char in enumerate(row):
                 if char == '#':
-                    rect = (x * self.__tile_size, y * self.__tile_size, self.__tile_size, self.__tile_size)
+                    rect = (x * self.__tile_size,
+                            y * self.__tile_size,
+                            self.__tile_size,
+                            self.__tile_size)
                     pygame.draw.rect(self.screen, (0, 0, 150), rect, 1)
 
     def _draw_dots(self):
         for x, y in self.__dots:
-            center = (x * self.__tile_size + self.__tile_size // 2, y * self.__tile_size + self.__tile_size // 2)
+            center = (x * self.__tile_size + self.__tile_size // 2,
+                      y * self.__tile_size + self.__tile_size // 2)
             pygame.draw.circle(self.screen, (255, 184, 174), center, 3)
 
     def _draw_player(self):
-        center = (self.__player_pos[0] * self.__tile_size + self.__tile_size // 2,
-                  self.__player_pos[1] * self.__tile_size + self.__tile_size // 2)
-        pygame.draw.circle(self.screen, (255, 255, 0), center, self.__tile_size // 2 - 2)
+        center = (self.__player_pos[0] * self.__tile_size +
+                  self.__tile_size // 2,
+                  self.__player_pos[1] * self.__tile_size +
+                  self.__tile_size // 2)
+        radius = self.__tile_size // 2 - 2
+        pygame.draw.circle(self.screen, (255, 255, 0), center, radius)
 
     def _draw_ghosts(self):
-        colors = [(255, 0, 0), (255, 184, 255), (0, 255, 255), (255, 184, 82)]
+        colors = [(255, 0, 0), (255, 184, 255),
+                  (0, 255, 255), (255, 184, 82)]
         for i, (x, y) in enumerate(self.__ghosts_pos):
-            rect = (x * self.__tile_size + 2, y * self.__tile_size + 2, self.__tile_size - 4, self.__tile_size - 4)
+            rect = (x * self.__tile_size + 2, y * self.__tile_size + 2,
+                    self.__tile_size - 4, self.__tile_size - 4)
             pygame.draw.rect(self.screen, colors[i % len(colors)], rect)
 
     def _draw_score(self):
