@@ -284,7 +284,7 @@ class PacGuy(Game):
         message.size = 9
         message.position = [620, 100]
         message.color = (255, 255, 255)
-        message.echo(f'SCORE {self.__score}')
+        message.echo(f'{self.__score}')
 
     def game_over(self):
         message = Font(self.screen)

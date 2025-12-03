@@ -20,26 +20,34 @@ class Sound():
         self.length = 0.015  # Sound duration (seconds)
         self.frames = int(self.bitrate * self.length)
         self.restframes = self.frames % self.bitrate
+        self.stream = None
+        self.socket = None
         self.open()
 
     def open(self):
         """
         description:
         """
-        self.socket = PyAudio()
-        self.stream = self.socket.open(
-            format=self.socket.get_format_from_width(1),
-            channels=1,
-            rate=self.bitrate,
-            output=True)
+        try:
+            self.socket = PyAudio()
+            self.stream = self.socket.open(
+                format=self.socket.get_format_from_width(1),
+                channels=1,
+                rate=self.bitrate,
+                output=True)
+        except OSError:
+            self.socket = None
+            self.stream = None
 
     def close(self):
         """
         description:
         """
-        self.stream.stop_stream()
-        self.stream.close()
-        self.socket.terminate()
+        if self.stream:
+            self.stream.stop_stream()
+            self.stream.close()
+        if self.socket:
+            self.socket.terminate()
 
     def wave(self, frequency, length=0.015):
         """
@@ -62,19 +70,21 @@ class Sound():
         """
         description:
         """
-        sample = self.wave(frequency)
-        self.stream.write(sample)
+        if self.stream:
+            sample = self.wave(frequency)
+            self.stream.write(sample)
 
     def demo(self):
         """
         description:
         """
-        for _ in range(2):
-            sample = self.wave(587.33)
-            self.stream.write(sample)
-            sample = self.wave(783.99)
-            self.stream.write(sample)
-            sample = self.wave(392)
-            self.stream.write(sample)
-            sample = self.wave(880)
-            self.stream.write(sample)
+        if self.stream:
+            for _ in range(2):
+                sample = self.wave(587.33)
+                self.stream.write(sample)
+                sample = self.wave(783.99)
+                self.stream.write(sample)
+                sample = self.wave(392)
+                self.stream.write(sample)
+                sample = self.wave(880)
+                self.stream.write(sample)
