@@ -27,6 +27,7 @@ from src.timer import Timer
 class PacGuy(Game):
     """ PacGuy game class """
     # pylint: disable=too-many-instance-attributes, too-many-locals
+    # pylint: disable=too-many-branches
 
     __version__ = '0.1.0'
     __up = 0
@@ -72,13 +73,14 @@ class PacGuy(Game):
         super().__init__(screen)
         self.__player_pos: list[int]
         self.__ghosts_pos: list[list[int]]
+        self.__ghosts_dir: list[int]
         self.__direction: int
         self.__next_direction: int
         self.__score: int
         self.__alive: bool
         self.__dots: list[tuple[int, int]]
         self.__sound = Sound()
-        self.__update = Timer(150)  # Speed of the game
+        self.__speed = 0.15
         self.__mouth_open = True
         self.__mouth_animation = Timer(100)
         self.start()
@@ -86,6 +88,7 @@ class PacGuy(Game):
     def start(self) -> None:
         self.__dots = []
         self.__ghosts_pos = []
+        self.__ghosts_dir = []
         self.__score = 0
         self.__alive = True
         self.__mouth_open = True
@@ -101,10 +104,26 @@ class PacGuy(Game):
                     self.__player_pos = [x, y]
                 elif char == 'G':
                     self.__ghosts_pos.append([x, y])
+                    self.__ghosts_dir.append(random.choice([  # nosec
+                        self.__up, self.__down, self.__left, self.__right
+                    ]))
 
         # If no player found, default to top left
         if not hasattr(self, '_PacGuy__player_pos'):
-            self.__player_pos = [1, 1]
+            self.__player_pos = [1.0, 1.0]
+        else:
+            self.__player_pos = [
+                float(self.__player_pos[0]), float(self.__player_pos[1])
+            ]
+
+        # Convert ghosts pos to float
+        self.__ghosts_pos = [
+            [float(g[0]), float(g[1])] for g in self.__ghosts_pos
+        ]
+
+        # Ensure ghosts_dir matches ghosts_pos length if re-initializing
+        if len(self.__ghosts_dir) != len(self.__ghosts_pos):
+            self.__ghosts_dir = [self.__right] * len(self.__ghosts_pos)
 
     def reset(self) -> None:
         self.start()
@@ -112,9 +131,6 @@ class PacGuy(Game):
     def update(self) -> None:
         if self.__mouth_animation.check():
             self.__mouth_open = not self.__mouth_open
-
-        if not self.__update.check():
-            return
 
         if self.__alive:
             self._move_player()
@@ -149,80 +165,231 @@ class PacGuy(Game):
             self.__next_direction = new_dir
 
     def _move_player(self):
-        # Try to change direction if possible
-        if self._can_move(self.__player_pos, self.__next_direction):
-            self.__direction = self.__next_direction
+        # Current integer position (for grid checks)
+        curr_x = int(round(self.__player_pos[0]))
+        curr_y = int(round(self.__player_pos[1]))
 
-        if self._can_move(self.__player_pos, self.__direction):
-            if self.__direction == self.__up:
-                self.__player_pos[1] -= 1
-            elif self.__direction == self.__right:
-                self.__player_pos[0] += 1
-            elif self.__direction == self.__down:
-                self.__player_pos[1] += 1
-            elif self.__direction == self.__left:
-                self.__player_pos[0] -= 1
+        # Check if we are close to the center of the tile to allow turning
+        dist_x = abs(self.__player_pos[0] - curr_x)
+        dist_y = abs(self.__player_pos[1] - curr_y)
+        is_centered = dist_x < self.__speed and dist_y < self.__speed
+
+        # Try to change direction
+        if self.__next_direction != self.__direction:
+            if is_centered and \
+               self._can_move([curr_x, curr_y], self.__next_direction):
+                self.__direction = self.__next_direction
+                # Snap to grid center when turning
+                self.__player_pos[0] = float(curr_x)
+                self.__player_pos[1] = float(curr_y)
+
+        # Calculate movement
+        move_x = 0
+        move_y = 0
+        if self.__direction == self.__up:
+            move_y = -self.__speed
+        elif self.__direction == self.__right:
+            move_x = self.__speed
+        elif self.__direction == self.__down:
+            move_y = self.__speed
+        elif self.__direction == self.__left:
+            move_x = -self.__speed
+
+        # Check collisions ahead
+        next_x = self.__player_pos[0] + move_x
+        next_y = self.__player_pos[1] + move_y
+
+        # Check collision with wall using a hitbox (radius 0.4)
+        hit_wall = False
+        radius = 0.4
+        if self.__direction == self.__up:
+            hit_wall = self._is_wall(next_x - radius, next_y - radius) or \
+                self._is_wall(next_x + radius, next_y - radius)
+        elif self.__direction == self.__down:
+            hit_wall = self._is_wall(next_x - radius, next_y + radius) or \
+                self._is_wall(next_x + radius, next_y + radius)
+        elif self.__direction == self.__left:
+            hit_wall = self._is_wall(next_x - radius, next_y - radius) or \
+                self._is_wall(next_x - radius, next_y + radius)
+        elif self.__direction == self.__right:
+            hit_wall = self._is_wall(next_x + radius, next_y - radius) or \
+                self._is_wall(next_x + radius, next_y + radius)
+
+        if hit_wall:
+            # Snap to grid if we hit a wall and were moving
+            if not is_centered:
+                pass
+        else:
+            self.__player_pos[0] = next_x
+            self.__player_pos[1] = next_y
 
         # Wrap around (tunnel)
-        if self.__player_pos[0] < 0:
-            self.__player_pos[0] = len(self.__map_layout[0]) - 1
-        elif self.__player_pos[0] >= len(self.__map_layout[0]):
-            self.__player_pos[0] = 0
+        if self.__player_pos[0] < -0.5:
+            self.__player_pos[0] = len(self.__map_layout[0]) - 0.5
+        elif self.__player_pos[0] >= len(self.__map_layout[0]) - 0.5:
+            self.__player_pos[0] = -0.5
 
     def _move_ghosts(self):
-        for ghost in self.__ghosts_pos:
-            # Simple random movement for now
-            options = []
-            if self._can_move(ghost, self.__up):
-                options.append(self.__up)
-            if self._can_move(ghost, self.__right):
-                options.append(self.__right)
-            if self._can_move(ghost, self.__down):
-                options.append(self.__down)
-            if self._can_move(ghost, self.__left):
-                options.append(self.__left)
+        for i, ghost in enumerate(self.__ghosts_pos):
+            direction = self.__ghosts_dir[i]
+            speed = self.__speed * 0.8  # Ghosts are slightly slower
 
-            if options:
-                move = random.choice(options)  # nosec
-                if move == self.__up:
-                    ghost[1] -= 1
-                elif move == self.__right:
-                    ghost[0] += 1
-                elif move == self.__down:
-                    ghost[1] += 1
-                elif move == self.__left:
-                    ghost[0] -= 1
+            # Calculate movement
+            move_x = 0
+            move_y = 0
+            if direction == self.__up:
+                move_y = -speed
+            elif direction == self.__right:
+                move_x = speed
+            elif direction == self.__down:
+                move_y = speed
+            elif direction == self.__left:
+                move_x = -speed
+
+            # Check collisions ahead
+            next_x = ghost[0] + move_x
+            next_y = ghost[1] + move_y
+
+            # Determine the tile we are moving into
+            check_x = next_x
+            check_y = next_y
+            if move_x > 0:
+                check_x += 0.4
+            elif move_x < 0:
+                check_x -= 0.4
+            if move_y > 0:
+                check_y += 0.4
+            elif move_y < 0:
+                check_y -= 0.4
+
+            # Current integer position
+            curr_x = int(round(ghost[0]))
+            curr_y = int(round(ghost[1]))
+
+            # Check if centered
+            dist_x = abs(ghost[0] - curr_x)
+            dist_y = abs(ghost[1] - curr_y)
+            is_centered = dist_x < speed and dist_y < speed
+
+            hit_wall = self._is_wall(check_x, check_y)
+
+            if hit_wall:
+                # Snap to center and pick new direction
+                ghost[0] = float(curr_x)
+                ghost[1] = float(curr_y)
+                self.__ghosts_dir[i] = self._pick_new_ghost_direction(
+                    [curr_x, curr_y], direction
+                )
+            else:
+                ghost[0] = next_x
+                ghost[1] = next_y
+
+                # If centered, maybe change direction (randomly)
+                if is_centered:
+                    # Snap orthogonal axis to ensure we don't drift
+                    if direction in [self.__up, self.__down]:
+                        ghost[0] = float(curr_x)
+                    else:
+                        ghost[1] = float(curr_y)
+
+                    # 20% chance to change direction at intersection
+                    if random.random() < 0.2:  # nosec
+                        new_dir = self._pick_new_ghost_direction(
+                            [curr_x, curr_y], direction
+                        )
+                        if new_dir != direction:
+                            # Snap both axes if changing direction
+                            ghost[0] = float(curr_x)
+                            ghost[1] = float(curr_y)
+                            self.__ghosts_dir[i] = new_dir
+
+    def _pick_new_ghost_direction(self, pos, current_dir):
+        options = []
+        # Prefer not to reverse direction unless necessary
+        reverse_dir = (current_dir + 2) % 4
+
+        if self._can_move(pos, self.__up):
+            options.append(self.__up)
+        if self._can_move(pos, self.__right):
+            options.append(self.__right)
+        if self._can_move(pos, self.__down):
+            options.append(self.__down)
+        if self._can_move(pos, self.__left):
+            options.append(self.__left)
+
+        # Filter out reverse direction if other options exist
+        non_reverse_options = [o for o in options if o != reverse_dir]
+        if non_reverse_options:
+            return random.choice(non_reverse_options)  # nosec
+        if options:
+            return random.choice(options)  # nosec
+        return current_dir
+
+    def _is_wall(self, x, y):
+        # Check if a specific float coordinate is inside a wall
+        # We treat the wall as a full 1x1 tile at integer coordinates
+        # So if x,y falls into a wall tile, it's a collision
+        # However, for smooth movement, we usually check the center or edges
+        # of the character against the wall.
+        # Here we assume the character is a point or small circle.
+        # Let's check the tile containing the point.
+        # Since pos is center-based, tile k spans [k-0.5, k+0.5]
+        tile_x = int(x + 0.5)
+        tile_y = int(y + 0.5)
+
+        # Bounds check
+        if tile_x < 0 or tile_x >= len(self.__map_layout[0]):
+            return False  # Tunnel
+        if tile_y < 0 or tile_y >= len(self.__map_layout):
+            return False
+
+        return self.__map_layout[tile_y][tile_x] == '#'
 
     def _can_move(self, pos, direction):
+        # Check if the NEXT tile in the given direction is a wall
+        # This is used for decision making (turning)
         x, y = pos
+        tile_x = int(round(x))
+        tile_y = int(round(y))
+
         if direction == self.__up:
-            y -= 1
+            tile_y -= 1
         elif direction == self.__right:
-            x += 1
+            tile_x += 1
         elif direction == self.__down:
-            y += 1
+            tile_y += 1
         elif direction == self.__left:
-            x -= 1
+            tile_x -= 1
 
         # Check bounds (allow tunnel entry)
-        if x < 0 or x >= len(self.__map_layout[0]):
+        if tile_x < 0 or tile_x >= len(self.__map_layout[0]):
             return True
 
-        if 0 <= y < len(self.__map_layout):
-            return self.__map_layout[y][x] != '#'
+        if 0 <= tile_y < len(self.__map_layout):
+            return self.__map_layout[tile_y][tile_x] != '#'
         return False
 
     def _check_collisions(self):
         # Dots
         px, py = self.__player_pos
-        if (px, py) in self.__dots:
-            self.__dots.remove((px, py))
-            self.__score += 10
-            self.__sound.tone(600)
+        # Check if we are close enough to a dot to eat it
+        # Simple distance check or grid check
+        # Since dots are at integer coordinates:
+        grid_x = int(round(px))
+        grid_y = int(round(py))
+
+        if (grid_x, grid_y) in self.__dots:
+            # Only eat if we are close enough
+            if abs(px - grid_x) < 0.4 and abs(py - grid_y) < 0.4:
+                self.__dots.remove((grid_x, grid_y))
+                self.__score += 10
+                self.__sound.tone(600)
 
         # Ghosts
         for gx, gy in self.__ghosts_pos:
-            if px == gx and py == gy:
+            # Simple distance check
+            dist = math.sqrt((px - gx)**2 + (py - gy)**2)
+            if dist < 0.8:  # Collision threshold
                 self.__alive = False
                 self.__sound.tone(200)
 

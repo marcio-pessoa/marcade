@@ -56,7 +56,7 @@ class TestPacGuy(unittest.TestCase):
         """ Test initialization """
 
         # Player starting position (default)
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 1])
+        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1.0, 1.0])
         # Ghosts starting position
         self.assertEqual(len(getattr(self.game, "_PacGuy__ghosts_pos")), 4)
         # Dots count
@@ -70,7 +70,7 @@ class TestPacGuy(unittest.TestCase):
         """ Test player movement on a valid path """
 
         # Set player to a known safe position
-        setattr(self.game, "_PacGuy__player_pos", [1, 1])
+        setattr(self.game, "_PacGuy__player_pos", [1.0, 1.0])
         setattr(
             self.game, "_PacGuy__direction",
             getattr(self.game, "_PacGuy__down")
@@ -82,34 +82,44 @@ class TestPacGuy(unittest.TestCase):
             getattr(self.game, "_PacGuy__down")
         )
         self.game._move_player()
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 2])
+        new_pos = getattr(self.game, "_PacGuy__player_pos")
+        self.assertAlmostEqual(new_pos[0], 1.0)
+        self.assertAlmostEqual(new_pos[1], 1.15)
         # Move right
-        setattr(self.game, "_PacGuy__player_pos", [1, 3])
+        setattr(self.game, "_PacGuy__player_pos", [1.0, 3.0])
         setattr(
             self.game, "_PacGuy__next_direction",
             getattr(self.game, "_PacGuy__right")
         )
         self.game._move_player()
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [2, 3])
+        new_pos = getattr(self.game, "_PacGuy__player_pos")
+        self.assertAlmostEqual(new_pos[0], 1.15)
+        self.assertAlmostEqual(new_pos[1], 3.0)
         # Move left
+        setattr(self.game, "_PacGuy__player_pos", [2.0, 3.0])
         setattr(
             self.game, "_PacGuy__next_direction",
             getattr(self.game, "_PacGuy__left")
         )
         self.game._move_player()
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 3])
+        new_pos = getattr(self.game, "_PacGuy__player_pos")
+        self.assertAlmostEqual(new_pos[0], 1.85)
+        self.assertAlmostEqual(new_pos[1], 3.0)
         # Move up
+        setattr(self.game, "_PacGuy__player_pos", [1.0, 3.0])
         setattr(
             self.game, "_PacGuy__next_direction",
             getattr(self.game, "_PacGuy__up")
         )
         self.game._move_player()
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 2])
+        new_pos = getattr(self.game, "_PacGuy__player_pos")
+        self.assertAlmostEqual(new_pos[0], 1.0)
+        self.assertAlmostEqual(new_pos[1], 2.85)
 
     def test_wall_collision(self):
         """ Test wall collision """
         # Player position at [1,1], trying to move UP into a wall at [1,0]
-        setattr(self.game, "_PacGuy__player_pos", [1, 1])
+        setattr(self.game, "_PacGuy__player_pos", [1.0, 1.0])
         setattr(
             self.game, "_PacGuy__direction", getattr(self.game, "_PacGuy__up")
         )
@@ -119,7 +129,7 @@ class TestPacGuy(unittest.TestCase):
         )
         self.game._move_player()
         # Position should not change
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 1])
+        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1.0, 1.0])
 
         # Trying to move LEFT into a wall at [0,1]
         setattr(
@@ -132,14 +142,14 @@ class TestPacGuy(unittest.TestCase):
         )
         self.game._move_player()
         # Position should not change
-        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1, 1])
+        self.assertEqual(getattr(self.game, "_PacGuy__player_pos"), [1.0, 1.0])
 
     def test_dot_collision(self):
         """ Test dot collision """
 
         # Manually place a dot and player
         setattr(self.game, "_PacGuy__dots", [(1, 3)])
-        setattr(self.game, "_PacGuy__player_pos", [1, 3])
+        setattr(self.game, "_PacGuy__player_pos", [1.0, 3.0])
         initial_score = getattr(self.game, "_PacGuy__score")
         self.game._check_collisions()
         self.assertEqual(
@@ -150,10 +160,29 @@ class TestPacGuy(unittest.TestCase):
     def test_ghost_collision(self):
         """ Test ghost collision """
 
-        setattr(self.game, "_PacGuy__player_pos", [10, 9])
-        setattr(self.game, "_PacGuy__ghosts_pos", [[10, 9]])
+        setattr(self.game, "_PacGuy__player_pos", [10.0, 9.0])
+        setattr(self.game, "_PacGuy__ghosts_pos", [[10.0, 9.0]])
         self.game._check_collisions()
         self.assertFalse(getattr(self.game, "_PacGuy__alive"))
+
+    def test_ghost_movement(self):
+        """ Test ghost movement """
+        # Place ghost in a clear area (1, 1)
+        setattr(self.game, "_PacGuy__ghosts_pos", [[1.0, 1.0]])
+        # Force direction to RIGHT
+        setattr(
+            self.game, "_PacGuy__ghosts_dir",
+            [getattr(self.game, "_PacGuy__right")]
+        )
+
+        initial_pos = getattr(self.game, "_PacGuy__ghosts_pos")[0][:]
+        self.game._move_ghosts()
+        new_pos = getattr(self.game, "_PacGuy__ghosts_pos")[0]
+
+        # Ghost should have moved right
+        self.assertNotEqual(initial_pos, new_pos)
+        self.assertGreater(new_pos[0], initial_pos[0])
+        self.assertEqual(new_pos[1], initial_pos[1])
 
 
 if __name__ == '__main__':
