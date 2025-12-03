@@ -105,28 +105,24 @@ Make sure your contribution meets the [Functionality and Code Quality Criteria](
 
 Make sure every development contribution meets the following functionality and code quality criteria.
 
-Pylint:
+To ensure code quality, this project uses `pre-commit` hooks. The hooks are defined in the `.pre-commit-config.yaml` file and are run automatically when you commit your changes.
+
+### Installing pre-commit
+
+To install the hooks, run the following command in the root of the repository:
 
 ```sh
-pylint $(find . -name "*.py")
+pre-commit install
 ```
 
-Flake8:
+### Using pre-commit
+
+Once installed, the hooks will be run automatically every time you commit your changes. If any of the hooks fail, the commit will be aborted. You can then fix the issues and try to commit again.
+
+To run the hooks manually on all files, use the following command:
 
 ```sh
-flake8 . --count --statistics
-```
-
-pytest:
-
-```sh
-./run_tests.sh
-```
-
-Bandit:
-
-```sh
-bandit --recursive marcade.py src games
+pre-commit run --all-files
 ```
 
 ## License

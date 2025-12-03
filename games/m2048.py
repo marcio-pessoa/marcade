@@ -501,18 +501,18 @@ class M2048(Game):  # pylint: disable=too-many-instance-attributes
 
     def _update_fireworks(self):
         # Spawn new fireworks
-        if random.random() < 0.1:
+        if random.random() < 0.1:  # nosec B311
             self.fireworks.append({
-                'x': random.randint(0, self.canvas.get_width()),
+                'x': random.randint(0, self.canvas.get_width()),  # nosec B311
                 'y': self.canvas.get_height(),
-                'vx': random.uniform(-2, 2),
-                'vy': random.uniform(-15, -10),
+                'vx': random.uniform(-2, 2),  # nosec B311
+                'vy': random.uniform(-15, -10),  # nosec B311
                 'color': (
-                    random.randint(100, 255),
-                    random.randint(100, 255),
-                    random.randint(100, 255)
+                    random.randint(100, 255),  # nosec B311
+                    random.randint(100, 255),  # nosec B311
+                    random.randint(100, 255)  # nosec B311
                 ),
-                'size': random.randint(2, 5),
+                'size': random.randint(2, 5),  # nosec B311
                 'life': 1.0
             })
 
