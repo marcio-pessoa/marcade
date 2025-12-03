@@ -10,6 +10,7 @@ people:
 
 import sys
 import random
+import math
 import pygame
 try:
     from pygame.locals import K_ESCAPE, K_UP, K_RIGHT, K_DOWN, K_LEFT
@@ -246,9 +247,37 @@ class PacGuy(Game):
         colors = [(255, 0, 0), (255, 184, 255),
                   (0, 255, 255), (255, 184, 82)]
         for i, (x, y) in enumerate(self.__ghosts_pos):
-            rect = (x * self.__tile_size + 2, y * self.__tile_size + 2,
-                    self.__tile_size - 4, self.__tile_size - 4)
-            pygame.draw.rect(self.screen, colors[i % len(colors)], rect)
+            body_color = colors[i % len(colors)]
+            eye_color = (255, 255, 255)
+            pupil_color = (0, 0, 0)
+            x_pixel = x * self.__tile_size + 2
+            y_pixel = y * self.__tile_size + 2
+            width = self.__tile_size - 4
+            height = self.__tile_size - 4
+            # Ghost body
+            pygame.draw.arc(
+                self.screen, body_color,
+                (x_pixel, y_pixel, width, height),
+                0, math.pi, width // 2
+            )
+            pygame.draw.rect(
+                self.screen, body_color,
+                (x_pixel, y_pixel + height // 2, width, height // 2)
+            )
+            # Ghost eyes
+            eye_y = y_pixel + height // 4
+            pupil_y = eye_y + 2
+            for i in range(2):
+                eye_x = x_pixel + (i * width // 2) + width // 4
+                pupil_x = eye_x
+                pygame.draw.circle(
+                    self.screen, eye_color,
+                    (eye_x, eye_y), width // 6
+                )
+                pygame.draw.circle(
+                    self.screen, pupil_color,
+                    (pupil_x, pupil_y), width // 12
+                )
 
     def _draw_score(self):
         # Simple score display
