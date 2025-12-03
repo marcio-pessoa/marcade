@@ -37,12 +37,12 @@ class MArcade():  # pylint: disable=too-few-public-methods
             usage=(
                 'marcade <game> [<args>]\n\n'
                 'Games:\n'
+                '  2048           based on the addictive 2048\n'
                 '  invasion       based on memorable Space Invaders\n'
                 '  pongue         based on classic Pong\n'
                 '  serpent        based on the fun Snake\n'
-                '  rocks          based on amazing Asteroids\n'
-                '  2048           based on the addictive 2048\n'
                 '  pacguy         based on the classic Pac-Man\n\n'
+                '  rocks          based on amazing Asteroids\n'
             ),
             epilog=(
                 'examples:\n'

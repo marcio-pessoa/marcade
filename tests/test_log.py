@@ -13,6 +13,8 @@ import logging as real_logging
 from unittest.mock import MagicMock, patch
 import sys
 
+# pylint: disable=protected-access
+
 
 class TestLog(unittest.TestCase):
     """ Test Log Class """

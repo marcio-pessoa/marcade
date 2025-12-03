@@ -39,8 +39,14 @@ class TestFont(unittest.TestCase):
 
     def setUp(self):
         """ Set up test """
+        self.pygame_patcher = patch('src.font.pygame')
+        self.mock_pygame = self.pygame_patcher.start()
         self.screen = MagicMock()
         self.font = self.Font(self.screen)
+
+    def tearDown(self):
+        """ Tear down test """
+        self.pygame_patcher.stop()
 
     def test_initialization(self):
         """ Test initialization """

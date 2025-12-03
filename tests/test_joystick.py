@@ -18,8 +18,8 @@ modules_patcher = patch.dict(sys.modules, {'pygame': mock_pygame})
 
 # We need to import the modules under test AFTER the patch is applied
 modules_patcher.start()
-# pylint: disable=import-outside-toplevel
-from src.joystick import Joystick, detect
+# pylint: disable=import-outside-toplevel, wrong-import-position
+from src.joystick import Joystick, detect  # noqa: E402
 modules_patcher.stop()
 
 

@@ -1,3 +1,4 @@
+# pylint: disable=protected-access
 """
 ---
 name: test_serpent.py
@@ -51,36 +52,43 @@ class TestSerpent(unittest.TestCase):
 
     def test_initialization(self):
         """ Test initialization """
-        self.assertEqual(len(self.game._Serpent__serpent), 3)
-        self.assertTrue(self.game._Serpent__alive)
+        self.assertEqual(len(getattr(self.game, "_Serpent__serpent")), 3)
+        self.assertTrue(getattr(self.game, "_Serpent__alive"))
 
     def test_serpent_move(self):
         """ Test serpent movement """
-        initial_head = self.game._Serpent__serpent[0]
-        self.game._Serpent__direction = self.game._Serpent__up
+        initial_head = getattr(self.game, "_Serpent__serpent")[0]
+        setattr(
+            self.game, "_Serpent__direction",
+            getattr(self.game, "_Serpent__up")
+        )
         self.game._serpent_move()
-        new_head = self.game._Serpent__serpent[0]
+        new_head = getattr(self.game, "_Serpent__serpent")[0]
         self.assertEqual(new_head, (initial_head[0], initial_head[1] - 1))
 
     def test_serpent_grow(self):
         """ Test serpent growth """
-        initial_length = len(self.game._Serpent__serpent)
+        initial_length = len(getattr(self.game, "_Serpent__serpent"))
         self.game._serpent_grow()
-        self.assertEqual(len(self.game._Serpent__serpent), initial_length + 1)
+        self.assertEqual(
+            len(getattr(self.game, "_Serpent__serpent")), initial_length + 1
+        )
 
     def test_collision_with_fruit(self):
         """ Test collision with fruit """
-        self.game._Serpent__serpent = [(20, 15), (21, 15), (22, 15)]
-        self.game._Serpent__fruit_position = (20, 15)
-        initial_score = self.game._Serpent__score
+        setattr(self.game, "_Serpent__serpent", [(20, 15), (21, 15), (22, 15)])
+        setattr(self.game, "_Serpent__fruit_position", (20, 15))
+        initial_score = getattr(self.game, "_Serpent__score")
         self.game._check_collision()
-        self.assertEqual(self.game._Serpent__score, initial_score + 1)
+        self.assertEqual(
+            getattr(self.game, "_Serpent__score"), initial_score + 1
+        )
 
     def test_collision_with_wall(self):
         """ Test collision with wall """
-        self.game._Serpent__serpent = [(-1, 15), (0, 15), (1, 15)]
+        setattr(self.game, "_Serpent__serpent", [(-1, 15), (0, 15), (1, 15)])
         self.game._check_collision()
-        self.assertFalse(self.game._Serpent__alive)
+        self.assertFalse(getattr(self.game, "_Serpent__alive"))
 
 
 if __name__ == '__main__':

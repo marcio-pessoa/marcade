@@ -36,16 +36,22 @@ class TestSound(unittest.TestCase):
 
     def setUp(self):
         """ Set up test """
+        self.pyaudio_patcher = patch('src.sound.PyAudio')
+        self.mock_pyaudio_class = self.pyaudio_patcher.start()
         self.sound = self.Sound()
 
-    def test_initialization(self):
-        """ Test initialization """
+    def tearDown(self):
+        """ Tear down test """
+        self.pyaudio_patcher.stop()
+
+        # pylint: disable=no-member
         self.sound.socket.open.assert_called_once()
         self.assertEqual(self.sound.bitrate, 44100)
 
     def test_tone(self):
         """ Test tone """
         self.sound.tone(440)
+        # pylint: disable=no-member
         self.sound.stream.write.assert_called_once()
 
 

@@ -16,6 +16,7 @@ import math
 
 class TestRocks(unittest.TestCase):
     """ Test Rocks Game """
+    # pylint: disable=protected-access, invalid-name
 
     @classmethod
     def setUpClass(cls):
@@ -76,13 +77,18 @@ class TestRocks(unittest.TestCase):
         self.ship = self.Ship(self.screen)
         self.ship.start()
         self.missile = self.Missile(self.screen, ship_for_missile)
+        self.ship.start()
+        self.missile = self.Missile(self.screen, ship_for_missile)
         self.sprite = self.Sprite(self.screen)
+
+        self.mock_missile = MagicMock()
+        self.mock_missile.update = MagicMock()
+        self.mock_missile.age.return_value = 0
 
     def tearDown(self):
         """ Tear down test """
         self.surface_patcher.stop()
         self.mock_pygame.reset_mock()
-
 
     def test_ship_initialization(self):
         """ Test ship initialization """
@@ -98,8 +104,11 @@ class TestRocks(unittest.TestCase):
         self.assertAlmostEqual(self.ship.speed[0], 0)
         self.assertLess(self.ship.speed[1], 0)
 
-    def test_missile_initialization(self):
-        """ Test missile initialization """
+    def test_missile_update(self):
+        """ Test missile update """
+        self.game.burst.add(self.mock_missile)
+        self.game.burst_update()
+        self.mock_missile.update.assert_called_once()
         self.assertIsNotNone(self.missile.position)
         self.assertIsNotNone(self.missile.speed)
 

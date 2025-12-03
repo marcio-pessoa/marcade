@@ -26,6 +26,7 @@ from src.timer import Timer
 
 class PacGuy(Game):
     """ PacGuy game class """
+    # pylint: disable=too-many-instance-attributes, too-many-locals
 
     __version__ = '0.1.0'
     __up = 0

@@ -35,15 +35,22 @@ class TestGameTemplate(unittest.TestCase):
         cls.Game = Game
 
         # Create a concrete implementation of the abstract class for testing
+        # Create a concrete implementation of the abstract class for testing
         class ConcreteGame(cls.Game):
+            """ Concrete Game for testing """
+
             def control(self, keys, joystick):
                 pass
+
             def update(self):
                 pass
+
             def start(self):
                 pass
+
             def game_over(self):
                 pass
+
             def reset(self):
                 pass
         cls.ConcreteGame = ConcreteGame
@@ -55,15 +62,31 @@ class TestGameTemplate(unittest.TestCase):
 
     def setUp(self):
         """ Set up test """
+        self.pygame_patcher = patch(
+            'src.game_template.pygame', self.mock_pygame
+        )
+        self.pygame_patcher.start()
+        # Patch SRCALPHA imported in src.game_template
+        patch(
+            'src.game_template.SRCALPHA', self.mock_pygame.locals.SRCALPHA
+        ).start()
+
+        self.mock_pygame.Surface.return_value = MagicMock()
+
         self.screen = MagicMock()
         self.screen.get_size.return_value = (800, 600)
         self.game = self.ConcreteGame(self.screen)
+
+    def tearDown(self):
+        """ Tear down test """
+        self.pygame_patcher.stop()
 
     def test_initialization(self):
         """ Test initialization """
         self.assertEqual(self.game.screen_size, [800, 600])
         self.mock_pygame.Surface.assert_called_with(
-            [800, 600], self.mock_pygame.locals.SRCALPHA, 32)
+            [800, 600], self.mock_pygame.locals.SRCALPHA, 32
+        )  # noqa: E501
         self.game.canvas.convert_alpha.assert_called_once()
 
     def test_stop(self):

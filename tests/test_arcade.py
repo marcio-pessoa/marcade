@@ -15,6 +15,7 @@ import sys
 
 class TestArcade(unittest.TestCase):
     """ Test Arcade Class """
+    # pylint: disable=protected-access, invalid-name
 
     @classmethod
     def setUpClass(cls):
@@ -50,10 +51,23 @@ class TestArcade(unittest.TestCase):
 
     def setUp(self):
         """ Set up test """
+        self.pygame_patcher = patch('src.arcade.pygame', self.mock_pygame)
+        self.pygame_patcher.start()
+
+        # Patch constants imported in src.arcade
+        patch('src.arcade.QUIT', self.mock_pygame.locals.QUIT).start()
+        patch('src.arcade.KEYDOWN', self.mock_pygame.locals.KEYDOWN).start()
+        patch('src.arcade.K_ESCAPE', self.mock_pygame.locals.K_ESCAPE).start()
+        patch('src.arcade.KEYUP', self.mock_pygame.locals.KEYUP).start()
+
         self.game_class = MagicMock()
         self.game_class.__name__ = "TestGame"
         self.game_class.__version__ = "1.0"
         self.arcade = self.Arcade(self.game_class)
+
+    def tearDown(self):
+        """ Tear down test """
+        self.pygame_patcher.stop()
 
     def test_initialization(self):
         """ Test initialization """
@@ -64,11 +78,11 @@ class TestArcade(unittest.TestCase):
         """ Test run loop """
         # Mock __check_event to run the loop only once
         def stop_loop_side_effect():
-            self.arcade._Arcade__running = False
+            setattr(self.arcade, "_Arcade__running", False)
             return (set(), None)
 
-        self.arcade._Arcade__check_event = MagicMock(
-            side_effect=stop_loop_side_effect)
+        setattr(self.arcade, "_Arcade__check_event", MagicMock(
+            side_effect=stop_loop_side_effect))
 
         self.arcade.run()
 
@@ -78,13 +92,13 @@ class TestArcade(unittest.TestCase):
 
     def test_escape_key_stops_running(self):
         """ Test escape key stops running """
-        self.arcade._Arcade__running = True
+        setattr(self.arcade, "_Arcade__running", True)
         event = MagicMock()
         event.type = self.mock_pygame.locals.KEYDOWN
         event.key = self.mock_pygame.locals.K_ESCAPE
         self.mock_pygame.event.get.return_value = [event]
         self.arcade._Arcade__check_event()
-        self.assertFalse(self.arcade._Arcade__running)
+        self.assertFalse(getattr(self.arcade, "_Arcade__running"))
 
 
 if __name__ == '__main__':

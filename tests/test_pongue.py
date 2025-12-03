@@ -11,7 +11,8 @@ people:
 import unittest
 from unittest.mock import MagicMock, patch
 import sys
-import pygame
+
+# pylint: disable=protected-access
 
 
 class TestPongue(unittest.TestCase):

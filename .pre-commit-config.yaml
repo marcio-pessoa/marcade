@@ -22,6 +22,7 @@ repos:
         entry: pytest tests/
         language: python
         types: [python]
+        pass_filenames: false
         additional_dependencies:
         - pygame
         - pyaudio
