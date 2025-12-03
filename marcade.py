@@ -41,7 +41,8 @@ class MArcade():  # pylint: disable=too-few-public-methods
                 '  pongue         based on classic Pong\n'
                 '  serpent        based on the fun Snake\n'
                 '  rocks          based on amazing Asteroids\n'
-                '  2048           based on the addictive 2048\n\n'
+                '  2048           based on the addictive 2048\n'
+                '  pacguy         based on the classic Pac-Man\n\n'
             ),
             epilog=(
                 'examples:\n'

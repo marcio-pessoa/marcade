@@ -13,6 +13,7 @@ from games.pongue import Pongue
 from games.rocks import Rocks
 from games.serpent import Serpent
 from games.m2048 import M2048
+from games.pacguy import PacGuy
 
 
 class GameManager:
@@ -24,7 +25,8 @@ class GameManager:
             'pongue': Pongue,
             'rocks': Rocks,
             'serpent': Serpent,
-            '2048': M2048
+            '2048': M2048,
+            'pacguy': PacGuy
         }
 
     def get_games(self):
