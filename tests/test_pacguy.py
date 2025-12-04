@@ -184,6 +184,26 @@ class TestPacGuy(unittest.TestCase):
         self.assertGreater(new_pos[0], initial_pos[0])
         self.assertEqual(new_pos[1], initial_pos[1])
 
+    def test_ghost_tunneling(self):
+        """ Test ghost tunneling """
+        # Place ghost at the right edge, moving right
+        width = len(getattr(self.game, "_PacGuy__map_layout")[0])
+        setattr(self.game, "_PacGuy__ghosts_pos", [[float(width) - 0.6, 1.0]])
+        setattr(
+            self.game, "_PacGuy__ghosts_dir",
+            [getattr(self.game, "_PacGuy__right")]
+        )
+
+        # Move enough to cross the boundary
+        # Speed is approx 0.12. Need to cross width-0.5.
+        # Current pos ~ width-0.6. Next pos ~ width-0.48.
+        # Boundary is width-0.5.
+        self.game._move_ghosts()
+
+        new_pos = getattr(self.game, "_PacGuy__ghosts_pos")[0]
+        # It should have wrapped to -0.5
+        self.assertEqual(new_pos[0], -0.5)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -230,6 +230,7 @@ class PacGuy(Game):
             self.__player_pos[0] = -0.5
 
     def _move_ghosts(self):
+        # pylint: disable=too-many-statements
         for i, ghost in enumerate(self.__ghosts_pos):
             direction = self.__ghosts_dir[i]
             speed = self.__speed * 0.8  # Ghosts are slightly slower
@@ -302,6 +303,12 @@ class PacGuy(Game):
                             ghost[0] = float(curr_x)
                             ghost[1] = float(curr_y)
                             self.__ghosts_dir[i] = new_dir
+
+                # Wrap around (tunnel)
+                if ghost[0] < -0.5:
+                    ghost[0] = len(self.__map_layout[0]) - 0.5
+                elif ghost[0] >= len(self.__map_layout[0]) - 0.5:
+                    ghost[0] = -0.5
 
     def _pick_new_ghost_direction(self, pos, current_dir):
         options = []
