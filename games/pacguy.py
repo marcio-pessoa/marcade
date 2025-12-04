@@ -80,7 +80,7 @@ class PacGuy(Game):
         self.__alive: bool
         self.__dots: list[tuple[int, int]]
         self.__sound = Sound()
-        self.__speed = 0.15
+        self.__speed = 0.08
         self.__mouth_open = True
         self.__mouth_animation = Timer(100)
         self.start()
